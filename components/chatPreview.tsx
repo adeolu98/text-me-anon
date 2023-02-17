@@ -26,7 +26,7 @@ export const ChatPreview: FunctionComponent<ChatPreviewProps> = ({
         ></img>
       </div>
       <div className="flex flex-col w-10/12">
-        <div className="flex flex-row w-full justify-between">
+        <div className="flex flex-row w-full gap-4 justify-between">
           <div className="text-lg font-bold truncate">{contactAddr}</div>
           <div className="text-xs"> {lastMessageTime}</div>
         </div>
