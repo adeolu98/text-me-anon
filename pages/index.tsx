@@ -11,7 +11,9 @@ export default function Home() {
       <div className="border shadow-2xl py-8 flex flex-col rounded-3xl h-full w-full sm:w-4/6 md:w-4/6 lg:w-3/6 xl:w-2/6">
         {/**top section with create new message icon */}
         <div className="flex flex-col xs:flex-row justify-between px-1 xs:px-5">
-          <div className="text-xs xs:text-base sm:text-xl font-bold">Messages</div>
+          <div className="text-xs xs:text-base sm:text-xl font-bold">
+            Messages
+          </div>
           <div>
             <img
               width={20}
@@ -34,17 +36,22 @@ export default function Home() {
         <div className="w-full overflow-x-scroll px-1 xs:px-5">
           {chatPreviewData.map((data, index) => {
             return (
-              <div key={index} className="w-full flex flex-col gap-4 pt-5 px-1 rounded-lg hover:bg-gray-200">
+              <div
+                key={index}
+                className="w-full flex flex-col gap-4 pt-5 px-1 rounded-lg hover:bg-gray-200"
+              >
                 <ChatPreview
                   lastMessage={data.lastMessage}
                   lastMessageTime={data.lastMessageTime}
                   contactAddr={data.contactAddr}
                 ></ChatPreview>
-                {index !== chatPreviewData.length - 1 && (
-                  <div className="w-full  h-0.5 flex justify-end">
-                    <div className="w-10/12 h-0.5 bg-gray-200 "></div>
-                  </div>
-                )}
+                <div className="w-full  h-0.5 flex justify-end">
+                  <div
+                    className={`w-10/12 h-0.5 ${
+                      index !== chatPreviewData.length - 1 && "bg-gray-200"
+                    }`}
+                  ></div>
+                </div>
               </div>
             );
           })}
