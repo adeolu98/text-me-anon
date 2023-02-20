@@ -9,14 +9,14 @@ interface MessageProps {
 
 export const Message: FunctionComponent<MessageProps> = ({ className, text, timeSent, received }) => {
   return (
-    <div className={`${className} flex ${received ? 'flex-row' :'flex-row-reverse'} items-center gap-1`}>
+    <div className={`${className} flex ${received ? 'flex-row' :'flex-row-reverse'} items-center gap-1 mt-3`}>
       <div className="w-2">
-        <div className={`rounded-full w-1.5 h-1.5 ${received ? 'bg-gray-300' : 'bg-gray-100'}`}></div>
+        <div className={`rounded-full w-1.5 h-1.5 ${received ? 'bg-gray-300' : 'bg-gray-200'}`}></div>
       </div>
-      <div className={`rounded-3xl h-max flex flex-col w-max break-all px-4 py-1.5 ${received ? 'bg-gray-300' : 'bg-gray-100'} `}>
-        <p>{text}</p>
-        <div className="relative w-full flex justify-end pl-16">
-          <p className=" text-[8px]">{timeSent} pm</p>
+      <div className={`rounded-3xl h-max flex flex-col gap-1 break-all sm:break-normal xs:gap-0 w-max px-4 py-1.5 ${received ? 'bg-gray-300' : 'bg-gray-100'} `}>
+        <p className="text-sm xs:text-base">{text}</p>
+        <div className="relative w-full flex justify-end">
+          <p className=" text-[8px]">{timeSent}</p>
         </div>
       </div>
     </div>

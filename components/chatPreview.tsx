@@ -1,5 +1,6 @@
 import React, { FunctionComponent } from "react";
 import { ProfilePic } from "./ProfilePic";
+import Link from "next/link";
 
 interface ChatPreviewProps {
   lastMessage: string;
@@ -17,17 +18,19 @@ export const ChatPreview: FunctionComponent<ChatPreviewProps> = ({
   className,
 }) => {
   return (
-    <div className={` ${className} w-full flex flex-row gap-2 sm:gap-4`}>
-      <ProfilePic className="w-2/12"></ProfilePic>
-      <div className="flex flex-col w-10/12">
-        <div className="flex flex-row w-full gap-4 justify-between">
-          <div className="text-lg font-bold truncate">{contactAddr}</div>
-          <div className="text-xs"> {lastMessageTime}</div>
-        </div>
-        <div className="w-full">
-          <p className="truncate">{lastMessage}</p>
+    <Link href={`/chat/${contactAddr}`}>
+      <div className={` ${className} w-full flex flex-row gap-2 sm:gap-4`}>
+        <ProfilePic className="w-2/12"></ProfilePic>
+        <div className="flex flex-col w-10/12">
+          <div className="flex flex-row w-full gap-4 justify-between">
+            <div className="text-lg font-bold truncate">{contactAddr}</div>
+            <div className="text-xs"> {lastMessageTime}</div>
+          </div>
+          <div className="w-full">
+            <p className="truncate">{lastMessage}</p>
+          </div>
         </div>
       </div>
-    </div>
+    </Link>
   );
 };
