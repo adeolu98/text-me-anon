@@ -1,6 +1,7 @@
 import { ChatPreview } from "@/components/ChatPreview";
 //import chatPreviewData from "@/mock/chatPreviewMock.json";
 import chatPreviewData from "@/mock/chatPreviewMock2.json";
+import InputEmoji from 'react-input-emoji'
 import { AppLayout } from "@/components/appLayout";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
@@ -19,12 +20,12 @@ const Chat: NextPage = () => {
 
   useEffect(() => {
     const handleClickScroll = () => {
-      const element = document.getElementById("section-1");
+      const element = document.getElementById("last-msg");
       if (element) {
-        // 👇 Will scroll smoothly to the top of the next section
-        element.scrollIntoView({ behavior: "smooth" });
+        element.scrollIntoView();
       }
     };
+    handleClickScroll()
   }, []);
 
   return (
@@ -49,9 +50,10 @@ const Chat: NextPage = () => {
         <div className="h-full overflow-x-scroll px-1 xs:px-5 py-3">
           {Object.entries(chatPreviewData)
             .find((data) => data[0] === address)![1]
-            .map((msgData) => {
+            .map((msgData, index) => {
               return (
-                <div className="">
+                <div className="" id = { index === (Object.entries(chatPreviewData)
+                  .find((data) => data[0] === address)![1].length - 1) ? 'last-msg' : '' }>
                   <Message
                     received={msgData.from === address}
                     text={msgData.message}
@@ -64,11 +66,11 @@ const Chat: NextPage = () => {
 
         {/**show input text area */}
         <div className="flex flex-row p-3 rounded-b-3xl">
-          <input
+          <InputEmoji
             type="text"
             className=" w-full border focus:bg-gray-100 rounded-3xl px-4 py-2 focus:border-2 focus:border-black focus:outline-none"
             placeholder="Text Message"
-          ></input>
+          ></InputEmoji>
         </div>
       </div>
     </AppLayout>
