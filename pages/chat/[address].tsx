@@ -1,7 +1,7 @@
 import { ChatPreview } from "@/components/ChatPreview";
 //import chatPreviewData from "@/mock/chatPreviewMock.json";
 import chatPreviewData from "@/mock/chatPreviewMock2.json";
-import InputEmoji from 'react-input-emoji'
+import InputEmoji from "react-input-emoji";
 import { AppLayout } from "@/components/appLayout";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
@@ -25,7 +25,7 @@ const Chat: NextPage = () => {
         element.scrollIntoView();
       }
     };
-    handleClickScroll()
+    handleClickScroll();
   }, []);
 
   return (
@@ -52,8 +52,18 @@ const Chat: NextPage = () => {
             .find((data) => data[0] === address)![1]
             .map((msgData, index) => {
               return (
-                <div className="" id = { index === (Object.entries(chatPreviewData)
-                  .find((data) => data[0] === address)![1].length - 1) ? 'last-msg' : '' }>
+                <div
+                  className=""
+                  id={
+                    index ===
+                    Object.entries(chatPreviewData).find(
+                      (data) => data[0] === address
+                    )![1].length -
+                      1
+                      ? "last-msg"
+                      : ""
+                  }
+                >
                   <Message
                     received={msgData.from === address}
                     text={msgData.message}
@@ -67,8 +77,10 @@ const Chat: NextPage = () => {
         {/**show input text area */}
         <div className="flex flex-row p-3 rounded-b-3xl">
           <InputEmoji
+            theme="light"
+            cleanOnEnter
             type="text"
-            className=" w-full border focus:bg-gray-100 rounded-3xl px-4 py-2 focus:border-2 focus:border-black focus:outline-none"
+            className="w-full border focus:bg-gray-100 rounded-3xl px-4 py-2 focus:border-2 focus:border-black focus:outline-none"
             placeholder="Text Message"
           ></InputEmoji>
         </div>
