@@ -19,7 +19,7 @@ export const ChatPreview: FunctionComponent<ChatPreviewProps> = ({
 }) => {
   return (
     <Link href={`/chat/${contactAddr}`}>
-      <div className={` ${className} w-full flex flex-row gap-2 sm:gap-4`}>
+      <div className={` ${className} w-full flex flex-row items-center gap-2 sm:gap-4`}>
         <ProfilePic className="w-2/12"></ProfilePic>
         <div className="flex flex-col w-10/12">
           <div className="flex flex-row w-full gap-4 justify-between">

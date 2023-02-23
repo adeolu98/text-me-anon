@@ -2,6 +2,7 @@ import { ChatPreview } from "@/components/ChatPreview";
 import { AppLayout } from "@/components/appLayout";
 import chatPreviewData from "@/mock/chatPreviewMock2.json";
 import { NextPage } from "next";
+import Link from "next/link";
 import { useEffect } from "react";
 
 const Home: NextPage = () => {
@@ -17,14 +18,16 @@ const Home: NextPage = () => {
           <div className="text-xs xs:text-base sm:text-xl font-bold">
             Messages
           </div>
-          <div>
-            <img
-              width={20}
-              height={20}
-              alt="message-plus-icon"
-              src="https://img.icons8.com/ios/50/null/new-message.png"
-            />
-          </div>
+          <Link href={"/new-message"}>
+            <div>
+              <img
+                width={20}
+                height={20}
+                alt="message-plus-icon"
+                src="https://img.icons8.com/ios/50/null/new-message.png"
+              />
+            </div>
+          </Link>
         </div>
         {/**search images */}
         <div className="w-full py-4 px-1 xs:px-5">
@@ -50,7 +53,8 @@ const Home: NextPage = () => {
                 <div className="w-full  h-0.5 flex justify-end">
                   <div
                     className={`w-10/12 h-0.5 ${
-                      index !== Object.entries(chatPreviewData).length - 1 && "bg-gray-200"
+                      index !== Object.entries(chatPreviewData).length - 1 &&
+                      "bg-gray-200"
                     }`}
                   ></div>
                 </div>
@@ -61,5 +65,5 @@ const Home: NextPage = () => {
       </div>
     </AppLayout>
   );
-}
+};
 export default Home;
