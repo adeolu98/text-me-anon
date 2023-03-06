@@ -29,8 +29,8 @@ const Info: NextPage = () => {
         </Link>
         <div className="flex flex-col items-center mt-24 px-1 xs:px-5">
           <ProfilePic className="w-3/12"></ProfilePic>
-          <p className="font-bold break-all xs:text-lg mt-8">{address}</p>
-          <a href="/" className="hover:underline mt-4"> view on explorer</a>
+          <p className="font-medium break-all text-center xs:text-base mt-8">{address}</p>
+          <a href="/" className="font-light hover:underline mt-4"> view on explorer</a>
         </div>
       </div>
     </AppLayout>

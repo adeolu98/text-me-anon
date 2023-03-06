@@ -38,6 +38,7 @@ const Chat: NextPage = () => {
           ></FontAwesomeIcon>
         </Link>
         {/** contact info display */}
+        <Link href={`/info/${address}`}>
         <div className="flex flex-col gap-1 w-full border rounded-t-3xl bg-gray-50  px-1 xs:px-5 py-3">
           <div className="w-full mt-1 flex justify-center items-center">
             <ProfilePic className="w-2/12 sm:w-1/12"></ProfilePic>
@@ -46,6 +47,7 @@ const Chat: NextPage = () => {
             <p className="truncate">{address}</p>
           </div>
         </div>
+        </Link>
         {/** show chat messages */}
         <div className="h-full overflow-x-scroll px-1 xs:px-5 py-3">
           {Object.entries(chatPreviewData)
