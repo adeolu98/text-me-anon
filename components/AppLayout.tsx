@@ -28,7 +28,7 @@ export const AppLayout: FunctionComponent<AppLayoutProps> = ({
   }
 
   return (
-    <div className={`${className}  flex flex-col h-screen p-6`}>
+    <div className={`${className}  flex flex-col h-screen bg-neutral-50 p-6`}>
       <div className=" flex flex-row justify-between w-full">
         <div className="font-bold text-xl"> Text-Me Anon </div>
         <div className="flex items-center">
