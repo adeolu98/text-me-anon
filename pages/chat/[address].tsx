@@ -11,6 +11,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { NextPage } from "next";
 import { useEffect } from "react";
+import { TextInput } from "@/components/TextInput";
 
 const Chat: NextPage = () => {
   const router = useRouter();
@@ -77,15 +78,7 @@ const Chat: NextPage = () => {
         </div>
 
         {/**show input text area */}
-        <div className="flex flex-row p-3 rounded-b-3xl">
-          <InputEmoji
-            theme="light"
-            cleanOnEnter
-            type="text"
-            className="w-full border focus:bg-gray-100 rounded-3xl px-4 py-2 focus:border-2 focus:border-black focus:outline-none"
-            placeholder="Text Message"
-          ></InputEmoji>
-        </div>
+        <TextInput></TextInput>
       </div>
     </AppLayout>
   );
