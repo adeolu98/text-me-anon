@@ -78,7 +78,7 @@ const Chat: NextPage = () => {
         </div>
 
         {/**show input text area */}
-        <TextInput></TextInput>
+        <TextInput toAddress={address}></TextInput>
       </div>
     </AppLayout>
   );

@@ -9,6 +9,10 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@chakra-ui/react": "^2.5.1",
+    "@chakra-ui/toast": "^6.0.1",
+    "@emotion/react": "^11.10.6",
+    "@emotion/styled": "^11.10.6",
     "@fortawesome/fontawesome-svg-core": "^6.3.0",
     "@fortawesome/free-regular-svg-icons": "^6.3.0",
     "@fortawesome/free-solid-svg-icons": "^6.3.0",
@@ -25,11 +29,13 @@
     "eslint": "8.34.0",
     "eslint-config-next": "13.1.6",
     "ethers": "^5.7.2",
+    "framer-motion": "^10.2.3",
     "next": "13.1.6",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-input-emoji": "^4.3.0",
     "react-redux": "^8.0.5",
+    "string-hex": "^1.0.0",
     "typescript": "4.9.5",
     "wagmi": "^0.12.0"
   },

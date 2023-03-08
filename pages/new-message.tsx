@@ -2,8 +2,10 @@ import { TextInput } from "@/components/TextInput";
 import { AppLayout } from "@/components/appLayout";
 import { NextPage } from "next";
 import Link from "next/link";
+import { useState } from "react";
 
 const NewMessage: NextPage = () => {
+  const [toAddress, setToAddress] = useState("");
 
   return (
     <AppLayout>
@@ -26,6 +28,8 @@ const NewMessage: NextPage = () => {
           <div className="flex flex-row items-center gap-2 px-1 xs:px-5 py-3">
             <p className="font-bold">To:</p>
             <input
+              value={toAddress}
+              onChange={ e => setToAddress(e.currentTarget.value)}
               className="outline-none w-full h-8 break-all text-sm px-2"
               type="text"
             ></input>
@@ -37,7 +41,7 @@ const NewMessage: NextPage = () => {
         <div className="h-full overflow-x-scroll px-1 xs:px-5 py-3"></div>
 
         {/**show msg input text area */}
-        <TextInput></TextInput>
+        <TextInput toAddress={toAddress} ></TextInput>
       </div>
     </AppLayout>
   );

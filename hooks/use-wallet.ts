@@ -213,6 +213,7 @@ export function useWallet() {
     appNetwork,
     walletNetwork,
     provider,
+    signer,
     connect,
     logout,
     switchAppNetwork,
