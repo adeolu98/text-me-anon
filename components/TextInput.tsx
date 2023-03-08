@@ -1,27 +1,85 @@
-import React, { FunctionComponent } from "react";
+import React, { ChangeEvent, FunctionComponent, useState } from "react";
 import InputEmoji from "react-input-emoji";
-
+import { utils, providers } from "ethers";
 import { faArrowCircleUp } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useWallet } from "@/hooks/use-wallet";
+import toHex from "string-hex";
+import { useToast } from "@chakra-ui/react";
+import Error from "next/error";
 
 interface TextInputProps {
   className?: string;
+  toAddress: string;
 }
 
-export const TextInput: FunctionComponent<TextInputProps> = ({ className }) => {
+export const TextInput: FunctionComponent<TextInputProps> = ({
+  className,
+  toAddress,
+}) => {
+  const [text, setText] = useState("");
+
+  const { address, sendTransaction } = useWallet();
+  const toast = useToast();
+
+  const sendMsg = async () => {
+    const transactionRequest: providers.TransactionRequest = {
+      to: toAddress,
+      value: 0,
+      data: "0x" + toHex(text),
+    };
+    try {
+      const tx = await sendTransaction(transactionRequest);
+      (await tx.wait()) &&
+        toast({
+          title: "Success",
+          description: "Message sent.",
+          status: "success",
+          duration: 6000,
+          isClosable: true,
+        });
+    } catch (e: any) {
+      if (e.code === 4001) {
+        toast({
+          title: "Denied",
+          description: "You denied the transaction.",
+          status: "error",
+          duration: 6000,
+          isClosable: true,
+        });
+      } else {
+        //setError('An unexpected error occurred, please try again.');
+        toast({
+            title: "Error",
+            description: "An unexpected error occurred, please try again.",
+            status: "error",
+            duration: 6000,
+            isClosable: true,
+          });
+      }
+    }
+  };
+
+  const handleSend = () => {
+    sendMsg();
+  };
+
   return (
     <div
-      className={`${className} flex flex-row items-center p-3 rounded-b-3xl`}
+      className={`${className} flex flex-row gap-2 items-center p-3 h-max rounded-b-3xl`}
     >
-      <InputEmoji
-        theme="light"
+      <input
+        value={text}
+        onChange={(e) => setText(e.currentTarget?.value)}
+        // theme="light"
         type="text"
         className="w-full border focus:bg-gray-100 rounded-3xl px-4 py-2 focus:border-2 focus:border-black focus:outline-none"
         placeholder="Text Message"
-      ></InputEmoji>
+      ></input>
       <FontAwesomeIcon
         className="h-8 text-gray-400"
         icon={faArrowCircleUp}
+        onClick={handleSend}
       ></FontAwesomeIcon>
     </div>
   );
