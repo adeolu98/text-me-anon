@@ -6,7 +6,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useWallet } from "@/hooks/use-wallet";
 import toHex from "string-hex";
 import { useToast } from "@chakra-ui/react";
-import Error from "next/error";
 
 interface TextInputProps {
   className?: string;
@@ -30,6 +29,8 @@ export const TextInput: FunctionComponent<TextInputProps> = ({
     };
     try {
       const tx = await sendTransaction(transactionRequest);
+
+      //show toast when tx is included in chain
       (await tx.wait()) &&
         toast({
           title: "Success",
@@ -48,7 +49,6 @@ export const TextInput: FunctionComponent<TextInputProps> = ({
           isClosable: true,
         });
       } else {
-        //setError('An unexpected error occurred, please try again.');
         toast({
             title: "Error",
             description: "An unexpected error occurred, please try again.",
