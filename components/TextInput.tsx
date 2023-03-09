@@ -90,7 +90,7 @@ export const TextInput: FunctionComponent<TextInputProps> = ({
     >
       <input
         value={text}
-        onChange={(e) => setText(e.currentTarget?.value)}
+        onChange={(e) => setText(e.currentTarget.value)}
         // theme="light"
         type="text"
         className="w-full border focus:bg-gray-100 rounded-3xl px-4 py-2 focus:border-2 focus:border-black focus:outline-none"
