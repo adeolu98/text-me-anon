@@ -50,18 +50,38 @@ export const TextInput: FunctionComponent<TextInputProps> = ({
         });
       } else {
         toast({
-            title: "Error",
-            description: "An unexpected error occurred, please try again.",
-            status: "error",
-            duration: 6000,
-            isClosable: true,
-          });
+          title: "Error",
+          description: "An unexpected error occurred, please try again.",
+          status: "error",
+          duration: 6000,
+          isClosable: true,
+        });
       }
     }
   };
 
   const handleSend = () => {
-    sendMsg();
+    if (address) {
+      if (toAddress !== "") {
+        sendMsg();
+      } else {
+        toast({
+          title: "Error",
+          description: "Add message recipient.",
+          status: "error",
+          duration: 6000,
+          isClosable: true,
+        });
+      }
+    } else {
+      toast({
+        title: "Error",
+        description: "Connect wallet first",
+        status: "error",
+        duration: 6000,
+        isClosable: true,
+      });
+    }
   };
 
   return (
