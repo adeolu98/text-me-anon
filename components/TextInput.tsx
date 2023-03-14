@@ -1,11 +1,12 @@
-import React, { ChangeEvent, FunctionComponent, useState } from "react";
+import React, { FunctionComponent, useState } from "react";
 import InputEmoji from "react-input-emoji";
-import { utils, providers } from "ethers";
+import { providers } from "ethers";
 import { faArrowCircleUp } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useWallet } from "@/hooks/use-wallet";
-import toHex from "string-hex";
 import { useToast } from "@chakra-ui/react";
+import { useRouter } from "next/router";
+import { string_to_hex } from "@/lib/utils";
 
 interface TextInputProps {
   className?: string;
@@ -20,12 +21,13 @@ export const TextInput: FunctionComponent<TextInputProps> = ({
 
   const { address, sendTransaction } = useWallet();
   const toast = useToast();
+  const router = useRouter();
 
   const sendMsg = async () => {
     const transactionRequest: providers.TransactionRequest = {
       to: toAddress,
       value: 0,
-      data: "0x" + toHex(text),
+      data: "0x" + string_to_hex("OCM:" + text),
     };
     try {
       const tx = await sendTransaction(transactionRequest);
@@ -39,6 +41,7 @@ export const TextInput: FunctionComponent<TextInputProps> = ({
           duration: 6000,
           isClosable: true,
         });
+        router.push(`/chat/${toAddress}`)
     } catch (e: any) {
       if (e.code === 4001) {
         toast({
@@ -60,10 +63,11 @@ export const TextInput: FunctionComponent<TextInputProps> = ({
     }
   };
 
-  const handleSend = () => {
+  const handleSend = async () => {
     if (address) {
       if (toAddress !== "") {
         sendMsg();
+        
       } else {
         toast({
           title: "Error",
