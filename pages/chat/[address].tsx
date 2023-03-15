@@ -1,5 +1,3 @@
-import chatPreviewData from "@/mock/chatPreviewMock2.json";
-import InputEmoji from "react-input-emoji";
 import { AppLayout } from "@/components/AppLayout";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -35,7 +33,7 @@ const Chat: NextPage = () => {
       }
     };
     handleClickScroll();
-  }, []);
+  }, [discussion]);
 
   return (
     <AppLayout>
@@ -64,6 +62,7 @@ const Chat: NextPage = () => {
               discussion?.map((msgData, index) => {
                 return (
                   <div
+                  key={index}
                     className=""
                     id={index === discussion.length - 1 ? "last-msg" : ""}
                   >
@@ -87,7 +86,7 @@ const Chat: NextPage = () => {
             className="text-9xl"
           ></FontAwesomeIcon>
           <p className="text-center font-bold font-xl">
-            Please connect wallet first
+            Please connect wallet to see messages
           </p>
         </div>
       )}

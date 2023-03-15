@@ -1,5 +1,5 @@
 import React, { FunctionComponent, useState } from "react";
-import InputEmoji from "react-input-emoji";
+//import InputEmoji from "react-input-emoji";
 import { providers } from "ethers";
 import { faArrowCircleUp } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";

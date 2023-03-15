@@ -1,6 +1,5 @@
-import { ChatPreview } from "@/components/chatPreview";
+import { ChatPreview } from "@/components/ChatPreview";
 import { AppLayout } from "@/components/AppLayout";
-import chatPreviewData from "@/mock/chatPreviewMock2.json";
 import { NextPage } from "next";
 import Link from "next/link";
 import { useWallet } from "@/hooks/use-wallet";
@@ -12,13 +11,10 @@ import { getTime, hex_to_string } from "@/lib/utils";
 const Home: NextPage = () => {
   const { address } = useWallet();
 
-  const discussion = Object.entries(useDiscussions());
-
-  //return last object in array since they are arranged in ascending order of timestamp 
-  const sortedDiscussions = discussion.map((data, index) => {
-   return data[1][data[1].length - 1]
-  }).sort ((a, b) => b.timestamp - a.timestamp )
-
+  //sort in descending order of timestamp 
+  const discussions = Object.entries(useDiscussions()).sort((a,b) => b[1][b[1].length - 1].timestamp - a[1][a[1].length - 1].timestamp )
+  console.log('discussions', discussions);
+  
   return (
     <AppLayout>
       {address ? (
@@ -49,21 +45,21 @@ const Home: NextPage = () => {
           </div>
           {/** contacts chat preview  */}
           <div className="w-full overflow-x-scroll px-1 xs:px-5">
-            {sortedDiscussions.map((data, index) => {
+            {discussions.map((data, index) => {
               return (
                 <div
                   key={index}
                   className="w-full flex flex-col gap-4 pt-5 px-1 rounded-lg hover:bg-gray-200"
                 >
                   <ChatPreview
-                    lastMessage={hex_to_string(data.text).slice(5)}
-                    lastMessageTime={getTime(data.timestamp)}
-                    contactAddr={data.from}
+                    lastMessage={hex_to_string(data[1][data[1].length - 1].text).slice(5)}
+                    lastMessageTime={getTime( data[1][data[1].length - 1].timestamp)}
+                    contactAddr={data[0] === 'self' ? address : data[0]}
                   ></ChatPreview>
                   <div className="w-full  h-0.5 flex justify-end">
                     <div
                       className={`w-10/12 h-0.5 ${
-                        index !== Object.entries(chatPreviewData).length - 1 &&
+                        index !== discussions.length - 1 &&
                         "bg-gray-200"
                       }`}
                     ></div>
@@ -80,7 +76,7 @@ const Home: NextPage = () => {
             className="text-9xl"
           ></FontAwesomeIcon>
           <p className="text-center font-bold font-xl">
-            Please connect wallet first
+          Please connect wallet to see messages
           </p>
         </div>
       )}
