@@ -25,8 +25,7 @@ export const fetchDiscussions = createAsyncThunk(
     const discussions = getInitialState();
    
     const filtered = history.filter((tx) => tx.data.includes(msgTxIdentifier))
-    console.log('filtered', filtered);
-
+    
     filtered.forEach((data) => {
       //for instances where messages are sent to self
       if (data.from.toLowerCase() === data.to!.toLowerCase()){

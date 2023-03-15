@@ -31,7 +31,6 @@ export function useDiscussions() {
     if (!address) return;
     const getData = () => {
       dispatch(fetchDiscussions({ network: appNetwork, userAddress: address }));
-     // console.log("discussions", discussions);
     };
 
     if (shouldFetch(discussions)) {

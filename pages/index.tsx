@@ -13,7 +13,6 @@ const Home: NextPage = () => {
 
   //sort in descending order of timestamp 
   const discussions = Object.entries(useDiscussions()).sort((a,b) => b[1][b[1].length - 1].timestamp - a[1][a[1].length - 1].timestamp )
-  console.log('discussions', discussions);
   
   return (
     <AppLayout>
