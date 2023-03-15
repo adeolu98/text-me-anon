@@ -17,7 +17,6 @@ export function string_to_hex(str: string){
       hex += str.charCodeAt(i).toString(16)
     }
     return hex
-  
 }
 
 export function getTime(timestamp: number) {

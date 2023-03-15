@@ -9,6 +9,7 @@ import { selectUser, connect as connectAction, setAppNetwork, setWalletNetwork, 
 import { fetchDiscussions, selectDiscussions } from '@/store/slice/discussions';
 import { useWallet } from './use-wallet';
 import { DiscussionsState } from '@/lib/types';
+import { setInterval } from 'timers';
 
 function shouldFetch(discussions: DiscussionsState) {
     return Object.entries(discussions).every(e => !e[1]);
@@ -17,9 +18,8 @@ function shouldFetch(discussions: DiscussionsState) {
 export function useDiscussions() {
     const dispatch = useAppDispatch();
     const discussions = useAppSelector(selectDiscussions);
-
     const { address, appNetwork } = useWallet();
-
+   
     useEffect(() => {
         if (!address) return;
         if (shouldFetch(discussions)) dispatch(fetchDiscussions({ network: appNetwork, userAddress: address }));
@@ -27,7 +27,6 @@ export function useDiscussions() {
     
       return discussions;
 }   
-
 
 export function useDiscussion(address: string) {
     const discussions = useDiscussions();

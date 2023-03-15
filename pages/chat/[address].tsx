@@ -14,14 +14,18 @@ import { NextPage } from "next";
 import { useEffect } from "react";
 import { TextInput } from "@/components/TextInput";
 import { useWallet } from "@/hooks/use-wallet";
+import { useDiscussion } from "@/hooks/use-discussions";
+import { getTime, hex_to_string } from "@/lib/utils";
 
 const Chat: NextPage = () => {
   const router = useRouter();
   const { address } = useWallet();
-  
+
   const toAddress = Array.isArray(router.query.address)
     ? router.query.address[0]
     : router.query.address!;
+
+  const discussion = useDiscussion(toAddress === address ? 'self' : toAddress)
 
   useEffect(() => {
     const handleClickScroll = () => {
@@ -56,26 +60,17 @@ const Chat: NextPage = () => {
           </Link>
           {/** show chat messages */}
           <div className="h-full overflow-x-scroll px-1 xs:px-5 py-3">
-            {Object.entries(chatPreviewData)
-              .find((data) => data[0] === toAddress)![1]
-              .map((msgData, index) => {
+            {
+              discussion?.map((msgData, index) => {
                 return (
                   <div
                     className=""
-                    id={
-                      index ===
-                      Object.entries(chatPreviewData).find(
-                        (data) => data[0] === toAddress
-                      )![1].length -
-                        1
-                        ? "last-msg"
-                        : ""
-                    }
+                    id={index === discussion.length - 1 ? "last-msg" : ""}
                   >
                     <Message
                       received={msgData.from === toAddress}
-                      text={msgData.message}
-                      timeSent={msgData.timeOfMessage}
+                      text={hex_to_string(msgData.text).slice(5)}
+                      timeSent={getTime(msgData.timestamp)}
                     ></Message>
                   </div>
                 );
