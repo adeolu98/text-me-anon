@@ -1,4 +1,4 @@
-import { ChatPreview } from "@/components/ChatPreview";
+import { ChatPreview } from "@/components/ChatMsgsPreview";
 import { AppLayout } from "@/components/AppLayout";
 import { NextPage } from "next";
 import Link from "next/link";
