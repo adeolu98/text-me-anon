@@ -1,8 +1,5 @@
-import { ChatPreview } from "@/components/ChatPreview";
-//import chatPreviewData from "@/mock/chatPreviewMock.json";
 import chatPreviewData from "@/mock/chatPreviewMock2.json";
-import InputEmoji from "react-input-emoji";
-import { AppLayout } from "@/components/appLayout";
+import { AppLayout } from "@/components/AppLayout";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
 import { ProfilePic } from "@/components/ProfilePic";
@@ -30,7 +27,7 @@ const Info: NextPage = () => {
         <div className="flex flex-col items-center mt-24 px-1 xs:px-5">
           <ProfilePic className="w-3/12"></ProfilePic>
           <p className="font-medium break-all text-center xs:text-base mt-8">{address}</p>
-          <a href="/" className="font-light hover:underline mt-4"> view on explorer</a>
+          <a href="www.etherscan.com" target="blank"  className="font-light hover:underline mt-4"> view on explorer</a>
         </div>
       </div>
     </AppLayout>
