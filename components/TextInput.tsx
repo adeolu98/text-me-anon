@@ -1,4 +1,10 @@
-import React, { FunctionComponent, useState } from "react";
+import React, {
+  Dispatch,
+  FunctionComponent,
+  KeyboardEventHandler,
+  SetStateAction,
+  useState,
+} from "react";
 //import InputEmoji from "react-input-emoji";
 import { providers } from "ethers";
 import { faArrowCircleUp } from "@fortawesome/free-solid-svg-icons";
@@ -9,16 +15,25 @@ import { useRouter } from "next/router";
 import { string_to_hex } from "@/lib/utils";
 
 interface TextInputProps {
+  text: string;
+  previewText: string;
+  setText: Dispatch<SetStateAction<string>>;
+  setPreviewText: Dispatch<SetStateAction<string>>;
+  setNewMsg: Dispatch<SetStateAction<boolean>>;
   className?: string;
   toAddress: string;
+  onEnter?: () => void;
 }
 
 export const TextInput: FunctionComponent<TextInputProps> = ({
+  text,
+  previewText,
+  setText,
+  setPreviewText,
+  setNewMsg,
   className,
   toAddress,
 }) => {
-  const [text, setText] = useState("");
-
   const { address, sendTransaction } = useWallet();
   const toast = useToast();
   const router = useRouter();
@@ -29,7 +44,14 @@ export const TextInput: FunctionComponent<TextInputProps> = ({
       value: 0,
       data: "0x" + string_to_hex("OCM:" + text),
     };
+
     try {
+        //set preview text, set newMsg and wipe the input bar clean
+        setText("");
+        setPreviewText(text);
+        setNewMsg(true);
+      
+      //send tx
       const tx = await sendTransaction(transactionRequest);
 
       //show toast when tx is included in chain
@@ -41,8 +63,18 @@ export const TextInput: FunctionComponent<TextInputProps> = ({
           duration: 6000,
           isClosable: true,
         });
-        router.push(`/chat/${toAddress}`)
+      
+     //go to chat page if msg not sent from chat page
+     setTimeout(() => {
+        if (router.pathname !== `/chat/${toAddress}` ) router.push(`/chat/${toAddress}`);
+     }, 4500); //set timeout because etherscan lags and might not have tx data if we go to chat immediately 
+
     } catch (e: any) {
+      //set text back to prev Text to return input bar to prev state, set newMsg
+      setText(text); //inspect
+      setNewMsg(false);
+      setPreviewText("")
+
       if (e.code === 4001) {
         toast({
           title: "Denied",
@@ -67,7 +99,6 @@ export const TextInput: FunctionComponent<TextInputProps> = ({
     if (address) {
       if (toAddress !== "") {
         sendMsg();
-        
       } else {
         toast({
           title: "Error",
@@ -88,11 +119,18 @@ export const TextInput: FunctionComponent<TextInputProps> = ({
     }
   };
 
+  const handleKeydown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      handleSend();
+    }
+  };
+
   return (
     <div
       className={`${className} flex flex-row gap-2 items-center p-3 h-max rounded-b-3xl`}
     >
       <input
+        onKeyDown={(e) => handleKeydown(e)}
         value={text}
         onChange={(e) => setText(e.currentTarget.value)}
         // theme="light"

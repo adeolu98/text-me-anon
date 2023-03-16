@@ -8,6 +8,7 @@ import { faCircleExclamation } from "@fortawesome/free-solid-svg-icons";
 import { useDiscussions } from "@/hooks/use-discussions";
 import { getTime, hex_to_string } from "@/lib/utils";
 
+
 const Home: NextPage = () => {
   const { address } = useWallet();
 

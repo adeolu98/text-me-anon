@@ -1,9 +1,10 @@
+import { Spinner } from "@chakra-ui/react";
 import React, { FunctionComponent } from "react";
 
 interface MessageProps {
   className?: string;
   text: string;
-  timeSent: string;
+  timeSent?: string;
   received: boolean;
 }
 
@@ -16,7 +17,9 @@ export const Message: FunctionComponent<MessageProps> = ({ className, text, time
       <div className={`rounded-3xl h-max flex flex-col gap-1 break-all sm:break-normal xs:gap-0 w-max px-4 py-1.5 ${received ? 'bg-gray-300' : 'bg-gray-100'} `}>
         <p className="text-sm xs:text-base">{text}</p>
         <div className="relative w-full flex justify-end">
-          <p className=" text-[8px]">{timeSent}</p>
+         { //if timeSent is undefined, message isn't sent yet onchain
+          timeSent ? <p className=" text-[8px]">{timeSent}</p> : <Spinner size={'xs'}/>
+         }
         </div>
       </div>
     </div>

@@ -9,7 +9,7 @@ import { Message } from "@/components/Message";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { NextPage } from "next";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { TextInput } from "@/components/TextInput";
 import { useWallet } from "@/hooks/use-wallet";
 import { useDiscussion } from "@/hooks/use-discussions";
@@ -23,7 +23,15 @@ const Chat: NextPage = () => {
     ? router.query.address[0]
     : router.query.address!;
 
-  const discussion = useDiscussion(toAddress === address ? 'self' : toAddress)
+  const discussion = useDiscussion(toAddress === address ? "self" : toAddress);
+
+  const [text, setText] = useState("");
+  const [previewText, setPreviewText] = useState("")
+  //tracks new msg entered by sender
+  const [newMsg, setNewMsg] = useState(false)
+  
+  //track the current length of discussion before a new msg is sent
+  const [lengthBeforeNewMsg, setLengthBeforeNewMsg] = useState<Number | undefined>(discussion?.length)
 
   useEffect(() => {
     const handleClickScroll = () => {
@@ -33,7 +41,18 @@ const Chat: NextPage = () => {
       }
     };
     handleClickScroll();
-  }, [discussion]);
+
+    if (discussion?.length === lengthBeforeNewMsg){
+      
+    } else {
+      //check new msg object to see that its not msg from recipient
+      if (discussion![discussion!.length - 1].from === address) setNewMsg(false)
+      setLengthBeforeNewMsg(discussion?.length)
+      
+    }
+  }, [discussion, newMsg]);
+
+  
 
   return (
     <AppLayout>
@@ -58,26 +77,33 @@ const Chat: NextPage = () => {
           </Link>
           {/** show chat messages */}
           <div className="h-full overflow-x-scroll px-1 xs:px-5 py-3">
-            {
-              discussion?.map((msgData, index) => {
-                return (
-                  <div
+            {discussion?.map((msgData, index) => {
+              return (
+                <div
                   key={index}
-                    className=""
-                    id={index === discussion.length - 1 ? "last-msg" : ""}
-                  >
-                    <Message
-                      received={msgData.from === toAddress}
-                      text={hex_to_string(msgData.text).slice(5)}
-                      timeSent={getTime(msgData.timestamp)}
-                    ></Message>
-                  </div>
-                );
-              })}
+                  className=""
+                  id={index === discussion.length - 1 && newMsg === false ? "last-msg" : ""}
+                >
+                  <Message
+                    received={msgData.from === toAddress}
+                    text={hex_to_string(msgData.text).slice(5)}
+                    timeSent={getTime(msgData.timestamp)}
+                  ></Message>
+                </div>
+              );
+            })}
+          { newMsg && <div id = {'last-msg'}><Message received={false} text={previewText}></Message></div> }
           </div>
 
           {/**show input text area */}
-          <TextInput toAddress={toAddress}></TextInput>
+          <TextInput
+            text={text}
+            previewText={previewText}
+            setText={setText}
+            setNewMsg = {setNewMsg}
+            setPreviewText = {setPreviewText}
+            toAddress={toAddress}
+          ></TextInput>
         </div>
       ) : (
         <div className="h-full w-full flex justify-center flex-col gap-10 sm:w-4/6 md:w-4/6 lg:w-3/6 xl:w-2/6">
