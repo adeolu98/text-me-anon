@@ -6,10 +6,17 @@ import { useState } from "react";
 import { useWallet } from "@/hooks/use-wallet";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleExclamation } from "@fortawesome/free-solid-svg-icons";
+import { Message } from "@/components/Message";
 
 const NewMessage: NextPage = () => {
   const [toAddress, setToAddress] = useState("");
+  const [text, setText] = useState("");
+  const [previewText, setPreviewText] = useState("")
+  //tracks new msg entered by sender
+  const [newMsg, setNewMsg] = useState(false)
+
   const { address } = useWallet();
+
   return (
     <AppLayout>
       {address ? (
@@ -32,20 +39,28 @@ const NewMessage: NextPage = () => {
             <div className="flex flex-row items-center gap-2 px-1 xs:px-5 py-3">
               <p className="font-bold">To:</p>
               <input
-                value={toAddress}
-                onChange={(e) => setToAddress(e.currentTarget.value)}
+                value={toAddress.toLowerCase()}
+                onChange={(e) => setToAddress(e.currentTarget.value.toLowerCase())}
                 className="outline-none w-full h-8 break-all text-sm px-2"
                 type="text"
               ></input>
-              {/* <input></input> */}
             </div>
             <div className="w-full bg-gray-200 h-0.5"></div>
           </div>
           {/** show chat messages */}
-          <div className="h-full overflow-x-scroll px-1 xs:px-5 py-3"></div>
+          <div className="h-full overflow-x-scroll px-1 xs:px-5 py-3">
+          { newMsg && <div id = {'last-msg'}><Message received={false} text={previewText}></Message></div> }
+          </div>
 
           {/**show msg input text area */}
-          <TextInput toAddress={toAddress}></TextInput>
+          <TextInput
+            text={text}
+            previewText={previewText}
+            setText={setText}
+            setNewMsg = {setNewMsg}
+            setPreviewText = {setPreviewText}
+            toAddress={toAddress}
+          ></TextInput>
         </div>
       ) : (
         <div className="h-full w-full flex justify-center flex-col gap-10 sm:w-4/6 md:w-4/6 lg:w-3/6 xl:w-2/6">
