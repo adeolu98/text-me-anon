@@ -1,9 +1,7 @@
 import React, {
     Dispatch,
     FunctionComponent,
-    KeyboardEventHandler,
     SetStateAction,
-    useState,
   } from "react";
   //import InputEmoji from "react-input-emoji";
   import { providers } from "ethers";
@@ -69,7 +67,7 @@ import React, {
         setText(text); //inspect
         setNewMsg(false);
         setPreviewText("")
-  
+        
         if (e.code === 4001) {
           toast({
             title: "Denied",
@@ -128,7 +126,6 @@ import React, {
           onKeyDown={(e) => handleKeydown(e)}
           value={text}
           onChange={(e) => setText(e.currentTarget.value)}
-          // theme="light"
           type="text"
           className="w-full border focus:bg-gray-100 rounded-3xl px-4 py-2 focus:border-2 focus:border-black focus:outline-none"
           placeholder="Text Message"

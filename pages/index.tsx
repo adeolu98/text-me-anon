@@ -100,7 +100,7 @@ const Home: NextPage = () => {
                   No messages found yet..
                 </p>
                <div>
-                <Spinner size={"md"}></Spinner>
+                <Spinner size="md"/>
                </div>
               </div>
             )}
