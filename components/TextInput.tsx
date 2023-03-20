@@ -79,7 +79,7 @@ import React, {
         } else {
           toast({
             title: "Error",
-            description: "An unexpected error occurred, please try again.",
+            description: "Please try again.",
             status: "error",
             duration: 6000,
             isClosable: true,
