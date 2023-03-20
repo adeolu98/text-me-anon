@@ -22,10 +22,6 @@ export const AppLayout: FunctionComponent<AppLayoutProps> = ({
 
   const { address, mode, appNetwork, walletNetwork } = useWallet();
 
-  const handleOpenWalletModal = () => {
-    setOpenWalletModal(true);
-  };
-
   return (
     <div className={`${className}  flex flex-col h-screen bg-neutral-50 p-10`}>
       <div className=" flex flex-row justify-between w-full">
