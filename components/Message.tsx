@@ -1,6 +1,5 @@
 import { Spinner } from "@chakra-ui/react";
 import React, { FunctionComponent } from "react";
-import { Spinner } from "@chakra-ui/react";
 
 interface MessageProps {
   className?: string;
