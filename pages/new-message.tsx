@@ -9,13 +9,13 @@ import { faCircleExclamation } from "@fortawesome/free-solid-svg-icons";
 import { Message } from "@/components/Message";
 
 const NewMessage: NextPage = () => {
-    const [toAddress, setToAddress] = useState("");
-    const [text, setText] = useState("");
-    const [previewText, setPreviewText] = useState("")
-    //tracks new msg entered by sender
-    const [newMsg, setNewMsg] = useState(false)
-  
-    const { address } = useWallet();
+  const [toAddress, setToAddress] = useState("");
+  const [text, setText] = useState("");
+  const [previewText, setPreviewText] = useState("");
+  //tracks new msg entered by sender
+  const [newMsg, setNewMsg] = useState(false);
+
+  const { address } = useWallet();
   return (
     <AppLayout>
       {address ? (
@@ -39,7 +39,9 @@ const NewMessage: NextPage = () => {
               <p className="font-bold">To:</p>
               <input
                 value={toAddress.toLowerCase()}
-                onChange={(e) => setToAddress(e.currentTarget.value.toLowerCase())}
+                onChange={(e) =>
+                  setToAddress(e.currentTarget.value.toLowerCase())
+                }
                 className="outline-none w-full h-8 break-all text-sm px-2"
                 type="text"
               ></input>
@@ -49,7 +51,7 @@ const NewMessage: NextPage = () => {
           </div>
           {/** show chat messages */}
           <div className="h-full overflow-x-scroll px-1 xs:px-5 py-3">
-          {newMsg && (
+            {newMsg && (
               <div>
                 <Message received={false} text={previewText}></Message>
               </div>
@@ -60,8 +62,8 @@ const NewMessage: NextPage = () => {
           <TextInput
             text={text}
             setText={setText}
-            setNewMsg = {setNewMsg}
-            setPreviewText = {setPreviewText}
+            setNewMsg={setNewMsg}
+            setPreviewText={setPreviewText}
             toAddress={toAddress}
           ></TextInput>
         </div>

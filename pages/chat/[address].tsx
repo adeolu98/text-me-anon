@@ -23,7 +23,9 @@ const Chat: NextPage = () => {
     ? router.query.address[0]
     : router.query.address!;
 
-  const discussion = useDiscussion(toAddress === address ? "myself" : toAddress);
+  const discussion = useDiscussion(
+    toAddress === address ? "myself" : toAddress
+  );
 
   const [text, setText] = useState("");
   const [previewText, setPreviewText] = useState("");
@@ -120,7 +122,7 @@ const Chat: NextPage = () => {
             setText={setText}
             setNewMsg={setNewMsg}
             setPreviewText={setPreviewText}
-            toAddress={toAddress === 'myself' ? address : toAddress}
+            toAddress={toAddress === "myself" ? address : toAddress}
           ></TextInput>
         </div>
       ) : (
