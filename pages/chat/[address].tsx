@@ -41,10 +41,8 @@ const Chat: NextPage = () => {
   >(discussion?.length);
 
   useEffect(() => {
-    if (discussion?.length !== lengthBeforeNewMsg) {
+    if (discussion && discussion?.length !== lengthBeforeNewMsg) {
       //check new msg object to see that its not msg from recipient
-      console.log("from", discussion![discussion!.length - 1].from);
-
       if (discussion![discussion!.length - 1].from === address) {
         setNewMsg(false);
       }
