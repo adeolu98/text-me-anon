@@ -20,7 +20,7 @@ const Chat: NextPage = () => {
   const { address } = useWallet();
 
   const toAddress = Array.isArray(router.query.address)
-    ? router.query.address[0]
+    ? router.query.address[0].toLowerCase()
     : router.query.address!;
 
   const discussion = useDiscussion(
