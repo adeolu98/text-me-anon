@@ -21,7 +21,7 @@ export const ProfilePic: FunctionComponent<ProfilePicProps> = ({
       btoa(Jazzicon(addr === "myself" ? address! : addr))
     );
   }
-  const imageUrl = buildDataUrl(addressForProfileIcon);
+  const imageUrl = addressForProfileIcon ? buildDataUrl(addressForProfileIcon) : '/profilePlaceholderPic.svg';
 
   return (
     <div className={`${className}`}>
