@@ -39,6 +39,7 @@ const Chat: NextPage = () => {
     Number | undefined
   >(discussion?.length);
 
+
   useEffect(() => {
     if (discussion?.length !== lengthBeforeNewMsg) {
       //check new msg object to see that its not msg from recipient

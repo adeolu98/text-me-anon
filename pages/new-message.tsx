@@ -16,6 +16,7 @@ const NewMessage: NextPage = () => {
   const [newMsg, setNewMsg] = useState(false);
 
   const { address } = useWallet();
+
   return (
     <AppLayout>
       {address ? (
@@ -45,7 +46,6 @@ const NewMessage: NextPage = () => {
                 className="outline-none w-full h-8 break-all text-sm px-2"
                 type="text"
               ></input>
-              {/* <input></input> */}
             </div>
             <div className="w-full bg-gray-200 h-0.5"></div>
           </div>
