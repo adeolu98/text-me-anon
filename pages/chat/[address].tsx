@@ -94,8 +94,8 @@ const Chat: NextPage = () => {
           </Link>
           {/** show chat messages */}
           <div className="h-full overflow-x-scroll px-1 xs:px-5 py-3">
-            {discussion?.length! > 0 ? (
-              discussion?.map((msgData, index) => {
+            {discussion && discussion.length > 0 ? (
+              discussion.map((msgData, index) => {
                 return (
                   <div
                     key={index}
@@ -120,7 +120,7 @@ const Chat: NextPage = () => {
                 <div>
                   <Spinner size="md" />
                 </div>
-              </div>
+              </div>  
             )}
             {newMsg && (
               <div id={"last-msg"}>
