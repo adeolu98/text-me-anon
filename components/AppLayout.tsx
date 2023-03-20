@@ -25,7 +25,7 @@ export const AppLayout: FunctionComponent<AppLayoutProps> = ({
   const { address, mode, appNetwork, walletNetwork } = useWallet();
 
   return (
-    <div className={`${className}  flex flex-col h-screen bg-neutral-50 p-10`}>
+    <div className={`${className}  flex flex-col justify-between h-screen bg-neutral-50 px-10 pt-10`}>
       <div className=" flex flex-row justify-between w-full">
         <div className="font-bold text-xl"> Text-Me Anon </div>
         <div className="flex items-center">
@@ -86,6 +86,9 @@ export const AppLayout: FunctionComponent<AppLayoutProps> = ({
       </div>
       <div className="flex w-full justify-center items-center h-5/6 pt-5 px-10">
         {children}
+      </div>
+      <div className=" w-full h-12 pb-2 flex  text-right">
+       <span className="self-end w-full"> Made by <a className="hover:underline text-blue-700" href="https://twitter.com/adeoluwami__">@Adeolu</a>   {`© 2023`}</span>
       </div>
       <WalletModal
         open={openWalletModal}
