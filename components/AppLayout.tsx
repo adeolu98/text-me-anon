@@ -28,7 +28,7 @@ export const AppLayout: FunctionComponent<AppLayoutProps> = ({
   }
 
   return (
-    <div className={`${className}  flex flex-col h-screen bg-neutral-50 p-6`}>
+    <div className={`${className}  flex flex-col h-screen bg-neutral-50 p-10`}>
       <div className=" flex flex-row justify-between w-full">
         <div className="font-bold text-xl"> Text-Me Anon </div>
         <div className="flex items-center">
@@ -72,7 +72,7 @@ export const AppLayout: FunctionComponent<AppLayoutProps> = ({
           }
         </div>
       </div>
-      <div className="flex w-full justify-center items-center h-full pt-5 px-10 pb-10">
+      <div className="flex w-full justify-center items-center h-5/6 pt-5 px-10">
         {children}
       </div>
       <WalletModal

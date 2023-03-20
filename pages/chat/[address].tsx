@@ -9,7 +9,7 @@ import { Message } from "@/components/Message";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { NextPage } from "next";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { TextInput } from "@/components/TextInput";
 import { useWallet } from "@/hooks/use-wallet";
 import { useDiscussion } from "@/hooks/use-discussions";
@@ -23,22 +23,52 @@ const Chat: NextPage = () => {
     ? router.query.address[0]
     : router.query.address!;
 
-  const discussion = useDiscussion(toAddress === address ? 'self' : toAddress)
+  const discussion = useDiscussion(toAddress === address ? "myself" : toAddress);
+
+  const [text, setText] = useState("");
+  const [previewText, setPreviewText] = useState("");
+  //tracks new msg entered by sender
+  const [newMsg, setNewMsg] = useState(false);
+  //tracks if chat age has scrolled to last msg on first open, its meant to do that only once
+  const [scrollOnOpen, setScrollOnOpen] = useState(false);
+
+  //track the current length of discussion before a new msg is sent
+  const [lengthBeforeNewMsg, setLengthBeforeNewMsg] = useState<
+    Number | undefined
+  >(discussion?.length);
 
   useEffect(() => {
-    const handleClickScroll = () => {
-      const element = document.getElementById("last-msg");
-      if (element) {
-        element.scrollIntoView();
+    if (discussion?.length !== lengthBeforeNewMsg) {
+      //check new msg object to see that its not msg from recipient
+      console.log("from", discussion![discussion!.length - 1].from);
+
+      if (discussion![discussion!.length - 1].from === address) {
+        setNewMsg(false);
       }
-    };
-    handleClickScroll();
+      setLengthBeforeNewMsg(discussion?.length);
+    }
   }, [discussion]);
+
+  useEffect(() => {
+    if (!scrollOnOpen) {
+      handleClickScroll();
+      setScrollOnOpen(true);
+    }
+
+    if (newMsg) handleClickScroll();
+  }, [newMsg]);
+
+  const handleClickScroll = () => {
+    const element = document.getElementById("last-msg");
+    if (element) {
+      element.scrollIntoView();
+    }
+  };
 
   return (
     <AppLayout>
       {address ? (
-        <div className="border shadow-2xl flex flex-col rounded-3xl h-full w-full sm:w-4/6 md:w-4/6 lg:w-3/6 xl:w-2/6">
+        <div className="border shadow-2xl flex flex-col rounded-3xl h-full w-full sm:w-4/6 lg:w-3/6 xl:w-2/6">
           <Link href={"/"}>
             <FontAwesomeIcon
               className="absolute  px-1 xs:px-5 mt-4 xs:mt-7 sm:mt-9"
@@ -58,26 +88,40 @@ const Chat: NextPage = () => {
           </Link>
           {/** show chat messages */}
           <div className="h-full overflow-x-scroll px-1 xs:px-5 py-3">
-            {
-              discussion?.map((msgData, index) => {
-                return (
-                  <div
+            {discussion?.map((msgData, index) => {
+              return (
+                <div
                   key={index}
-                    className=""
-                    id={index === discussion.length - 1 ? "last-msg" : ""}
-                  >
-                    <Message
-                      received={msgData.from === toAddress}
-                      text={hex_to_string(msgData.text).slice(5)}
-                      timeSent={getTime(msgData.timestamp)}
-                    ></Message>
-                  </div>
-                );
-              })}
+                  className=""
+                  id={
+                    index === discussion.length - 1 && newMsg === false
+                      ? "last-msg"
+                      : ""
+                  }
+                >
+                  <Message
+                    received={msgData.from === toAddress}
+                    text={hex_to_string(msgData.text).slice(5)}
+                    timeSent={getTime(msgData.timestamp)}
+                  ></Message>
+                </div>
+              );
+            })}
+            {newMsg && (
+              <div id={"last-msg"}>
+                <Message received={false} text={previewText}></Message>
+              </div>
+            )}
           </div>
 
           {/**show input text area */}
-          <TextInput toAddress={toAddress}></TextInput>
+          <TextInput
+            text={text}
+            setText={setText}
+            setNewMsg={setNewMsg}
+            setPreviewText={setPreviewText}
+            toAddress={toAddress === 'myself' ? address : toAddress}
+          ></TextInput>
         </div>
       ) : (
         <div className="h-full w-full flex justify-center flex-col gap-10 sm:w-4/6 md:w-4/6 lg:w-3/6 xl:w-2/6">

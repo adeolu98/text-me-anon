@@ -17,26 +17,19 @@ import { fetchDiscussions, selectDiscussions } from "@/store/slice/discussions";
 import { useWallet } from "./use-wallet";
 import { DiscussionsState } from "@/lib/types";
 import { setInterval } from "timers";
+import { selectUser } from "@/store/slice/user";
 
-function shouldFetch(discussions: DiscussionsState) {
-  return Object.entries(discussions).every((e) => !e[1]);
-}
+
 
 export function useDiscussions() {
   const dispatch = useAppDispatch();
   const discussions = useAppSelector(selectDiscussions);
-  const { address, appNetwork } = useWallet();
-
+  const { address, appNetwork } = useWallet()
+  
   useEffect(() => {
     if (!address) return;
-    const getData = () => {
-      dispatch(fetchDiscussions({ network: appNetwork, userAddress: address }));
-    };
+    dispatch(fetchDiscussions({ network: appNetwork, userAddress: address }));
 
-    if (shouldFetch(discussions)) {
-    setInterval(getData, 2000);
-    // dispatch(fetchDiscussions({ network: appNetwork, userAddress: address }));
-    }
   }, [dispatch, address, discussions, appNetwork]);
 
   return discussions;

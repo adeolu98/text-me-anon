@@ -8,8 +8,13 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleExclamation } from "@fortawesome/free-solid-svg-icons";
 
 const NewMessage: NextPage = () => {
-  const [toAddress, setToAddress] = useState("");
-  const { address } = useWallet();
+    const [toAddress, setToAddress] = useState("");
+    const [text, setText] = useState("");
+    const [previewText, setPreviewText] = useState("")
+    //tracks new msg entered by sender
+    const [newMsg, setNewMsg] = useState(false)
+  
+    const { address } = useWallet();
   return (
     <AppLayout>
       {address ? (
@@ -45,7 +50,13 @@ const NewMessage: NextPage = () => {
           <div className="h-full overflow-x-scroll px-1 xs:px-5 py-3"></div>
 
           {/**show msg input text area */}
-          <TextInput toAddress={toAddress}></TextInput>
+          <TextInput
+            text={text}
+            setText={setText}
+            setNewMsg = {setNewMsg}
+            setPreviewText = {setPreviewText}
+            toAddress={toAddress}
+          ></TextInput>
         </div>
       ) : (
         <div className="h-full w-full flex justify-center flex-col gap-10 sm:w-4/6 md:w-4/6 lg:w-3/6 xl:w-2/6">
