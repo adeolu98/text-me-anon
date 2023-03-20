@@ -8,6 +8,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import { shorten } from "@/lib/utils";
 import { Network, networkLogo } from "@/lib/network";
+import { NetworkModal } from "./Modal/NetworkModal";
 
 interface AppLayoutProps {
   className?: string;
@@ -19,6 +20,7 @@ export const AppLayout: FunctionComponent<AppLayoutProps> = ({
   children,
 }) => {
   const [openWalletModal, setOpenWalletModal] = useState(false);
+  const [openNetworkModal, setOpenNetworkModal] = useState(false);
 
   const { address, mode, appNetwork, walletNetwork } = useWallet();
 
@@ -29,6 +31,22 @@ export const AppLayout: FunctionComponent<AppLayoutProps> = ({
         <div className="flex items-center">
           {!!address ? (
             <>
+                <button 
+                  onClick={() => setOpenNetworkModal(true)}
+                  className={`bg-white hover:bg-black rounded-lg p-2 mr-2 ${appNetwork !== walletNetwork ? 'bg-red-100' : ''}`}
+                >
+                  {
+                    appNetwork === walletNetwork
+                    ? <Image
+                        width="36"
+                        height="36"
+                        alt="network logo"
+                        src={networkLogo[appNetwork as Network]}
+                      />
+                    : <span className="font-semibold text-red-400">Change Network</span>
+                  }
+                </button>
+
               <button
                 onClick={() => setOpenWalletModal(true)}
                 className="flex items-center p-3 gap-2 rounded-xl shadow-2xl hover:bg-black hover:text-white"
@@ -72,6 +90,10 @@ export const AppLayout: FunctionComponent<AppLayoutProps> = ({
       <WalletModal
         open={openWalletModal}
         onClose={() => setOpenWalletModal(false)}
+      />
+      <NetworkModal
+        open={openNetworkModal}
+        onClose={() => setOpenNetworkModal(false)}
       />
     </div>
   );

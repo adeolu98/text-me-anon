@@ -1,16 +1,16 @@
-import chatPreviewData from "@/mock/chatPreviewMock2.json";
 import { AppLayout } from "@/components/AppLayout";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
 import { ProfilePic } from "@/components/ProfilePic";
-import { Message } from "@/components/Message";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { NextPage } from "next";
-import { useEffect } from "react";
+import { getEtherscanAddressLink } from "@/lib/network";
+import { useWallet } from "@/hooks/use-wallet";
 
 const Info: NextPage = () => {
   const router = useRouter();
+  const {appNetwork} = useWallet()
   const address = Array.isArray(router.query.address)
     ? router.query.address[0]
     : router.query.address!;
@@ -27,7 +27,7 @@ const Info: NextPage = () => {
         <div className="flex flex-col items-center mt-24 px-1 xs:px-5">
           <ProfilePic className="w-3/12"></ProfilePic>
           <p className="font-medium break-all text-center xs:text-base mt-8">{address}</p>
-          <a href="www.etherscan.com" target="blank"  className="font-light hover:underline mt-4"> view on explorer</a>
+          <a href={`${getEtherscanAddressLink(appNetwork, address)}`} target="blank"  className="font-light hover:underline mt-4"> view on explorer</a>
         </div>
       </div>
     </AppLayout>
