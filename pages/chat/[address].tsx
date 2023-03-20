@@ -14,6 +14,7 @@ import { TextInput } from "@/components/TextInput";
 import { useWallet } from "@/hooks/use-wallet";
 import { useDiscussion } from "@/hooks/use-discussions";
 import { getTime, hex_to_string } from "@/lib/utils";
+import { Spinner } from "@chakra-ui/react";
 
 const Chat: NextPage = () => {
   const router = useRouter();
@@ -39,12 +40,9 @@ const Chat: NextPage = () => {
     Number | undefined
   >(discussion?.length);
 
-
   useEffect(() => {
-    if (discussion?.length !== lengthBeforeNewMsg) {
+    if (discussion && discussion?.length !== lengthBeforeNewMsg) {
       //check new msg object to see that its not msg from recipient
-      console.log("from", discussion![discussion!.length - 1].from);
-
       if (discussion![discussion!.length - 1].from === address) {
         setNewMsg(false);
       }
@@ -82,7 +80,10 @@ const Chat: NextPage = () => {
           <Link href={`/info/${toAddress}`}>
             <div className="flex flex-col gap-1 w-full border rounded-t-3xl bg-gray-50  px-1 xs:px-5 py-3">
               <div className="w-full mt-1 flex justify-center items-center">
-                <ProfilePic addressForProfileIcon = {toAddress} className="w-2/12 sm:w-1/12"></ProfilePic>
+                <ProfilePic
+                  addressForProfileIcon={toAddress}
+                  className="w-2/12 sm:w-1/12"
+                ></ProfilePic>
               </div>
               <div className="text-center">
                 <p className="truncate">{toAddress}</p>
@@ -91,25 +92,34 @@ const Chat: NextPage = () => {
           </Link>
           {/** show chat messages */}
           <div className="h-full overflow-x-scroll px-1 xs:px-5 py-3">
-            {discussion?.map((msgData, index) => {
-              return (
-                <div
-                  key={index}
-                  className=""
-                  id={
-                    index === discussion.length - 1 && newMsg === false
-                      ? "last-msg"
-                      : ""
-                  }
-                >
-                  <Message
-                    received={msgData.from === toAddress}
-                    text={hex_to_string(msgData.text).slice(5)}
-                    timeSent={getTime(msgData.timestamp)}
-                  ></Message>
+            {discussion && discussion.length > 0 ? (
+              discussion.map((msgData, index) => {
+                return (
+                  <div
+                    key={index}
+                    className=""
+                    id={
+                      index === discussion.length - 1 && newMsg === false
+                        ? "last-msg"
+                        : ""
+                    }
+                  >
+                    <Message
+                      received={msgData.from === toAddress}
+                      text={hex_to_string(msgData.text).slice(5)}
+                      timeSent={getTime(msgData.timestamp)}
+                    ></Message>
+                  </div>
+                );
+              })
+            ) : (
+              <div className="pt-8 w-full flex justify-center gap-4">
+                <p className="text-sm  font-light">No messages found, searching..</p>
+                <div>
+                  <Spinner size="md" />
                 </div>
-              );
-            })}
+              </div>  
+            )}
             {newMsg && (
               <div id={"last-msg"}>
                 <Message received={false} text={previewText}></Message>
