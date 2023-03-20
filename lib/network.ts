@@ -26,28 +26,28 @@ export const networkLogo: Record<Network, string> = {
 export const chainCurrency: Record<Network, { name: string; symbol: string }> =
   {
     1: { name: "Ethereum", symbol: "Ethereum" },
-    5: { name: 'Goerli', symbol: 'GoerliETH' },
+    5: { name: "Goerli", symbol: "GoerliETH" },
     137: { name: "Polygon Mainnet", symbol: "MATIC" },
-    42161:{ name: "Arbitrum One", symbol: "ArbETH" },
+    42161: { name: "Arbitrum One", symbol: "ArbETH" },
     10: { name: "Optimism", symbol: "OpETH" },
-    11155111: { name: "Sepolia", symbol: "SepoliaETH" }
+    11155111: { name: "Sepolia", symbol: "SepoliaETH" },
   };
 
 export const alchemyApiKeys: Record<Network, string> = {
   1: process.env.NEXT_PUBLIC_ETHEREUM_MAINNET_ALCHEMY_API_KEY!,
   5: process.env.NEXT_PUBLIC_GOERLI_TESTNET_ALCHEMY_API_KEY!,
   137: process.env.NEXT_PUBLIC_POLYGON_MAINNET_ALCHEMY_API_KEY!,
-  42161: process.env.NEXT_PUBLIC_ARBITRUM_ALCHEMY_API_KEY!,
-  10: process.env.NEXT_PUBLIC_OPTIMISM_ALCHEMY_API_KEY!,
-  11155111: process.env.NEXT_PUBLIC_SEPOLIA_ALCHEMY_API_KEY!,
+  42161: process.env.NEXT_PUBLIC_ARBITRUM_MAINNET_ALCHEMY_API_KEY!,
+  10: process.env.NEXT_PUBLIC_OPTIMISM_MAINNET_ALCHEMY_API_KEY!,
+  11155111: process.env.NEXT_PUBLIC_SEPOLIA_TESTNET_ALCHEMY_API_KEY!,
 };
 
 export const rpcBaseURl: Record<Network, string> = {
   1: "https://eth-mainnet.g.alchemy.com/",
-   5: 'https://eth-goerli.g.alchemy.com/',
+  5: "https://eth-goerli.g.alchemy.com/",
   // 56:   "https://rpc.ankr.com/bsc",
   137: "https://polygon-mainnet.g.alchemy.com/",
-  42161:"",
+  42161: "",
   10: "",
   11155111: "",
 };
@@ -63,47 +63,38 @@ export const rpcUrls: Record<Network, string> = {
 
 export const etherscanUrl: Record<Network, string> = {
   1: "https://etherscan.io",
-   5: 'https://goerli.etherscan.io',
+  5: "https://goerli.etherscan.io",
   137: "https://polygonscan.com",
-  42161: "",
-  10: "",
-  11155111: "",
+  42161: "https://arbiscan.io/",
+  10: "https://optimistic.etherscan.io/",
+  11155111: "https://sepolia.etherscan.io/",
 };
 
 export const etherscanProviderSupportedNetworks: Record<Network, string> = {
   1: "homestead",
   137: "matic",
-  42161 : 'arbitrum',
-  10  : 'optimism',
-  5: 'goerli',
-  11155111 :'sepolia',
+  42161: "arbitrum",
+  10: "optimism",
+  5: "goerli",
+  11155111: "sepolia",
 };
 
 const etherscanTxUrl: Record<Network, string> = {
   1: "https://etherscan.io/tx/${hash}",
-  5: 'https://goerli.etherscan.io/tx/${hash}',
+  5: "https://goerli.etherscan.io/tx/${hash}",
   137: "https://polygonscan.com/tx/${hash}",
-  42161: "",
-  10: "",
-  11155111: "",
+  42161: "https://arbiscan.io/tx/${hash}",
+  10: "https://optimistic.etherscan.io/tx/${hash}",
+  11155111: "https://sepolia.etherscan.io/tx/${hash}",
 };
 
 const etherscanAddressUrl: Record<Network, string> = {
   1: "https://etherscan.io/address/${address}",
-  5: 'https://goerli.etherscan.io/address/${address}',
+  5: "https://goerli.etherscan.io/address/${address}",
   137: "https://polygonscan.com/address/${address}",
-  42161: "",
-  10: "",
-  11155111: "",
-};
-
-export const etherscanEndpointUrl: Record<Network, string> = {
-  1: "https://api.etherscan.io",
-  5: 'https://api-goerli.etherscan.io',
-  137: "https://api.polygonscan.com",
-  42161: "",
-  10: "",
-  11155111: "",
+  42161: "https://arbiscan.io/address/${address}",
+  10: "https://optimistic.etherscan.io/address/${address}",
+  11155111: "https://sepolia.etherscan.io/address/${address}",
 };
 
 export const etherscanApiKeys: Record<Network, string> = {
@@ -113,7 +104,6 @@ export const etherscanApiKeys: Record<Network, string> = {
   42161: process.env.NEXT_PUBLIC_ARBITRUM_MAINNET_ETHERSCAN_API_KEY!,
   10: process.env.NEXT_PUBLIC_OPTIMISM_MAINNET_ETHERSCAN_API_KEY!,
   11155111: process.env.NEXT_PUBLIC_SEPOLIA_TESTNET_ETHERSCAN_API_KEY!,
-
 };
 
 export function isNetworkSupported(chainId: number): chainId is Network {
