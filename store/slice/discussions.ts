@@ -16,27 +16,27 @@ export const fetchDiscussions = createAsyncThunk(
   'discussions/fetchDiscussions',
   async ({ network, userAddress }: {network: Network, userAddress: string}) => {
     const etherscanProvider = new ethers.providers.EtherscanProvider(
-      "matic"
+      "matic", 'QB8FSJU2KCJQ1ME4JK1FKAVDR5FDWVC6B7'
     );
     const history = await etherscanProvider.getHistory(
       userAddress
     );
 
     const discussions = getInitialState();
-   
     const filtered = history.filter((tx) => tx.data.includes(msgTxIdentifier))
+ //   console.log('filtered', userAddress, filtered );
     
     filtered.forEach((data) => {
       //for instances where messages are sent to self
       if (data.from.toLowerCase() === data.to!.toLowerCase()){
-        discussions["self"] === undefined ? discussions["self"] = [
+        discussions["myself"] === undefined ? discussions["myself"] = [
           {
               from: data.from.toLowerCase(),
               to: data.to!.toLowerCase(),
               text: data.data,
               timestamp: data.timestamp!,
           },
-        ] : discussions["self"].push({
+        ] : discussions["myself"].push({
           from: data.from.toLowerCase(),
           to: data.to!.toLowerCase(),
           text: data.data,
@@ -87,6 +87,7 @@ export const fetchDiscussions = createAsyncThunk(
 
 function getInitialState() {
   const initialState: DiscussionsState = {};
+
   return initialState;
 }
 

@@ -40,7 +40,7 @@ export function useWallet() {
         console.log('wallet: account changed: remove address & signer');
         dispatch(disconnect());
       } else {
-        dispatch(setAddress({ address }));
+        dispatch(setAddress({address}));
       }
     });
 

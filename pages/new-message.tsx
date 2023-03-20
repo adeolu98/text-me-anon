@@ -11,9 +11,9 @@ import { Message } from "@/components/Message";
 const NewMessage: NextPage = () => {
   const [toAddress, setToAddress] = useState("");
   const [text, setText] = useState("");
-  const [previewText, setPreviewText] = useState("")
+  const [previewText, setPreviewText] = useState("");
   //tracks new msg entered by sender
-  const [newMsg, setNewMsg] = useState(false)
+  const [newMsg, setNewMsg] = useState(false);
 
   const { address } = useWallet();
 
@@ -40,7 +40,9 @@ const NewMessage: NextPage = () => {
               <p className="font-bold">To:</p>
               <input
                 value={toAddress.toLowerCase()}
-                onChange={(e) => setToAddress(e.currentTarget.value.toLowerCase())}
+                onChange={(e) =>
+                  setToAddress(e.currentTarget.value.toLowerCase())
+                }
                 className="outline-none w-full h-8 break-all text-sm px-2"
                 type="text"
               ></input>
@@ -49,16 +51,19 @@ const NewMessage: NextPage = () => {
           </div>
           {/** show chat messages */}
           <div className="h-full overflow-x-scroll px-1 xs:px-5 py-3">
-          { newMsg && <div id = {'last-msg'}><Message received={false} text={previewText}></Message></div> }
+            {newMsg && (
+              <div>
+                <Message received={false} text={previewText}></Message>
+              </div>
+            )}
           </div>
 
           {/**show msg input text area */}
           <TextInput
             text={text}
-            previewText={previewText}
             setText={setText}
-            setNewMsg = {setNewMsg}
-            setPreviewText = {setPreviewText}
+            setNewMsg={setNewMsg}
+            setPreviewText={setPreviewText}
             toAddress={toAddress}
           ></TextInput>
         </div>

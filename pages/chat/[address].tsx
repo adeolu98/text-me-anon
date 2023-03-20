@@ -23,41 +23,55 @@ const Chat: NextPage = () => {
     ? router.query.address[0]
     : router.query.address!;
 
-  const discussion = useDiscussion(toAddress === address ? "self" : toAddress);
+  const discussion = useDiscussion(
+    toAddress === address ? "myself" : toAddress
+  );
 
   const [text, setText] = useState("");
-  const [previewText, setPreviewText] = useState("")
+  const [previewText, setPreviewText] = useState("");
   //tracks new msg entered by sender
-  const [newMsg, setNewMsg] = useState(false)
-  
+  const [newMsg, setNewMsg] = useState(false);
+  //tracks if chat age has scrolled to last msg on first open, its meant to do that only once
+  const [scrollOnOpen, setScrollOnOpen] = useState(false);
+
   //track the current length of discussion before a new msg is sent
-  const [lengthBeforeNewMsg, setLengthBeforeNewMsg] = useState<Number | undefined>(discussion?.length)
+  const [lengthBeforeNewMsg, setLengthBeforeNewMsg] = useState<
+    Number | undefined
+  >(discussion?.length);
+
 
   useEffect(() => {
-    const handleClickScroll = () => {
-      const element = document.getElementById("last-msg");
-      if (element) {
-        element.scrollIntoView();
-      }
-    };
-    handleClickScroll();
-
-    if (discussion?.length === lengthBeforeNewMsg){
-      
-    } else {
+    if (discussion?.length !== lengthBeforeNewMsg) {
       //check new msg object to see that its not msg from recipient
-      if (discussion![discussion!.length - 1].from === address) setNewMsg(false)
-      setLengthBeforeNewMsg(discussion?.length)
-      
-    }
-  }, [discussion, newMsg]);
+      console.log("from", discussion![discussion!.length - 1].from);
 
-  
+      if (discussion![discussion!.length - 1].from === address) {
+        setNewMsg(false);
+      }
+      setLengthBeforeNewMsg(discussion?.length);
+    }
+  }, [discussion]);
+
+  useEffect(() => {
+    if (!scrollOnOpen) {
+      handleClickScroll();
+      setScrollOnOpen(true);
+    }
+
+    if (newMsg) handleClickScroll();
+  }, [newMsg]);
+
+  const handleClickScroll = () => {
+    const element = document.getElementById("last-msg");
+    if (element) {
+      element.scrollIntoView();
+    }
+  };
 
   return (
     <AppLayout>
       {address ? (
-        <div className="border shadow-2xl flex flex-col rounded-3xl h-full w-full sm:w-4/6 md:w-4/6 lg:w-3/6 xl:w-2/6">
+        <div className="border shadow-2xl flex flex-col rounded-3xl h-full w-full sm:w-4/6 lg:w-3/6 xl:w-2/6">
           <Link href={"/"}>
             <FontAwesomeIcon
               className="absolute  px-1 xs:px-5 mt-4 xs:mt-7 sm:mt-9"
@@ -82,7 +96,11 @@ const Chat: NextPage = () => {
                 <div
                   key={index}
                   className=""
-                  id={index === discussion.length - 1 && newMsg === false ? "last-msg" : ""}
+                  id={
+                    index === discussion.length - 1 && newMsg === false
+                      ? "last-msg"
+                      : ""
+                  }
                 >
                   <Message
                     received={msgData.from === toAddress}
@@ -92,17 +110,20 @@ const Chat: NextPage = () => {
                 </div>
               );
             })}
-          { newMsg && <div id = {'last-msg'}><Message received={false} text={previewText}></Message></div> }
+            {newMsg && (
+              <div id={"last-msg"}>
+                <Message received={false} text={previewText}></Message>
+              </div>
+            )}
           </div>
 
           {/**show input text area */}
           <TextInput
             text={text}
-            previewText={previewText}
             setText={setText}
-            setNewMsg = {setNewMsg}
-            setPreviewText = {setPreviewText}
-            toAddress={toAddress}
+            setNewMsg={setNewMsg}
+            setPreviewText={setPreviewText}
+            toAddress={toAddress === "myself" ? address : toAddress}
           ></TextInput>
         </div>
       ) : (
