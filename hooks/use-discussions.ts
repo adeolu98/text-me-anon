@@ -1,24 +1,7 @@
-import { BigNumber, providers } from "ethers";
-import { useCallback, useEffect } from "react";
-import WalletConnectProvider from "@walletconnect/web3-provider";
-
+import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "@/store";
-import {
-  chainCurrency,
-  etherscanUrl,
-  isNetworkSupported,
-  Network,
-  networkNames,
-  rpcBaseURl,
-  rpcUrls,
-} from "@/lib/network";
-
 import { fetchDiscussions, selectDiscussions } from "@/store/slice/discussions";
 import { useWallet } from "./use-wallet";
-import { DiscussionsState } from "@/lib/types";
-import { setInterval } from "timers";
-import { selectUser } from "@/store/slice/user";
-
 
 
 export function useDiscussions() {

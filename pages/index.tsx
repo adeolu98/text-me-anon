@@ -10,7 +10,6 @@ import { getTime, hex_to_string } from "@/lib/utils";
 import { Spinner } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 
-
 const Home: NextPage = () => {
   const { address } = useWallet();
 
@@ -31,6 +30,8 @@ const Home: NextPage = () => {
       setBounce("animate-bounce");
     }, 10000);
   };
+
+
 
   return (
     <AppLayout>

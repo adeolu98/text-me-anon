@@ -82,7 +82,7 @@ const Chat: NextPage = () => {
           <Link href={`/info/${toAddress}`}>
             <div className="flex flex-col gap-1 w-full border rounded-t-3xl bg-gray-50  px-1 xs:px-5 py-3">
               <div className="w-full mt-1 flex justify-center items-center">
-                <ProfilePic className="w-2/12 sm:w-1/12"></ProfilePic>
+                <ProfilePic addressForProfileIcon = {toAddress} className="w-2/12 sm:w-1/12"></ProfilePic>
               </div>
               <div className="text-center">
                 <p className="truncate">{toAddress}</p>

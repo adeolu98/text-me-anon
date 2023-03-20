@@ -1,150 +1,109 @@
 import { getDefaultProvider } from "ethers";
 
-export const networks = [1] as const;
+export const networks = [1, 137, 42161, 10, 5, 11155111] as const;
 export type Network = typeof networks[number];
 
 export const DEFAULT_NETWORK: Network = 1;
 
 export const networkNames: Record<Network, string> = {
-   1: 'Ethereum',
-  // 3: 'Ropsten',
-  // 4: 'Rinkeby',
-  // 5: 'Goerli',
-  //56: "BSC",
-  // 97: 'BSC Testnet',
-  // 137: 'Polygon Mainnet',
-  // 80001: 'Mumbai Testnet',
-  // 43113: 'Avalanche Fuji',
-  // 43114: 'Avalanche C-Chain',
+  1: "Ethereum",
+  137: "Polygon Mainnet",
+  42161: "Arbitrum One",
+  10: "Optimism",
+  5: "Goerli",
+  11155111: "Sepolia",
 };
 
 export const networkLogo: Record<Network, string> = {
-   1: '/logo/eth-logo-gray.svg',
-  // 3: '/logo/eth-logo-green.svg',
-  // 4: '/logo/eth-logo-blue.svg',
-  // 5: '/logo/eth-logo-gray.svg',
- // 56: "/logo/eth-logo-gray.svg", // TODO use BSC logo instead
-  // 137: '/logo/polygon-logo.svg',
-  // 80001: '/logo/polygon-logo.svg',
-  // 43113: '/logo/avalanche-logo.svg',
-  // 43114: '/logo/avalanche-logo.svg',
+  1: "/logo/eth.svg",
+  137: "/logo/polygon.svg",
+  42161: "/logo/arbitrum.svg",
+  10: "/logo/optimism.svg",
+  5: "/logo/eth.svg",
+  11155111: "/logo/eth.svg",
 };
 
 export const chainCurrency: Record<Network, { name: string; symbol: string }> =
   {
-     1: { name: 'Ethereum', symbol: 'Ethereum' },
-    // 3: { name: 'Ropsten', symbol: 'RopstenETH' },
-    // 4: { name: 'Rinkeby', symbol: 'RinkebyETH' },
-    // 5: { name: 'Goerli', symbol: 'GoerliETH' },
-    //56: { name: "Binance Coin", symbol: "BNB" },
-    // 97: { name: 'Testnet Binance Coin', symbol: 'TBNB' },
-    // 137: { name: 'Polygon Mainnet', symbol: 'MATIC' },
-    // 80001: { name: 'Mumbai Testnet', symbol: 'MATIC' },
-    // 43113: { name: 'Testnet Avalanche', symbol: 'AVAX' },
-    // 43114: { name: 'Avalanche', symbol: 'AVAX' },
+    1: { name: "Ethereum", symbol: "Ethereum" },
+    5: { name: "Goerli", symbol: "GoerliETH" },
+    137: { name: "Polygon Mainnet", symbol: "MATIC" },
+    42161: { name: "Arbitrum One", symbol: "ArbETH" },
+    10: { name: "Optimism", symbol: "OpETH" },
+    11155111: { name: "Sepolia", symbol: "SepoliaETH" },
   };
 
 export const alchemyApiKeys: Record<Network, string> = {
-   1: process.env.NEXT_PUBLIC_ETHEREUM_MAINNET_ALCHEMY_API_KEY!,
-  // 3: process.env.NEXT_PUBLIC_ROPSTEN_ALCHEMY_API_KEY!,
-  // 4: process.env.NEXT_PUBLIC_RINKEBY_ALCHEMY_API_KEY!,
-  // 5: process.env.NEXT_PUBLIC_GOERLI_TESTNET_ALCHEMY_API_KEY!,
-  //56: "not-needed",
-  // 137: process.env.NEXT_PUBLIC_POLYGON_MAINNET_ALCHEMY_API_KEY!,
-  // 80001: process.env.NEXT_PUBLIC_POLYGON_TESTNET_ALCHEMY_API_KEY!,
-  // 43113: process.env.NEXT_PUBLIC_AVAX_TESTNET_API_KEY!,
-  // 43114: process.env.NEXT_PUBLIC_AVAX_MAINNET_API_KEY!,
+  1: process.env.NEXT_PUBLIC_ETHEREUM_MAINNET_ALCHEMY_API_KEY!,
+  5: process.env.NEXT_PUBLIC_GOERLI_TESTNET_ALCHEMY_API_KEY!,
+  137: process.env.NEXT_PUBLIC_POLYGON_MAINNET_ALCHEMY_API_KEY!,
+  42161: process.env.NEXT_PUBLIC_ARBITRUM_MAINNET_ALCHEMY_API_KEY!,
+  10: process.env.NEXT_PUBLIC_OPTIMISM_MAINNET_ALCHEMY_API_KEY!,
+  11155111: process.env.NEXT_PUBLIC_SEPOLIA_TESTNET_ALCHEMY_API_KEY!,
 };
 
 export const rpcBaseURl: Record<Network, string> = {
-   1: 'https://eth-mainnet.g.alchemy.com/',
-  // 3: 'https://eth-ropsten.alchemyapi.io/',
-  // 4: 'https://eth-rinkeby.alchemyapi.io/',
-  // 5: 'https://eth-goerli.g.alchemy.com/',
-  //56: "not-needed",
-  // 137: 'https://polygon-mainnet.g.alchemy.com/',
-  // 80001: 'https://polygon-mumbai.g.alchemy.com/',
-  // 43113: 'https://rpc.ankr.com/avalanche_fuji',
-  // 43114: 'https://rpc.ankr.com/avalanche',
+  1: "https://eth-mainnet.g.alchemy.com/",
+  5: "https://eth-goerli.g.alchemy.com/",
+  // 56:   "https://rpc.ankr.com/bsc",
+  137: "https://polygon-mainnet.g.alchemy.com/",
+  42161: "",
+  10: "",
+  11155111: "",
 };
 
 export const rpcUrls: Record<Network, string> = {
   1: `${rpcBaseURl[1]}v2/${alchemyApiKeys[1]}`,
-  // 3: `${rpcBaseURl[3]}v2/${alchemyApiKeys[3]}`,
-  // 4: `${rpcBaseURl[4]}v2/${alchemyApiKeys[4]}`,
-  // 5: `${rpcBaseURl[5]}v2/${alchemyApiKeys[5]}`,
-  //56: 'https://bsc-dataseed1.binance.org',
-  //56: "https://rpc.ankr.com/bsc",
-  // 137: `${rpcBaseURl[137]}v2/${alchemyApiKeys[137]}`,
-  // 80001: `${rpcBaseURl[80001]}v2/${alchemyApiKeys[80001]}`,
-  // 43113: `${rpcBaseURl[43113]}`,
-  // 43114: `${rpcBaseURl[43114]}`,
-
-  // 56: 'https://bsc-dataseed1.binance.org',
-  // 97: 'https://data-seed-prebsc-1-s1.binance.org:8545',
+  5: `${rpcBaseURl[5]}v2/${alchemyApiKeys[5]}`,
+  137: `${rpcBaseURl[137]}v2/${alchemyApiKeys[137]}`,
+  42161: `${rpcBaseURl[42161]}v2/${alchemyApiKeys[42161]}`,
+  10: `${rpcBaseURl[10]}v2/${alchemyApiKeys[10]}`,
+  11155111: `${rpcBaseURl[11155111]}v2/${alchemyApiKeys[11155111]}`,
 };
 
 export const etherscanUrl: Record<Network, string> = {
-  1: 'https://etherscan.io',
-  // 3: 'https://ropsten.etherscan.io',
-  // 4: 'https://rinkeby.etherscan.io',
-  // 5: 'https://goerli.etherscan.io',
-  //56: "https://bscscan.com",
-  // 97: 'https://testnet.bscscan.com',
-  // 137: 'https://polygonscan.com',
-  // 80001: 'https://mumbai.polygonscan.com',
-  // 43113: '',
-  // 43114: '',
+  1: "https://etherscan.io",
+  5: "https://goerli.etherscan.io",
+  137: "https://polygonscan.com",
+  42161: "https://arbiscan.io/",
+  10: "https://optimistic.etherscan.io/",
+  11155111: "https://sepolia.etherscan.io/",
+};
+
+export const etherscanProviderSupportedNetworks: Record<Network, string> = {
+  1: "homestead",
+  137: "matic",
+  42161: "arbitrum",
+  10: "optimism",
+  5: "goerli",
+  11155111: "sepolia",
 };
 
 const etherscanTxUrl: Record<Network, string> = {
-   1: 'https://etherscan.io/tx/${hash}',
-  // 3: 'https://ropsten.etherscan.io/tx/${hash}',
-  // 4: 'https://rinkeby.etherscan.io/tx/${hash}',
-  // 5: 'https://goerli.etherscan.io/tx/${hash}',
-  //56: "https://bscscan.com/tx/${hash}",
-  // 97: 'https://testnet.bscscan.com/tx/${hash}',
-  // 137: 'https://polygonscan.com/tx/${hash}',
-  // 80001: 'https://mumbai.polygonscan.com/tx/${hash}',
-  // 43113: '',
-  // 43114: '',
+  1: "https://etherscan.io/tx/${hash}",
+  5: "https://goerli.etherscan.io/tx/${hash}",
+  137: "https://polygonscan.com/tx/${hash}",
+  42161: "https://arbiscan.io/tx/${hash}",
+  10: "https://optimistic.etherscan.io/tx/${hash}",
+  11155111: "https://sepolia.etherscan.io/tx/${hash}",
 };
 
 const etherscanAddressUrl: Record<Network, string> = {
-  1: 'https://etherscan.io/address/${address}',
-  // 3: 'https://ropsten.etherscan.io/address/${address}',
-  // 4: 'https://rinkeby.etherscan.io/address/${address}',
-  // 5: 'https://goerli.etherscan.io/address/${address}',
-  //56: "https://bscscan.com/address/${address}",
-  // 97: 'https://testnet.bscscan.com/address/${address}',
-  // 137: 'https://polygonscan.com/address/${address}',
-  // 80001: 'https://mumbai.polygonscan.com/address/${address}',
-  // 43113: '',
-  // 43114: '',
-};
-
-export const etherscanEndpointUrl: Record<Network, string> = {
-  1: 'https://api.etherscan.io',
-  // 3: 'https://api-ropsten.etherscan.io',
-  // 4: 'https://api-rinkeby.etherscan.io',
-  // 5: 'https://api-goerli.etherscan.io',
-  // 56: "https://api.bscscan.com",
-  // 137: 'https://api.polygonscan.com',
-  // 80001: 'https://api-testnet.polygonscan.com/',
-  // 43114: '',
-  // 43113: '',
+  1: "https://etherscan.io/address/${address}",
+  5: "https://goerli.etherscan.io/address/${address}",
+  137: "https://polygonscan.com/address/${address}",
+  42161: "https://arbiscan.io/address/${address}",
+  10: "https://optimistic.etherscan.io/address/${address}",
+  11155111: "https://sepolia.etherscan.io/address/${address}",
 };
 
 export const etherscanApiKeys: Record<Network, string> = {
   1: process.env.NEXT_PUBLIC_ETHEREUM_MAINNET_ETHERSCAN_API_KEY!,
-  // 3: '',
-  // 4: '',
-  // 5: process.env.NEXT_PUBLIC_GOERLI_TESTNET_ETHERSCAN_API_KEY!,
-  // 56: process.env.NEXT_PUBLIC_BSC_MAINNET_ETHERSCAN_API_KEY!,
-  // 137: process.env.NEXT_PUBLIC_POLYGON_MAINNET_ETHERSCAN_API_KEY!,
-  // 80001: process.env.NEXT_PUBLIC_POLYGON_TESTNET_ETHERSCAN_API_KEY!,
-  // 43113: '',
-  // 43114: '',
+  5: process.env.NEXT_PUBLIC_GOERLI_TESTNET_ETHERSCAN_API_KEY!,
+  137: process.env.NEXT_PUBLIC_POLYGON_MAINNET_ETHERSCAN_API_KEY!,
+  42161: process.env.NEXT_PUBLIC_ARBITRUM_MAINNET_ETHERSCAN_API_KEY!,
+  10: process.env.NEXT_PUBLIC_OPTIMISM_MAINNET_ETHERSCAN_API_KEY!,
+  11155111: process.env.NEXT_PUBLIC_SEPOLIA_TESTNET_ETHERSCAN_API_KEY!,
 };
 
 export function isNetworkSupported(chainId: number): chainId is Network {

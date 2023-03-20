@@ -1,4 +1,3 @@
-
 import { Dialog } from '@headlessui/react';
 import { faXmark } from '@fortawesome/free-solid-svg-icons'
 import React, { FunctionComponent, ReactNode } from 'react';
