@@ -3,7 +3,7 @@ import { formatEther } from 'ethers/lib/utils';
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { AppState } from '@/store';
 // import contractsData from '@auto-hedge/public/contracts.json';
-import { DEFAULT_NETWORK, Network } from '@/lib/network';
+import { DEFAULT_NETWORK, etherscanProviderSupportedNetworks, Network } from '@/lib/network';
 import { ethers } from 'ethers';
 import { DiscussionsState } from '@/lib/types';
 
@@ -16,7 +16,7 @@ export const fetchDiscussions = createAsyncThunk(
   'discussions/fetchDiscussions',
   async ({ network, userAddress }: {network: Network, userAddress: string}) => {
     const etherscanProvider = new ethers.providers.EtherscanProvider(
-      "matic", 'QB8FSJU2KCJQ1ME4JK1FKAVDR5FDWVC6B7'
+      etherscanProviderSupportedNetworks[network] 
     );
     const history = await etherscanProvider.getHistory(
       userAddress
