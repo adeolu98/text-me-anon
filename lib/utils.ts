@@ -1,3 +1,7 @@
+import { useWallet } from "@/hooks/use-wallet";
+import { providers } from "ethers";
+import { DEFAULT_NETWORK, Network } from "./network";
+
 export function shorten(addr: string): string {
   return `${addr.slice(0, 6)}...${addr.slice(-4)}`;
 }
@@ -26,13 +30,53 @@ export function getTime(timestamp: number) {
   if (date.toDateString() !== new Date(currentTime * 1000).toDateString()) {
     //format is h:m dd/mm/yy
     const minutes = "0" + date.getMinutes();
-    return `${date.getHours()}:${minutes.substr(-2)} ${date.getDay()}/${date.getMonth()}/${date.getFullYear().toString().slice(2)}`;
+    return `${date.getHours()}:${minutes.substr(
+      -2
+    )} ${date.getDay()}/${date.getMonth()}/${date
+      .getFullYear()
+      .toString()
+      .slice(2)}`;
   } else {
-    const hours = date.getHours();
+    const hours = "0" + date.getHours();
     const minutes = "0" + date.getMinutes();
 
     // Will display time in h:m format
-    return hours + ":" + minutes.substr(-2);
+    return hours.substr(-2) + ":" + minutes.substr(-2);
   }
+}
 
+//ens functions
+export async function getEnsName(
+  address: string,
+  appNetwork: Network,
+  provider?: providers.Web3Provider
+) {
+  if (appNetwork !== DEFAULT_NETWORK) return;
+  if (address && address.length !== 42) return;
+
+  try {
+    const ens = await provider?.lookupAddress(address);
+    if (ens !== null) return ens;
+    if (ens === null) return;
+  } catch (error) {
+    console.error();
+  }
+}
+
+export async function resolveEnsName(
+  ensName: string,
+  appNetwork: Network,
+  provider?: providers.Web3Provider
+) {
+  if (appNetwork !== DEFAULT_NETWORK) return;
+
+  try {
+    const address = await provider?.resolveName(ensName);
+    console.log("resolve", address);
+
+    if (address !== null) return address;
+    if (address === null) return;
+  } catch (error) {
+    console.error();
+  }
 }

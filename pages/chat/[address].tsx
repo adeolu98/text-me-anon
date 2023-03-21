@@ -15,10 +15,11 @@ import { useWallet } from "@/hooks/use-wallet";
 import { useDiscussion } from "@/hooks/use-discussions";
 import { getTime, hex_to_string } from "@/lib/utils";
 import { Spinner } from "@chakra-ui/react";
+import { useLookUpENS } from "@/hooks/use-ens";
 
 const Chat: NextPage = () => {
   const router = useRouter();
-  const { address } = useWallet();
+  const { address, appNetwork, provider } = useWallet();
 
   const toAddress = Array.isArray(router.query.address)
     ? router.query.address[0].toLowerCase()
@@ -28,13 +29,14 @@ const Chat: NextPage = () => {
     toAddress === address ? "myself" : toAddress
   );
 
+  const ens = useLookUpENS(toAddress); 
+
   const [text, setText] = useState("");
   const [previewText, setPreviewText] = useState("");
   //tracks new msg entered by sender
   const [newMsg, setNewMsg] = useState(false);
   //tracks if chat age has scrolled to last msg on first open, its meant to do that only once
   const [scrollOnOpen, setScrollOnOpen] = useState(false);
-
   //track the current length of discussion before a new msg is sent
   const [lengthBeforeNewMsg, setLengthBeforeNewMsg] = useState<
     Number | undefined
@@ -86,7 +88,7 @@ const Chat: NextPage = () => {
                 ></ProfilePic>
               </div>
               <div className="text-center">
-                <p className="truncate">{toAddress}</p>
+                <p className="truncate">{ens ? ens : toAddress}</p>
               </div>
             </div>
           </Link>

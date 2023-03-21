@@ -2,11 +2,12 @@ import { TextInput } from "@/components/TextInput";
 import { AppLayout } from "@/components/AppLayout";
 import { NextPage } from "next";
 import Link from "next/link";
-import { useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { useWallet } from "@/hooks/use-wallet";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleExclamation } from "@fortawesome/free-solid-svg-icons";
 import { Message } from "@/components/Message";
+import { resolveEnsName } from "@/lib/utils";
 
 const NewMessage: NextPage = () => {
   const [toAddress, setToAddress] = useState("");
@@ -14,8 +15,18 @@ const NewMessage: NextPage = () => {
   const [previewText, setPreviewText] = useState("");
   //tracks new msg entered by sender
   const [newMsg, setNewMsg] = useState(false);
+  const [resolvedENS, setResolvedENS] = useState<string | undefined>();
+  const { address, appNetwork, provider } = useWallet();
 
-  const { address } = useWallet();
+  useEffect(() => {
+    const checkIfENS = async () => {
+      const addr = await resolveEnsName(toAddress, appNetwork, provider);
+      if (addr !== null && addr !== undefined) {
+        setResolvedENS(addr);
+      }
+    };
+    checkIfENS();
+  }, [toAddress]);
 
   return (
     <AppLayout>
@@ -40,8 +51,8 @@ const NewMessage: NextPage = () => {
               <p className="font-bold">To:</p>
               <input
                 value={toAddress.toLowerCase()}
-                onChange={(e) =>
-                  setToAddress(e.currentTarget.value.toLowerCase())
+                onChange={
+                  (e) => setToAddress(e.currentTarget.value.toLowerCase())
                 }
                 className="outline-none w-full h-8 break-all text-sm px-2"
                 type="text"
@@ -64,7 +75,7 @@ const NewMessage: NextPage = () => {
             setText={setText}
             setNewMsg={setNewMsg}
             setPreviewText={setPreviewText}
-            toAddress={toAddress}
+            toAddress={resolvedENS ? resolvedENS : toAddress}
           ></TextInput>
         </div>
       ) : (
