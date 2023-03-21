@@ -33,13 +33,13 @@ export const AppLayout: FunctionComponent<AppLayoutProps> = ({
             <>
                 <button 
                   onClick={() => setOpenNetworkModal(true)}
-                  className={`bg-white hover:bg-black rounded-lg p-2 mr-2 ${appNetwork !== walletNetwork ? 'bg-red-100' : ''}`}
+                  className={`bg-white hover:bg-black rounded-lg h-12 p-2 mr-2 ${appNetwork !== walletNetwork ? 'bg-red-100' : ''}`}
                 >
                   {
                     appNetwork === walletNetwork
                     ? <Image
-                        width="36"
-                        height="36"
+                        width="20"
+                        height="20"
                         alt="network logo"
                         src={networkLogo[appNetwork as Network]}
                       />
@@ -49,7 +49,7 @@ export const AppLayout: FunctionComponent<AppLayoutProps> = ({
 
               <button
                 onClick={() => setOpenWalletModal(true)}
-                className="flex items-center p-3 gap-2 rounded-xl shadow-2xl hover:bg-black hover:text-white"
+                className="flex items-center h-12 p-3 gap-2 rounded-xl shadow-2xl hover:bg-black hover:text-white"
               >
                 {mode === "MetaMask" ? (
                   <Image
