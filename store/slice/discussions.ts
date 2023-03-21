@@ -1,47 +1,52 @@
-
-import { formatEther } from 'ethers/lib/utils';
-import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { AppState } from '@/store';
-// import contractsData from '@auto-hedge/public/contracts.json';
-import { DEFAULT_NETWORK, etherscanProviderSupportedNetworks, Network } from '@/lib/network';
-import { ethers } from 'ethers';
-import { DiscussionsState } from '@/lib/types';
-
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { AppState } from "@/store";
+import {
+  etherscanProviderSupportedNetworks,
+  Network,
+} from "@/lib/network";
+import { ethers } from "ethers";
+import { DiscussionsState } from "@/lib/types";
 
 //USE THIS TO FILTER THROUGH ALL TXS TO DIFFERENTIATE WHICH TXS ARE MESSAGE TXS
 //THIS IS JUST "OCM:" WHEN HEXED. OCM = ON-CHAIN MESSAGE.
-const msgTxIdentifier = "0x4f434d3a"
+const msgTxIdentifier = "0x4f434d3a";
 
 export const fetchDiscussions = createAsyncThunk(
-  'discussions/fetchDiscussions',
-  async ({ network, userAddress }: {network: Network, userAddress: string}) => {
+  "discussions/fetchDiscussions",
+  async ({
+    network,
+    userAddress,
+  }: {
+    network: Network;
+    userAddress: string;
+  }) => {
     const etherscanProvider = new ethers.providers.EtherscanProvider(
-      etherscanProviderSupportedNetworks[network] 
+      etherscanProviderSupportedNetworks[network]
     );
-    const history = await etherscanProvider.getHistory(
-      userAddress
-    );
+    const history = await etherscanProvider.getHistory(userAddress);
 
     const discussions = getInitialState();
-    const filtered = history.filter((tx) => tx.data.includes(msgTxIdentifier))
- //   console.log('filtered', userAddress, filtered );
-    
-    filtered.forEach((data) => {
+    const filtered = history.filter((tx) => tx.data.includes(msgTxIdentifier));
+    //   console.log('filtered', userAddress, filtered);
+
+    filtered.forEach(async (data) => {
       //for instances where messages are sent to self
-      if (data.from.toLowerCase() === data.to!.toLowerCase()){
-        discussions["myself"] === undefined ? discussions["myself"] = [
-          {
+      if (data.from.toLowerCase() === data.to!.toLowerCase()) {
+        discussions["myself"] === undefined
+          ? (discussions["myself"] = [
+              {
+                from: data.from.toLowerCase(),
+                to: data.to!.toLowerCase(),
+                text: data.data,
+                timestamp: data.timestamp!,
+              },
+            ])
+          : discussions["myself"].push({
               from: data.from.toLowerCase(),
               to: data.to!.toLowerCase(),
               text: data.data,
               timestamp: data.timestamp!,
-          },
-        ] : discussions["myself"].push({
-          from: data.from.toLowerCase(),
-          to: data.to!.toLowerCase(),
-          text: data.data,
-          timestamp: data.timestamp!,
-        })
+            });
       }
 
       // for instances where messages are sent to other addresses.
@@ -81,9 +86,10 @@ export const fetchDiscussions = createAsyncThunk(
             });
       }
     });
-  
-    return discussions
-})
+
+    return discussions;
+  }
+);
 
 function getInitialState() {
   const initialState: DiscussionsState = {};
@@ -92,22 +98,21 @@ function getInitialState() {
 }
 
 export const discussionsSlice = createSlice({
-  name: 'discussions',
+  name: "discussions",
   initialState: getInitialState(),
   reducers: {
     resetDiscussions: () => {},
   },
-  extraReducers: builder => {
+  extraReducers: (builder) => {
     builder.addCase(fetchDiscussions.fulfilled, (_, action) => action.payload);
   },
 });
 
-export const {
-  resetDiscussions,
-} = discussionsSlice.actions;
+export const { resetDiscussions } = discussionsSlice.actions;
 
 type selectDiscussions = (state: AppState) => DiscussionsState;
 
-export const selectDiscussions: selectDiscussions = (state: AppState) => state.discussions;
+export const selectDiscussions: selectDiscussions = (state: AppState) =>
+  state.discussions;
 
 export default discussionsSlice.reducer;

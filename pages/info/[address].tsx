@@ -7,6 +7,7 @@ import { useRouter } from "next/router";
 import { NextPage } from "next";
 import { getEtherscanAddressLink } from "@/lib/network";
 import { useWallet } from "@/hooks/use-wallet";
+import { useLookUpENS } from "@/hooks/use-ens";
 
 const Info: NextPage = () => {
   const router = useRouter();
@@ -14,6 +15,8 @@ const Info: NextPage = () => {
   const queriedAddress = Array.isArray(router.query.address)
     ? router.query.address[0]
     : router.query.address!;
+
+  const ens = useLookUpENS(queriedAddress);
 
   return (
     <AppLayout>
@@ -29,7 +32,16 @@ const Info: NextPage = () => {
             addressForProfileIcon={queriedAddress}
             className="w-5/12"
           ></ProfilePic>
-          <p className="font-medium break-all text-center xs:text-base mt-8">
+          {ens && (
+            <p className="font-bold break-all text-center xs:text-base mt-8">
+              {ens}
+            </p>
+          )}
+          <p
+            className={`font-medium break-all text-center xs:text-base ${
+              ens ? "mt-2" : "mt-8"
+            } mt-8`}
+          >
             {queriedAddress}
           </p>
           <a

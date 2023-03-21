@@ -6,12 +6,16 @@ import { useWallet } from "@/hooks/use-wallet";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleExclamation } from "@fortawesome/free-solid-svg-icons";
 import { useDiscussions } from "@/hooks/use-discussions";
-import { getTime, hex_to_string } from "@/lib/utils";
+import {
+  getTime,
+  hex_to_string,
+  resolveEnsName,
+} from "@/lib/utils";
 import { Spinner } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 
 const Home: NextPage = () => {
-  const { address } = useWallet();
+  const { address, appNetwork, provider } = useWallet();
 
   const [bounce, setBounce] = useState("");
   const [filterFor, setFilterFor] = useState("");
@@ -31,7 +35,17 @@ const Home: NextPage = () => {
     }, 10000);
   };
 
-
+  useEffect(() => {
+    const handleEnsInSearchBar = async () => {
+      const addr = await resolveEnsName(filterFor, appNetwork, provider);
+      if (addr !== null && addr !== undefined) {
+        setFilterFor(
+          addr.toLowerCase() === address ? "myself" : addr.toLowerCase()
+        );
+      }
+    };
+    handleEnsInSearchBar();
+  }, [filterFor]);
 
   return (
     <AppLayout>
@@ -62,9 +76,9 @@ const Home: NextPage = () => {
               placeholder="search"
               onChange={(e) =>
                 setFilterFor(
-                  e.target.value.toLowerCase() === address
+                  e.currentTarget.value.toLowerCase() === address
                     ? "myself"
-                    : e.target.value.toLowerCase()
+                    : e.currentTarget.value.toLowerCase()
                 )
               }
             ></input>
