@@ -67,11 +67,8 @@ export default function App({ Component, pageProps }: AppProps) {
     <WagmiConfig client={wagmiClient}>
       <RainbowKitProvider
         modalSize="compact"
-        theme={lightTheme({
-          accentColor: "#ffffff",
-          accentColorForeground: "black",
-          overlayBlur: "small",
-        })}
+        theme={lightTheme()}
+
         avatar={customAvatar}
         chains={chains}
       >
