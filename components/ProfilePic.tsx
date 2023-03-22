@@ -1,7 +1,7 @@
 import React, { FunctionComponent } from "react";
 import Jazzicon from "@raugfer/jazzicon";
-import { useWallet } from "@/hooks/use-wallet";
 import Link from "next/link";
+import { useAccount } from "wagmi";
 
 interface ProfilePicProps {
   addressForProfileIcon: string;
@@ -12,7 +12,7 @@ export const ProfilePic: FunctionComponent<ProfilePicProps> = ({
   addressForProfileIcon,
   className,
 }) => {
-  const { address } = useWallet();
+  const { address } = useAccount();
 
   // builds an image data url for embedding
   function buildDataUrl(addr: string): string {

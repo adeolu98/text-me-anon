@@ -5,18 +5,21 @@ import { ProfilePic } from "@/components/ProfilePic";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { NextPage } from "next";
-import { getEtherscanAddressLink } from "@/lib/network";
-import { useWallet } from "@/hooks/use-wallet";
-import { useLookUpENS } from "@/hooks/use-ens";
+import { Network, getEtherscanAddressLink } from "@/lib/network";
+import { useAccount, useEnsName, useNetwork } from "wagmi";
+
 
 const Info: NextPage = () => {
   const router = useRouter();
-  const { address, appNetwork } = useWallet();
+  const { address } = useAccount();
+  const { chain } = useNetwork()
   const queriedAddress = Array.isArray(router.query.address)
     ? router.query.address[0]
     : router.query.address!;
 
-  const ens = useLookUpENS(queriedAddress);
+    const { data } = useEnsName({
+    address: queriedAddress ? `0x${queriedAddress.slice(2)}` : undefined
+  })
 
   return (
     <AppLayout>
@@ -32,23 +35,23 @@ const Info: NextPage = () => {
             addressForProfileIcon={queriedAddress}
             className="w-5/12"
           ></ProfilePic>
-          {ens && (
+          {data && (
             <p className="font-bold break-all text-center xs:text-base mt-8">
-              {ens}
+              {data}
             </p>
           )}
           <p
             className={`font-medium break-all text-center xs:text-base ${
-              ens ? "mt-2" : "mt-8"
+              data ? "mt-2" : "mt-8"
             } mt-8`}
           >
             {queriedAddress}
           </p>
           <a
             href={
-              queriedAddress === "myself" && address
-                ? `${getEtherscanAddressLink(appNetwork, address)}`
-                : `${getEtherscanAddressLink(appNetwork, queriedAddress)}`
+              queriedAddress && queriedAddress === "myself" && address
+                ? `${getEtherscanAddressLink(chain?.id as Network, address)}`
+                : `${getEtherscanAddressLink(chain?.id as Network, queriedAddress)}`
             }
             target="blank"
             className="font-light hover:underline mt-4"
