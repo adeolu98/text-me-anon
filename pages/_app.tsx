@@ -23,7 +23,7 @@ import { AvatarComponent, lightTheme } from "@rainbow-me/rainbowkit";
 
 const { chains, provider } = configureChains(
   [mainnet, polygon, optimism, arbitrum, goerli, sepolia],
-  [alchemyProvider({ apiKey: process.env.ALCHEMY_ID }), publicProvider()]
+  [alchemyProvider({ apiKey: process.env.ALCHEMY_ID! }), publicProvider()]
 );
 
 const { connectors } = getDefaultWallets({

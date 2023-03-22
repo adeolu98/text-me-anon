@@ -121,7 +121,7 @@ const Chat: NextPage = () => {
                   No messages found, searching..
                 </p>
                 <div>
-                  <Spinner size="md" />
+                  <Spinner size="md"/>
                 </div>
               </div>
             )}
