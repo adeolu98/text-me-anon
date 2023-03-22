@@ -1,7 +1,3 @@
-import { useWallet } from "@/hooks/use-wallet";
-import { providers } from "ethers";
-import { DEFAULT_NETWORK, Network } from "./network";
-
 export function shorten(addr: string): string {
   return `${addr.slice(0, 6)}...${addr.slice(-4)}`;
 }
@@ -45,38 +41,3 @@ export function getTime(timestamp: number) {
   }
 }
 
-//ens functions
-export async function getEnsName(
-  address: string,
-  appNetwork: Network,
-  provider?: providers.Web3Provider
-) {
-  if (appNetwork !== DEFAULT_NETWORK) return;
-  if (address && address.length !== 42) return;
-
-  try {
-    const ens = await provider?.lookupAddress(address);
-    if (ens !== null) return ens;
-    if (ens === null) return;
-  } catch (error) {
-    console.error();
-  }
-}
-
-export async function resolveEnsName(
-  ensName: string,
-  appNetwork: Network,
-  provider?: providers.Web3Provider
-) {
-  if (appNetwork !== DEFAULT_NETWORK) return;
-
-  try {
-    const address = await provider?.resolveName(ensName);
-    console.log("resolve", address);
-
-    if (address !== null) return address;
-    if (address === null) return;
-  } catch (error) {
-    console.error();
-  }
-}

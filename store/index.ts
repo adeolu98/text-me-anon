@@ -1,13 +1,10 @@
 
 import { configureStore, combineReducers } from '@reduxjs/toolkit';
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
-
-import user from '@/store/slice/user';
 import discussions from '@/store/slice/discussions';
 
 
 const reducer = combineReducers({
-  user,
   discussions,
   // TODO
 });

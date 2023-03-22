@@ -2,12 +2,11 @@ import { TextInput } from "@/components/TextInput";
 import { AppLayout } from "@/components/AppLayout";
 import { NextPage } from "next";
 import Link from "next/link";
-import { ChangeEvent, useEffect, useState } from "react";
-import { useWallet } from "@/hooks/use-wallet";
+import {useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleExclamation } from "@fortawesome/free-solid-svg-icons";
 import { Message } from "@/components/Message";
-import { resolveEnsName } from "@/lib/utils";
+import { useAccount, useEnsAddress, useEnsName } from "wagmi";
 
 const NewMessage: NextPage = () => {
   const [toAddress, setToAddress] = useState("");
@@ -15,18 +14,11 @@ const NewMessage: NextPage = () => {
   const [previewText, setPreviewText] = useState("");
   //tracks new msg entered by sender
   const [newMsg, setNewMsg] = useState(false);
-  const [resolvedENS, setResolvedENS] = useState<string | undefined>();
-  const { address, appNetwork, provider } = useWallet();
+  const { address } = useAccount();
 
-  useEffect(() => {
-    const checkIfENS = async () => {
-      const addr = await resolveEnsName(toAddress, appNetwork, provider);
-      if (addr !== null && addr !== undefined) {
-        setResolvedENS(addr);
-      }
-    };
-    checkIfENS();
-  }, [toAddress]);
+  const { data } = useEnsAddress({
+    name: toAddress,
+  });
 
   return (
     <AppLayout>
@@ -51,13 +43,17 @@ const NewMessage: NextPage = () => {
               <p className="font-bold">To:</p>
               <input
                 value={toAddress.toLowerCase()}
-                onChange={
-                  (e) => setToAddress(e.currentTarget.value.toLowerCase())
+                onChange={(e) =>
+                  setToAddress(e.currentTarget.value.toLowerCase())
                 }
                 className="outline-none w-full h-8 break-all text-sm px-2"
                 type="text"
               ></input>
             </div>
+            {data && <div className="text-xs px-1 gap-2 xs:px-5 py-3">
+              <p className="font-light">ENS for address <span className="font-semibold">{data.toLowerCase()}</span></p>
+            </div>}
+
             <div className="w-full bg-gray-200 h-0.5"></div>
           </div>
           {/** show chat messages */}
@@ -75,7 +71,7 @@ const NewMessage: NextPage = () => {
             setText={setText}
             setNewMsg={setNewMsg}
             setPreviewText={setPreviewText}
-            toAddress={resolvedENS ? resolvedENS : toAddress}
+            toAddress={data ? data : toAddress}
           ></TextInput>
         </div>
       ) : (

@@ -11,15 +11,14 @@ import { useRouter } from "next/router";
 import { NextPage } from "next";
 import { useEffect, useState } from "react";
 import { TextInput } from "@/components/TextInput";
-import { useWallet } from "@/hooks/use-wallet";
 import { useDiscussion } from "@/hooks/use-discussions";
 import { getTime, hex_to_string } from "@/lib/utils";
 import { Spinner } from "@chakra-ui/react";
-import { useLookUpENS } from "@/hooks/use-ens";
+import { useAccount, useEnsName } from "wagmi";
 
 const Chat: NextPage = () => {
   const router = useRouter();
-  const { address, appNetwork, provider } = useWallet();
+  const { address } = useAccount();
 
   const toAddress = Array.isArray(router.query.address)
     ? router.query.address[0].toLowerCase()
@@ -29,7 +28,9 @@ const Chat: NextPage = () => {
     toAddress === address ? "myself" : toAddress
   );
 
-  const ens = useLookUpENS(toAddress); 
+  const { data } = useEnsName({
+    address: toAddress ? `0x${toAddress.slice(2)}` : undefined,
+  });
 
   const [text, setText] = useState("");
   const [previewText, setPreviewText] = useState("");
@@ -45,7 +46,7 @@ const Chat: NextPage = () => {
   useEffect(() => {
     if (discussion && discussion?.length !== lengthBeforeNewMsg) {
       //check new msg object to see that its not msg from recipient
-      if (discussion![discussion!.length - 1].from === address) {
+      if (discussion![discussion!.length - 1].from === address?.toLowerCase()) {
         setNewMsg(false);
       }
       setLengthBeforeNewMsg(discussion?.length);
@@ -88,7 +89,7 @@ const Chat: NextPage = () => {
                 ></ProfilePic>
               </div>
               <div className="text-center">
-                <p className="truncate">{ens ? ens : toAddress}</p>
+                <p className="truncate">{data ? data : toAddress}</p>
               </div>
             </div>
           </Link>
@@ -116,11 +117,13 @@ const Chat: NextPage = () => {
               })
             ) : (
               <div className="pt-8 w-full flex justify-center gap-4">
-                <p className="text-sm  font-light">No messages found, searching..</p>
+                <p className="text-sm  font-light">
+                  No messages found, searching..
+                </p>
                 <div>
                   <Spinner size="md" />
                 </div>
-              </div>  
+              </div>
             )}
             {newMsg && (
               <div id={"last-msg"}>

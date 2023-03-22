@@ -1,19 +1,19 @@
 import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "@/store";
 import { fetchDiscussions, selectDiscussions } from "@/store/slice/discussions";
-import { useWallet } from "./use-wallet";
+import { useAccount, useNetwork, useProvider } from "wagmi";
 
 
 export function useDiscussions() {
   const dispatch = useAppDispatch();
   const discussions = useAppSelector(selectDiscussions);
-  const { address, appNetwork } = useWallet()
+  const { address } = useAccount();
+  const { chain } = useNetwork()
   
   useEffect(() => {
     if (!address) return;
-    dispatch(fetchDiscussions({ network: appNetwork, userAddress: address }));
-
-  }, [dispatch, address, discussions, appNetwork]);
+    dispatch(fetchDiscussions({ network: chain, userAddress: address }));
+  }, [dispatch, address, discussions, chain]);
 
   return discussions;
 }

@@ -1,9 +1,8 @@
 import React, { FunctionComponent, useEffect, useState } from "react";
 import { ProfilePic } from "./ProfilePic";
 import Link from "next/link";
-import { getEnsName } from "@/lib/utils";
-import { useWallet } from "@/hooks/use-wallet";
-import { useLookUpENS } from "@/hooks/use-ens";
+import { useEnsName } from "wagmi";
+
 
 interface ChatPreviewProps {
   lastMessage: string;
@@ -18,7 +17,11 @@ export const ChatPreview: FunctionComponent<ChatPreviewProps> = ({
   contactAddr,
   className,
 }) => {
-  const ens = useLookUpENS(contactAddr)
+
+  const { data } = useEnsName({
+    address: `0x${contactAddr.slice(2)}` 
+  })
+
   
   return (
     <Link href={`/chat/${contactAddr}`}>
@@ -26,7 +29,7 @@ export const ChatPreview: FunctionComponent<ChatPreviewProps> = ({
        <ProfilePic  addressForProfileIcon = {contactAddr} className="w-2/12"></ProfilePic>
         <div className="flex flex-col w-9/12">
           <div className="flex flex-row w-full justify-between">
-            <div className="text-lg font-bold truncate">{ ens ? ens : contactAddr}</div>
+            <div className="text-lg font-bold truncate">{data ? data : contactAddr}</div>
             <div className="text-xs"> {lastMessageTime}</div>
           </div>
           <div className="w-full">
