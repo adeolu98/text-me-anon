@@ -49,7 +49,7 @@ const Info: NextPage = () => {
           </p>
           <a
             href={
-              queriedAddress === "myself" && address
+              queriedAddress && queriedAddress === "myself" && address
                 ? `${getEtherscanAddressLink(chain?.id as Network, address)}`
                 : `${getEtherscanAddressLink(chain?.id as Network, queriedAddress)}`
             }
