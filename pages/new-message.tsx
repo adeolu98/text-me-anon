@@ -2,7 +2,7 @@ import { TextInput } from "@/components/TextInput";
 import { AppLayout } from "@/components/AppLayout";
 import { NextPage } from "next";
 import Link from "next/link";
-import {useState } from "react";
+import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleExclamation } from "@fortawesome/free-solid-svg-icons";
 import { Message } from "@/components/Message";
@@ -19,6 +19,8 @@ const NewMessage: NextPage = () => {
   const { data } = useEnsAddress({
     name: toAddress,
   });
+
+  console.log("data", data);
 
   return (
     <AppLayout>
@@ -50,9 +52,14 @@ const NewMessage: NextPage = () => {
                 type="text"
               ></input>
             </div>
-            {data && <div className="text-xs px-1 gap-2 xs:px-5 py-3">
-              <p className="font-light">ENS for address <span className="font-semibold">{data.toLowerCase()}</span></p>
-            </div>}
+            {data && data.length !== 42 && (
+              <div className="text-xs px-1 gap-2 xs:px-5 py-3">
+                <p className="font-light">
+                  ENS for address{" "}
+                  <span className="font-semibold">{data.toLowerCase()}</span>
+                </p>
+              </div>
+            )}
 
             <div className="w-full bg-gray-200 h-0.5"></div>
           </div>
