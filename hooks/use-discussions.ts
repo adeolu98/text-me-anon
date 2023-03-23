@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "@/store";
 import { fetchDiscussions, selectDiscussions } from "@/store/slice/discussions";
-import { useAccount, useNetwork, useProvider } from "wagmi";
+import { useAccount, useNetwork } from "wagmi";
 
 
 export function useDiscussions() {
