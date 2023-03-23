@@ -73,14 +73,14 @@ const Chat: NextPage = () => {
     <AppLayout>
       {address ? (
         <div className="border shadow-2xl flex flex-col rounded-3xl h-full w-full sm:w-4/6 lg:w-3/6 xl:w-2/6">
-          <Link href={"/"}>
+          <Link href={"/"} className="" title="Go back">
             <FontAwesomeIcon
-              className="absolute  px-1 xs:px-5 mt-4 xs:mt-7 sm:mt-9"
+              className="absolute py-4 px-1 xs:px-5 mt-4 xs:mt-5 sm:mt-6"
               icon={faChevronLeft}
             ></FontAwesomeIcon>
           </Link>
           {/** contact info display */}
-          <Link href={`/info/${toAddress}`}>
+          <Link href={`/info/${toAddress}`} title="Click to view more info">
             <div className="flex flex-col gap-1 w-full border rounded-t-3xl bg-gray-50  px-1 xs:px-5 py-3">
               <div className="w-full mt-1 flex justify-center items-center">
                 <ProfilePic

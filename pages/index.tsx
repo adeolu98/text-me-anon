@@ -53,7 +53,7 @@ const Home: NextPage = () => {
               Messages
             </div>
             <Link href={"/new-message"}>
-              <div className={`${bounce}`}>
+              <div className={`${bounce}`} title="Send new message">
                 <img
                   width={30}
                   height={30}

@@ -24,7 +24,7 @@ export const ProfilePic: FunctionComponent<ProfilePicProps> = ({
   const imageUrl = addressForProfileIcon ? buildDataUrl(addressForProfileIcon) : '/profilePlaceholderPic.svg';
 
   return (
-    <div className={`${className}`}>
+    <div className={`${className}`} title="Click to view more info">
       <Link href ={`/info/${addressForProfileIcon}`}>
         <img
           id="img"

@@ -23,7 +23,7 @@ export const ChatPreview: FunctionComponent<ChatPreviewProps> = ({
   });
 
   return (
-    <Link href={`/chat/${contactAddr}`}>
+    <Link href={`/chat/${contactAddr}`} title="Click to open chat">
       <div
         className={` ${className} w-full flex flex-row items-center gap-2 sm:gap-4`}
       >
@@ -40,7 +40,7 @@ export const ChatPreview: FunctionComponent<ChatPreviewProps> = ({
           </div>
           <div className="w-full flex flex-row justify-between">
             <p className="truncate">{lastMessage}</p>
-            {replied && <div className="px-2 py-1 border border-gray-300 rounded-xl"><p className="text-black text-xs font-light">not replied</p></div> }
+            {replied && <div title="You have not replied to this conversation" className="px-2 py-1 border border-gray-300 rounded-xl"><p className="text-black text-xs font-light">not replied</p></div> }
           </div>
         </div>
       </div>
