@@ -6,7 +6,7 @@ import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleExclamation } from "@fortawesome/free-solid-svg-icons";
 import { Message } from "@/components/Message";
-import { useAccount, useEnsAddress, useEnsName } from "wagmi";
+import { mainnet, useAccount, useEnsAddress, useNetwork } from "wagmi";
 
 const NewMessage: NextPage = () => {
   const [toAddress, setToAddress] = useState("");
@@ -15,6 +15,7 @@ const NewMessage: NextPage = () => {
   //tracks new msg entered by sender
   const [newMsg, setNewMsg] = useState(false);
   const { address } = useAccount();
+  const {chain} = useNetwork()
 
   const { data } = useEnsAddress({
     name: toAddress,
@@ -48,6 +49,7 @@ const NewMessage: NextPage = () => {
                 onChange={(e) =>
                   setToAddress(e.currentTarget.value.toLowerCase())
                 }
+                placeholder={`input ${chain?.name} address ${ chain?.id === mainnet.id ? 'or ENS name' : ''}`}
                 className="outline-none w-full h-8 break-all text-sm px-2"
                 type="text"
               ></input>
@@ -55,7 +57,7 @@ const NewMessage: NextPage = () => {
             {data && data.length !== 42 && (
               <div className="text-xs px-1 gap-2 xs:px-5 py-3">
                 <p className="font-light">
-                  ENS for address{" "}
+                  ENS for address
                   <span className="font-semibold">{data.toLowerCase()}</span>
                 </p>
               </div>

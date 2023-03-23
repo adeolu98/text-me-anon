@@ -167,7 +167,7 @@ const Home: NextPage = () => {
             className="text-9xl"
           ></FontAwesomeIcon>
           <p className="text-center font-bold font-xl">
-            Please connect wallet to see messages
+            Please connect wallet to see messages 
           </p>
         </div>
       )}
