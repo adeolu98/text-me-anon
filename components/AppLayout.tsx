@@ -35,14 +35,14 @@ export const AppLayout: FunctionComponent<AppLayoutProps> = ({
       </div>
       <div className=" w-full h-12 pb-2 flex  text-right">
         <span className="self-end w-full">
-          Made by
+          {'Made by '}
           <a
             className="hover:underline text-blue-700"
             href="https://twitter.com/adeoluwami__"
           >
             @Adeolu
           </a>
-          {`© 2023`}
+          {` © 2023`}
         </span>
       </div>
     </div>
