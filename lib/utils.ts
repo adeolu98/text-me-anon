@@ -26,7 +26,8 @@ export function getTime(timestamp: number) {
   if (date.toDateString() !== new Date(currentTime * 1000).toDateString()) {
     //format is h:m dd/mm/yy
     const minutes = "0" + date.getMinutes();
-    return `${date.getHours()}:${minutes.substr(
+    const hours = "0" + date.getHours();
+    return `${hours.substr(-2)}:${minutes.substr(
       -2
     )} ${date.getDay()}/${date.getMonth()}/${date
       .getFullYear()
