@@ -13,7 +13,7 @@ export const AppLayout: FunctionComponent<AppLayoutProps> = ({
 }) => {
   return (
     <div
-      className={`${className}  flex flex-col justify-between h-screen bg-neutral-50 px-10 pt-10`}
+      className={`${className}  flex flex-col justify-between h-screen bg-neutral-50 px-4 xs:px-6 sm:px-10 pt-10`}
     >
       <div className=" flex flex-row justify-between w-full">
         <div className="font-bold text-xl"> Text-Me Anon </div>
