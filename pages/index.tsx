@@ -53,7 +53,7 @@ const Home: NextPage = () => {
               Messages
             </div>
             <Link href={"/new-message"}>
-              <div className={`${bounce}`}>
+              <div className={`${bounce}`} title="Send new message">
                 <img
                   width={30}
                   height={30}
@@ -97,6 +97,7 @@ const Home: NextPage = () => {
                           data[1][data[1].length - 1].timestamp
                         )}
                         contactAddr={data[0]}
+                        replied ={data[1][data[1].length - 1].from.toLowerCase() !== address.toLowerCase() ? true : false}
                       ></ChatPreview>
                       <div className="w-full  h-0.5 flex justify-end">
                         <div
@@ -136,6 +137,7 @@ const Home: NextPage = () => {
                             data[1][data[1].length - 1].timestamp
                           )}
                           contactAddr={data[0]}
+                          replied = {data[1][data[1].length - 1].from !== address.toLowerCase() ? true : false}
                         ></ChatPreview>
                         <div className="w-full  h-0.5 flex justify-end">
                           <div
