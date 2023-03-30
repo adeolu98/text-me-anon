@@ -3,22 +3,26 @@ import { AppLayout } from "@/components/AppLayout";
 import { NextPage } from "next";
 import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCircleExclamation } from "@fortawesome/free-solid-svg-icons";
+import { faCheck, faCircleExclamation, faLink } from "@fortawesome/free-solid-svg-icons";
 import { useDiscussions } from "@/hooks/use-discussions";
 import { getTime, hex_to_string } from "@/lib/utils";
 import { Spinner } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { useAccount, useEnsAddress } from "wagmi";
 import { networkNames } from "@/lib/network";
+import { useRouter } from "next/router";
+import { faCircleCheck } from "@fortawesome/free-regular-svg-icons";
 
 const Home: NextPage = () => {
   const { address } = useAccount();
   const [bounce, setBounce] = useState("");
+
   const [filterFor, setFilterFor] = useState("");
   const [currentMsgsChain, setCurrentMsgsChain] = useState<
     number | undefined
   >();
-
+  const [changeCopyLinkFavicon, setChangeCopyLinkFavicon] = useState(false);
+  const router = useRouter();
   //sort in descending order of timestamp
   const discussions = Object.entries(useDiscussions()).sort(
     (a, b) => b[1][b[1].length - 1].timestamp - a[1][a[1].length - 1].timestamp
@@ -45,14 +49,47 @@ const Home: NextPage = () => {
     if (data) setFilterFor(data.toLowerCase());
   }, [filterFor]);
 
+  const handleCopy = () => {
+    navigator.clipboard.writeText(
+      `${window.location.origin}/chat/${address?.toLowerCase()}`
+    );
+    setChangeCopyLinkFavicon(true);
+
+    setTimeout(() => {
+      setChangeCopyLinkFavicon(false);
+    }, 2000);
+  };
+
   return (
     <AppLayout>
       {address ? (
         <div className="border shadow-2xl py-8 flex flex-col rounded-3xl h-full w-full sm:w-4/6 lg:w-3/6 xl:w-2/6">
           {/**top section with create new message icon */}
           <div className="flex flex-col xs:flex-row justify-between px-1 xs:px-5">
-            <div className="text-xs xs:text-base sm:text-xl font-bold">
-              Messages {currentMsgsChain && `on ${networkNames[currentMsgsChain!]}`}
+            <div className="flex-flex-col">
+              <div className="text-xs xs:text-base sm:text-xl font-bold">
+                Messages
+                {currentMsgsChain && ` on ${networkNames[currentMsgsChain!]}`}
+              </div>
+              <div
+                className="hover:underline cursor-copy text-xs py-2 flex flex-row items-center gap-1"
+                onClick={handleCopy}
+              >
+                <p>{!changeCopyLinkFavicon ? 'Click to copy your address link' : 'Copied!'}</p>
+                {!changeCopyLinkFavicon ? (
+                  <FontAwesomeIcon
+                    width={15}
+                    height={15}
+                    icon={faLink}
+                  ></FontAwesomeIcon>
+                ) : (
+                  <FontAwesomeIcon
+                    width={15}
+                    height={15}
+                    icon={faCircleCheck}
+                  ></FontAwesomeIcon>
+                )}
+              </div>
             </div>
             <Link href={"/new-message"}>
               <div className={`${bounce}`} title="Send new message">
@@ -66,7 +103,7 @@ const Home: NextPage = () => {
             </Link>
           </div>
           {/**search images */}
-          <div className="w-full py-4 px-1 xs:px-5">
+          <div className="w-full pt-2 pb-4 px-1 xs:px-5">
             <input
               value={filterFor.toLowerCase()}
               type="text"
