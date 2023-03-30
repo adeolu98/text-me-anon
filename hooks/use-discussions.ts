@@ -1,21 +1,32 @@
 import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "@/store";
-import { fetchDiscussions, selectDiscussions } from "@/store/slice/discussions";
+import { fetchDiscussions, resetDiscussions, selectDiscussions } from "@/store/slice/discussions";
 import { useAccount, useNetwork } from "wagmi";
+import { DiscussionsState } from "@/lib/types";
 
+let localDiscussion: DiscussionsState;
+
+function shouldFetch(discussions: DiscussionsState) {
+  //should only fetch if there's new update
+  return !(localDiscussion === discussions);
+}
 
 export function useDiscussions() {
   const dispatch = useAppDispatch();
-  const discussions = useAppSelector(selectDiscussions);
+  let discussions = useAppSelector(selectDiscussions);
   const { address } = useAccount();
-  const { chain } = useNetwork()
-  
+  const { chain } = useNetwork();
+
   useEffect(() => {
     if (!address) return;
-    dispatch(fetchDiscussions({ network: chain, userAddress: address }));
-  }, [dispatch, address, discussions, chain]);
 
-  return discussions;
+    if (shouldFetch(discussions)) {
+     dispatch(fetchDiscussions({ network: chain, userAddress: address }));
+     localDiscussion = discussions;
+    }
+  }, [address, chain, dispatch, discussions]);
+
+  return discussions ;
 }
 
 export function useDiscussion(address: string) {

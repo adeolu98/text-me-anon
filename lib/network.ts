@@ -11,6 +11,14 @@ const etherscanUrl: Record<Network, string> = {
   11155111: "https://sepolia.etherscan.io",
 };
 
+export const networkNames: Record<number, string>  = {
+  1: "ETH Mainnet",
+  5: "Goerli",
+  137: "Polygon",
+  42161: "Arbitrum",
+  10: "Optimism",
+  11155111: "Sepolia",
+}
 
 export const etherscanApiKeys: Record<Network, string> = {
   1: process.env.NEXT_PUBLIC_ETHEREUM_MAINNET_ETHERSCAN_API_KEY!,

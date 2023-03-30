@@ -5,19 +5,19 @@ import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleExclamation } from "@fortawesome/free-solid-svg-icons";
 import { useDiscussions } from "@/hooks/use-discussions";
-import {
-  getTime,
-  hex_to_string,
-} from "@/lib/utils";
+import { getTime, hex_to_string } from "@/lib/utils";
 import { Spinner } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import { useAccount, useEnsAddress, useNetwork, useProvider } from "wagmi";
+import { useAccount, useEnsAddress } from "wagmi";
+import { networkNames } from "@/lib/network";
 
 const Home: NextPage = () => {
   const { address } = useAccount();
-
   const [bounce, setBounce] = useState("");
   const [filterFor, setFilterFor] = useState("");
+  const [currentMsgsChain, setCurrentMsgsChain] = useState<
+    number | undefined
+  >();
 
   //sort in descending order of timestamp
   const discussions = Object.entries(useDiscussions()).sort(
@@ -26,6 +26,9 @@ const Home: NextPage = () => {
 
   useEffect(() => {
     address && discussions.length === 0 ? startBounce() : setBounce("");
+    discussions[0] &&
+      discussions[0][1][0] &&
+      setCurrentMsgsChain(discussions[0][1][0].id);
   }, [address, discussions]);
 
   const startBounce = () => {
@@ -36,12 +39,11 @@ const Home: NextPage = () => {
 
   const { data } = useEnsAddress({
     name: filterFor,
-  })
+  });
 
   useEffect(() => {
-    if (data) setFilterFor(data.toLowerCase())
-  }, [filterFor])
-  
+    if (data) setFilterFor(data.toLowerCase());
+  }, [filterFor]);
 
   return (
     <AppLayout>
@@ -50,7 +52,7 @@ const Home: NextPage = () => {
           {/**top section with create new message icon */}
           <div className="flex flex-col xs:flex-row justify-between px-1 xs:px-5">
             <div className="text-xs xs:text-base sm:text-xl font-bold">
-              Messages
+              Messages {currentMsgsChain && `on ${networkNames[currentMsgsChain!]}` }
             </div>
             <Link href={"/new-message"}>
               <div className={`${bounce}`} title="Send new message">
@@ -72,7 +74,7 @@ const Home: NextPage = () => {
               placeholder="search"
               onChange={(e) =>
                 setFilterFor(
-                  e.currentTarget.value.toLowerCase() === address
+                  e.currentTarget.value.toLowerCase() === address.toLowerCase()
                     ? "myself"
                     : e.currentTarget.value.toLowerCase()
                 )
@@ -97,7 +99,12 @@ const Home: NextPage = () => {
                           data[1][data[1].length - 1].timestamp
                         )}
                         contactAddr={data[0]}
-                        replied ={data[1][data[1].length - 1].from.toLowerCase() !== address.toLowerCase() ? true : false}
+                        replied={
+                          data[1][data[1].length - 1].from.toLowerCase() !==
+                          address.toLowerCase()
+                            ? true
+                            : false
+                        }
                       ></ChatPreview>
                       <div className="w-full  h-0.5 flex justify-end">
                         <div
@@ -113,7 +120,7 @@ const Home: NextPage = () => {
                 <div className="pt-8 w-full flex justify-center gap-4">
                   <p className="text-sm  font-light">No messages found yet..</p>
                   <div>
-                    <Spinner size="md" />
+                    <Spinner size={"md"} />
                   </div>
                 </div>
               )}
@@ -137,7 +144,12 @@ const Home: NextPage = () => {
                             data[1][data[1].length - 1].timestamp
                           )}
                           contactAddr={data[0]}
-                          replied = {data[1][data[1].length - 1].from !== address.toLowerCase() ? true : false}
+                          replied={
+                            data[1][data[1].length - 1].from !==
+                            address.toLowerCase()
+                              ? true
+                              : false
+                          }
                         ></ChatPreview>
                         <div className="w-full  h-0.5 flex justify-end">
                           <div
@@ -167,7 +179,7 @@ const Home: NextPage = () => {
             className="text-9xl"
           ></FontAwesomeIcon>
           <p className="text-center font-bold font-xl">
-            Please connect wallet to see messages 
+            Please connect wallet to see messages
           </p>
         </div>
       )}
