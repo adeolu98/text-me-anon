@@ -21,8 +21,6 @@ const NewMessage: NextPage = () => {
     name: toAddress,
   });
 
-  console.log("data", data);
-
   return (
     <AppLayout>
       {address ? (
@@ -85,10 +83,11 @@ const NewMessage: NextPage = () => {
           ></TextInput>
         </div>
       ) : (
-        <div className="h-full w-full flex justify-center flex-col gap-10 sm:w-4/6 md:w-4/6 lg:w-3/6 xl:w-2/6">
+        <div className="h-full w-full flex items-center justify-center flex-col gap-10 sm:w-4/6 md:w-4/6 lg:w-3/6 xl:w-2/6">
           <FontAwesomeIcon
             icon={faCircleExclamation}
-            className="text-9xl"
+            width={100}
+            height={100}
           ></FontAwesomeIcon>
           <p className="text-center font-bold font-xl">
             Please connect wallet first

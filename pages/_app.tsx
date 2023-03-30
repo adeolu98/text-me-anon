@@ -20,6 +20,7 @@ import { publicProvider } from "wagmi/providers/public";
 import React from "react";
 import Jazzicon from "@raugfer/jazzicon";
 import { AvatarComponent, lightTheme } from "@rainbow-me/rainbowkit";
+import Head from "next/head";
 
 const { chains, provider } = configureChains(
   [mainnet, polygon, optimism, arbitrum, goerli, sepolia],
@@ -65,10 +66,13 @@ export const customAvatar: AvatarComponent = ({ address, ensImage, size }) => {
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <WagmiConfig client={wagmiClient}>
+      <Head>
+        <title>Text-Me Anon</title>
+        <link rel="icon" href="/anon.ico"></link>
+      </Head>
       <RainbowKitProvider
         modalSize="compact"
         theme={lightTheme()}
-
         avatar={customAvatar}
         chains={chains}
       >

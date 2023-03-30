@@ -52,7 +52,7 @@ const Home: NextPage = () => {
           {/**top section with create new message icon */}
           <div className="flex flex-col xs:flex-row justify-between px-1 xs:px-5">
             <div className="text-xs xs:text-base sm:text-xl font-bold">
-              Messages {currentMsgsChain && `on ${networkNames[currentMsgsChain!]}` }
+              Messages {currentMsgsChain && `on ${networkNames[currentMsgsChain!]}`}
             </div>
             <Link href={"/new-message"}>
               <div className={`${bounce}`} title="Send new message">
@@ -173,10 +173,11 @@ const Home: NextPage = () => {
           )}
         </div>
       ) : (
-        <div className="h-full w-full flex justify-center flex-col gap-10 sm:w-4/6 md:w-4/6 lg:w-3/6 xl:w-2/6">
+        <div className="h-full w-full flex items-center justify-center flex-col gap-10 sm:w-4/6 md:w-4/6 lg:w-3/6 xl:w-2/6">
           <FontAwesomeIcon
             icon={faCircleExclamation}
-            className="text-9xl"
+            width={100}
+            height={100}
           ></FontAwesomeIcon>
           <p className="text-center font-bold font-xl">
             Please connect wallet to see messages

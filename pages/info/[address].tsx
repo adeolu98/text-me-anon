@@ -26,8 +26,10 @@ const Info: NextPage = () => {
       <div className="border shadow-2xl flex flex-col rounded-3xl h-full w-full sm:w-4/6 md:w-4/6 lg:w-3/6 xl:w-2/6">
         <Link href={`/chat/${queriedAddress}`}>
           <FontAwesomeIcon
-            className="absolute  px-1 xs:px-5 mt-4 xs:mt-7 sm:mt-9"
+            className="absolute px-1 xs:px-5 mt-4"
             icon={faChevronLeft}
+            width={50}
+            height={50}
           ></FontAwesomeIcon>
         </Link>
         <div className="flex flex-col items-center mt-24 px-1 xs:px-5">

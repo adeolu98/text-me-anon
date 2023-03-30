@@ -44,7 +44,6 @@ export const TextInput: FunctionComponent<TextInputProps> = ({
       ? "myself"
       : toAddress.toLowerCase()
   );
-  console.log(discussion);
 
   const { config } = usePrepareSendTransaction({
     request: {
