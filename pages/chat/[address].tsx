@@ -15,6 +15,7 @@ import { useDiscussion } from "@/hooks/use-discussions";
 import { getTime, hex_to_string } from "@/lib/utils";
 import { Spinner } from "@chakra-ui/react";
 import { useAccount, useEnsName } from "wagmi";
+import { networkNames } from "@/lib/network";
 
 const Chat: NextPage = () => {
   const router = useRouter();
@@ -42,6 +43,9 @@ const Chat: NextPage = () => {
   const [lengthBeforeNewMsg, setLengthBeforeNewMsg] = useState<
     Number | undefined
   >(discussion?.length);
+  const [currentMsgsChain, setCurrentMsgsChain] = useState<
+    number | undefined
+  >();
 
   useEffect(() => {
     if (discussion && discussion?.length !== lengthBeforeNewMsg) {
@@ -51,6 +55,7 @@ const Chat: NextPage = () => {
       }
       setLengthBeforeNewMsg(discussion?.length);
     }
+    discussion && setCurrentMsgsChain(discussion[0].id);
   }, [discussion]);
 
   useEffect(() => {
@@ -93,6 +98,11 @@ const Chat: NextPage = () => {
               </div>
             </div>
           </Link>
+          {currentMsgsChain && (
+            <p className="text-center text-xs p-1 font-light">
+              Conversation with {toAddress.slice(0,6)} on {networkNames[currentMsgsChain!]}
+            </p>
+          )}
           {/** show chat messages */}
           <div className="h-full overflow-x-scroll px-1 xs:px-5 py-3">
             {discussion && discussion.length > 0 ? (
@@ -121,7 +131,7 @@ const Chat: NextPage = () => {
                   No messages found, searching..
                 </p>
                 <div>
-                  <Spinner size="md"/>
+                  <Spinner size="md" />
                 </div>
               </div>
             )}

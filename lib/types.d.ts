@@ -3,6 +3,7 @@ export interface Discussion {
   to: string;
   text: string;
   timestamp: number;
+  id?:number;
 }
 
 export type DiscussionsState = Record<string, Discussion[]>;

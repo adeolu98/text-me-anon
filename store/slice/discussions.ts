@@ -14,7 +14,7 @@ export const fetchDiscussions = createAsyncThunk(
     network,
     userAddress,
   }: {
-    network: (Chain & { unsupported?: boolean | undefined; }) | undefined;
+    network: (Chain & { unsupported?: boolean | undefined }) | undefined;
     userAddress: string;
   }) => {
     const etherscanProvider = new ethers.providers.EtherscanProvider(
@@ -23,7 +23,6 @@ export const fetchDiscussions = createAsyncThunk(
     const history = await etherscanProvider.getHistory(userAddress);
     const discussions = getInitialState();
     const filtered = history.filter((tx) => tx.data.includes(msgTxIdentifier));
-    //   console.log('filtered', userAddress, filtered);
 
     filtered.forEach(async (data) => {
       //for instances where messages are sent to self
@@ -35,6 +34,7 @@ export const fetchDiscussions = createAsyncThunk(
                 to: data.to!.toLowerCase(),
                 text: data.data,
                 timestamp: data.timestamp!,
+                id: network?.id,
               },
             ])
           : discussions["myself"].push({
@@ -42,6 +42,7 @@ export const fetchDiscussions = createAsyncThunk(
               to: data.to!.toLowerCase(),
               text: data.data,
               timestamp: data.timestamp!,
+              id: network?.id,
             });
       }
 
@@ -54,6 +55,7 @@ export const fetchDiscussions = createAsyncThunk(
                 to: data.to!.toLowerCase(),
                 text: data.data,
                 timestamp: data.timestamp!,
+                id: network?.id,
               },
             ])
           : discussions[data.from.toLowerCase()].push({
@@ -61,6 +63,7 @@ export const fetchDiscussions = createAsyncThunk(
               to: data.to!.toLowerCase(),
               text: data.data,
               timestamp: data.timestamp!,
+              id: network?.id,
             });
       }
 
@@ -72,6 +75,7 @@ export const fetchDiscussions = createAsyncThunk(
                 to: data.to!.toLowerCase(),
                 text: data.data,
                 timestamp: data.timestamp!,
+                id: network?.id,
               },
             ])
           : discussions[data.to!.toLowerCase()].push({
@@ -79,6 +83,7 @@ export const fetchDiscussions = createAsyncThunk(
               to: data.to!.toLowerCase(),
               text: data.data,
               timestamp: data.timestamp!,
+              id: network?.id,
             });
       }
     });
@@ -97,7 +102,9 @@ export const discussionsSlice = createSlice({
   name: "discussions",
   initialState: getInitialState(),
   reducers: {
-    resetDiscussions: () => {},
+    resetDiscussions: () => {
+      return {};
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(fetchDiscussions.fulfilled, (_, action) => action.payload);
