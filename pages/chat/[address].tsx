@@ -26,7 +26,7 @@ const Chat: NextPage = () => {
     : router.query.address!;
 
   const discussion = useDiscussion(
-    toAddress === address ? "myself" : toAddress
+    toAddress === address?.toLowerCase() ? "myself" : toAddress
   );
 
   const { data } = useEnsName({
@@ -59,13 +59,13 @@ const Chat: NextPage = () => {
   }, [discussion]);
 
   useEffect(() => {
-    if (!scrollOnOpen) {
+    if (!scrollOnOpen && discussion ) {
       handleClickScroll();
       setScrollOnOpen(true);
     }
 
     if (newMsg) handleClickScroll();
-  }, [newMsg]);
+  }, [newMsg, discussion]);
 
   const handleClickScroll = () => {
     const element = document.getElementById("last-msg");
@@ -96,17 +96,17 @@ const Chat: NextPage = () => {
                 ></ProfilePic>
               </div>
               <div className="text-center">
-                <p className="truncate">{data ? data : toAddress}</p>
+                <p className="truncate">{data ? data : toAddress === address.toLowerCase() ? 'myself' : toAddress}</p>
               </div>
             </div>
           </Link>
           {currentMsgsChain && (
             <p className="text-center text-xs p-1 font-light">
-              Conversation with {toAddress.slice(0,6)} on {networkNames[currentMsgsChain!]}
+              Conversation with {toAddress === address.toLowerCase() ? 'myself' : toAddress.slice(0,6)} on {networkNames[currentMsgsChain!]}
             </p>
           )}
           {/** show chat messages */}
-          <div className="h-full overflow-x-scroll px-1 xs:px-5 py-3">
+          <div className="h-full overflow-x-scroll px-1 xs:px-5 pt-3  pb-6">
             {discussion && discussion.length > 0 ? (
               discussion.map((msgData, index) => {
                 return (
@@ -120,7 +120,7 @@ const Chat: NextPage = () => {
                     }
                   >
                     <Message
-                      received={msgData.from === toAddress}
+                      received={msgData.from.toLowerCase() !== address.toLowerCase()}
                       text={hex_to_string(msgData.text).slice(5)}
                       timeSent={getTime(msgData.timestamp)}
                     ></Message>
