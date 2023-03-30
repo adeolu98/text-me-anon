@@ -77,6 +77,7 @@ const NewMessage: NextPage = () => {
           {/**show msg input text area */}
           <TextInput
             text={text}
+            previewText={previewText}
             setText={setText}
             setNewMsg={setNewMsg}
             setPreviewText={setPreviewText}
