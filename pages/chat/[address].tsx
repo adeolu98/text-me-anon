@@ -80,8 +80,10 @@ const Chat: NextPage = () => {
         <div className="border shadow-2xl flex flex-col rounded-3xl h-full w-full sm:w-4/6 lg:w-3/6 xl:w-2/6">
           <Link href={"/"} className="" title="Go back">
             <FontAwesomeIcon
-              className="absolute py-4 px-1 xs:px-5 mt-4 xs:mt-5 sm:mt-6"
+              className="absolute py-4 px-1 xs:px-5 mt-4"
               icon={faChevronLeft}
+              width={50}
+              height={50}
             ></FontAwesomeIcon>
           </Link>
           {/** contact info display */}
@@ -152,10 +154,11 @@ const Chat: NextPage = () => {
           ></TextInput>
         </div>
       ) : (
-        <div className="h-full w-full flex justify-center flex-col gap-10 sm:w-4/6 md:w-4/6 lg:w-3/6 xl:w-2/6">
+        <div className="h-full w-full flex items-center justify-center flex-col gap-10 sm:w-4/6 md:w-4/6 lg:w-3/6 xl:w-2/6">
           <FontAwesomeIcon
             icon={faCircleExclamation}
-            className="text-9xl"
+            width={100}
+            height={100}
           ></FontAwesomeIcon>
           <p className="text-center font-bold font-xl">
             Please connect wallet to see messages
