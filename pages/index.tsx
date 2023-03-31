@@ -155,7 +155,7 @@ const Home: NextPage = () => {
           </div>
           {/** contacts chat preview  */}
           {filterFor === "" ? (
-            <div className="w-full overflow-x-scroll px-1 xs:px-5">
+            <div className="w-full overflow-x-none overflow-y-scroll px-1 xs:px-5">
               {discussions.length !== 0 ? (
                 discussions.map((data, index) => {
                   return (
@@ -198,7 +198,7 @@ const Home: NextPage = () => {
               )}
             </div>
           ) : (
-            <div className="w-full overflow-x-scroll px-1 xs:px-5">
+            <div className="w-full overflow-x-none overflow-y-scroll px-1 xs:px-5">
               {discussions.length !== 0 ? (
                 discussions
                   .filter((data) => data[0] === filterFor)
