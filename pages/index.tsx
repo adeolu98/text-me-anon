@@ -3,7 +3,11 @@ import { AppLayout } from "@/components/AppLayout";
 import { NextPage } from "next";
 import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCheck, faCircleExclamation, faLink } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCheck,
+  faCircleExclamation,
+  faLink,
+} from "@fortawesome/free-solid-svg-icons";
 import { useDiscussions } from "@/hooks/use-discussions";
 import { getTime, hex_to_string } from "@/lib/utils";
 import { Spinner } from "@chakra-ui/react";
@@ -71,11 +75,40 @@ const Home: NextPage = () => {
                 Messages
                 {currentMsgsChain && ` on ${networkNames[currentMsgsChain!]}`}
               </div>
+              <div className="hidden sm:block">
+                <div
+                  className="hover:underline text-blue-800 cursor-copy text-xs py-2 flex flex-row items-center gap-1"
+                  onClick={handleCopy}
+                >
+                  <p>
+                    {!changeCopyLinkFavicon
+                      ? "Click to copy your address link"
+                      : "Copied! Now share it with other anons"}
+                  </p>
+                  {!changeCopyLinkFavicon ? (
+                    <FontAwesomeIcon
+                      width={15}
+                      height={15}
+                      icon={faLink}
+                    ></FontAwesomeIcon>
+                  ) : (
+                    <FontAwesomeIcon
+                      width={15}
+                      height={15}
+                      icon={faCircleCheck}
+                    ></FontAwesomeIcon>
+                  )}
+                </div>
+              </div>
               <div
-                className="hover:underline cursor-copy text-xs py-2 flex flex-row items-center gap-1"
+                className="block sm:hidden text-blue-800 hover:underline cursor-copy text-xs py-2 flex flex-row items-center gap-1"
                 onClick={handleCopy}
               >
-                <p>{!changeCopyLinkFavicon ? 'Click to copy your address link' : 'Copied! Now share it with other anons'}</p>
+                <p>
+                  {!changeCopyLinkFavicon
+                    ? "Copy your address link"
+                    : "Copied!"}
+                </p>
                 {!changeCopyLinkFavicon ? (
                   <FontAwesomeIcon
                     width={15}
