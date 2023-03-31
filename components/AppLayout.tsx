@@ -34,7 +34,7 @@ export const AppLayout: FunctionComponent<AppLayoutProps> = ({
       <div className="flex w-full justify-center items-center h-5/6 pt-5 md:px-10">
         {children}
       </div>
-      <div className=" w-full h-12 pb-2 flex  text-right">
+      <div className=" w-full pt-2 sm:pt-0 xs:h-12 pb-2 flex  text-right">
         <span className="self-end w-full">
           {'Made by '}
           <a

@@ -75,7 +75,7 @@ const Home: NextPage = () => {
                 className="hover:underline cursor-copy text-xs py-2 flex flex-row items-center gap-1"
                 onClick={handleCopy}
               >
-                <p>{!changeCopyLinkFavicon ? 'Click to copy your address link' : 'Copied! Now share with other anons'}</p>
+                <p>{!changeCopyLinkFavicon ? 'Click to copy your address link' : 'Copied! Now share it with other anons'}</p>
                 {!changeCopyLinkFavicon ? (
                   <FontAwesomeIcon
                     width={15}
