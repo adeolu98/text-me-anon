@@ -27,7 +27,6 @@ const Home: NextPage = () => {
   >();
   const [changeCopyLinkFavicon, setChangeCopyLinkFavicon] = useState(false);
 
-  const { chain } = useNetwork();
   //sort in descending order of timestamp
   const discussions = Object.entries(useDiscussions()).sort(
     (a, b) => b[1][b[1].length - 1].timestamp - a[1][a[1].length - 1].timestamp
@@ -38,10 +37,7 @@ const Home: NextPage = () => {
     discussions[0] &&
       discussions[0][1][0] &&
       setCurrentMsgsChain(discussions[0][1][0].id);
-
-    //for cases whereby theres no message found, need to update the ui somehow
-    discussions.length === 0 && setCurrentMsgsChain(chain?.id);
-  }, [address, discussions, chain]);
+  }, [address, discussions]);
 
   const startBounce = () => {
     setTimeout(() => {
@@ -78,7 +74,7 @@ const Home: NextPage = () => {
               <div className="text-xs xs:text-base sm:text-xl font-bold">
                 Messages
                 {currentMsgsChain &&
-                  discussions &&
+                  discussions.length > 0 &&
                   ` on ${networkNames[currentMsgsChain!]}`}
               </div>
               <div className="hidden sm:block">
