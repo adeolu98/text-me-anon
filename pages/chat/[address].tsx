@@ -88,7 +88,7 @@ const Chat: NextPage = () => {
           </Link>
           {/** contact info display */}
           <Link href={`/info/${toAddress}`} title="Click to view more info">
-            <div className="flex flex-col gap-1 w-full border rounded-t-3xl bg-gray-50  px-1 xs:px-5 py-3">
+            <div className="flex flex-col gap-1 w-full rounded-t-3xl bg-gray-50  px-1 xs:px-5 py-3">
               <div className="w-full mt-1 flex justify-center items-center">
                 <ProfilePic
                   addressForProfileIcon={toAddress}
@@ -99,6 +99,7 @@ const Chat: NextPage = () => {
                 <p className="truncate">{data ? data : toAddress === address.toLowerCase() ? 'myself' : toAddress}</p>
               </div>
             </div>
+            <div className="bg-gray-200 h-[1px] w-full"></div> 
           </Link>
           {currentMsgsChain && (
             <p className="text-center text-xs p-1 font-light">
