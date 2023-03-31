@@ -132,7 +132,7 @@ const Home: NextPage = () => {
                   width={30}
                   height={30}
                   alt="message-plus-icon"
-                  src="https://img.icons8.com/ios/50/null/new-message.png"
+                  src="/new-message.svg"
                 />
               </div>
             </Link>
