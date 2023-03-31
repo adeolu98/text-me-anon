@@ -3,6 +3,7 @@ import React, {
   FunctionComponent,
   SetStateAction,
   useEffect,
+  useState,
 } from "react";
 //import InputEmoji from "react-input-emoji";
 import { faArrowCircleUp } from "@fortawesome/free-solid-svg-icons";
@@ -44,7 +45,7 @@ export const TextInput: FunctionComponent<TextInputProps> = ({
       ? "myself"
       : toAddress.toLowerCase()
   );
-
+  const [previousText, setPreviousText] = useState('')
   const { config } = usePrepareSendTransaction({
     request: {
       to: toAddress,
@@ -82,16 +83,17 @@ export const TextInput: FunctionComponent<TextInputProps> = ({
 
   const sendMsg = async () => {
     //set preview text, set newMsg and wipe the input bar clean
-    setText("");
     setPreviewText(text);
+    setPreviousText(text)
+    setText("");
     setNewMsg(true);
     //send tx
     sendTransaction?.();
   };
 
   const handleOnError = (e: any) => {
-    //set text back to prev Text to return input bar to prev state, set newMsg
-    setText(text); //inspect
+    //set text back to previousText to return input bar to prev state, set newMsg
+    setText(previousText);
     setNewMsg(false);
     setPreviewText("");
 
