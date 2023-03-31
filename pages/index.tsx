@@ -12,7 +12,7 @@ import { useDiscussions } from "@/hooks/use-discussions";
 import { getTime, hex_to_string } from "@/lib/utils";
 import { Spinner } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import { useAccount, useEnsAddress } from "wagmi";
+import { useAccount, useEnsAddress, useNetwork } from "wagmi";
 import { networkNames } from "@/lib/network";
 import { useRouter } from "next/router";
 import { faCircleCheck } from "@fortawesome/free-regular-svg-icons";
@@ -26,7 +26,8 @@ const Home: NextPage = () => {
     number | undefined
   >();
   const [changeCopyLinkFavicon, setChangeCopyLinkFavicon] = useState(false);
-  const router = useRouter();
+
+  const { chain } = useNetwork();
   //sort in descending order of timestamp
   const discussions = Object.entries(useDiscussions()).sort(
     (a, b) => b[1][b[1].length - 1].timestamp - a[1][a[1].length - 1].timestamp
@@ -37,7 +38,10 @@ const Home: NextPage = () => {
     discussions[0] &&
       discussions[0][1][0] &&
       setCurrentMsgsChain(discussions[0][1][0].id);
-  }, [address, discussions]);
+
+    //for cases whereby theres no message found, need to update the ui somehow
+    discussions.length === 0 && setCurrentMsgsChain(chain?.id);
+  }, [address, discussions, chain]);
 
   const startBounce = () => {
     setTimeout(() => {
@@ -73,7 +77,9 @@ const Home: NextPage = () => {
             <div className="flex-flex-col">
               <div className="text-xs xs:text-base sm:text-xl font-bold">
                 Messages
-                {currentMsgsChain && ` on ${networkNames[currentMsgsChain!]}`}
+                {currentMsgsChain &&
+                  discussions &&
+                  ` on ${networkNames[currentMsgsChain!]}`}
               </div>
               <div className="hidden sm:block">
                 <div
