@@ -1,4 +1,5 @@
 import React, {
+  ChangeEvent,
   Dispatch,
   FunctionComponent,
   SetStateAction,
@@ -45,7 +46,7 @@ export const TextInput: FunctionComponent<TextInputProps> = ({
       ? "myself"
       : toAddress.toLowerCase()
   );
-  const [previousText, setPreviousText] = useState('')
+  const [previousText, setPreviousText] = useState("");
   const { config } = usePrepareSendTransaction({
     request: {
       to: toAddress,
@@ -79,12 +80,17 @@ export const TextInput: FunctionComponent<TextInputProps> = ({
           }`
         );
     }
+    if (text === "") setTextAreaHeight(1);
   }, [discussion, address]);
+
+  useEffect(() => {
+    if (text === "") setTextAreaHeight(1);
+  }, [text]);
 
   const sendMsg = async () => {
     //set preview text, set newMsg and wipe the input bar clean
     setPreviewText(text);
-    setPreviousText(text)
+    setPreviousText(text);
     setText("");
     setNewMsg(true);
     //send tx
@@ -151,24 +157,35 @@ export const TextInput: FunctionComponent<TextInputProps> = ({
     }
   };
 
-  const handleKeydown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
+  const handleKeydown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === "Enter" && !e.shiftKey) {
       handleSend();
     }
   };
 
+  const [textAreaHeight, setTextAreaHeight] = useState(1);
+
+  const handleChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
+    setText(e.currentTarget.value);
+
+    const height = e.target.scrollHeight;
+    const rowHeight = 24;
+    const trows = Math.ceil(height / rowHeight) - 1;
+
+    if (trows && textAreaHeight < 15) setTextAreaHeight(trows);
+  };
   return (
     <div
       className={`${className} flex flex-row gap-2 items-center p-3 h-max rounded-b-3xl`}
     >
-      <input
-        onKeyDown={(e) => handleKeydown(e)}
-        value={text}
-        onChange={(e) => setText(e.currentTarget.value)}
-        type="text"
-        className="w-full border focus:bg-gray-100 rounded-3xl px-4 py-2 focus:border-2 focus:border-black focus:outline-none"
-        placeholder="Text Message"
-      ></input>
+        <textarea
+          onKeyDown={(e) => handleKeydown(e)}
+          value={text}
+          onChange={(e) => handleChange(e)}
+          className={`w-full border resize-none focus:bg-gray-100 rounded-3xl px-4 py-2 focus:border-2 focus:border-black focus:outline-none`}
+          placeholder="Text Message"
+          rows={textAreaHeight}
+        ></textarea>
       <FontAwesomeIcon
         className="h-8 text-gray-400"
         icon={faArrowCircleUp}
