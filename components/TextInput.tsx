@@ -172,7 +172,7 @@ export const TextInput: FunctionComponent<TextInputProps> = ({
     const rowHeight = 24;
     const trows = Math.ceil(height / rowHeight) - 1;
 
-    if (trows && textAreaHeight < 15) setTextAreaHeight(trows);
+    if (trows && textAreaHeight < 6) setTextAreaHeight(trows);
   };
   return (
     <div
