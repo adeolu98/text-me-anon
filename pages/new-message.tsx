@@ -64,7 +64,7 @@ const NewMessage: NextPage = () => {
             <div className="w-full bg-gray-200 h-0.5"></div>
           </div>
           {/** show chat messages */}
-          <div className="h-full overflow-x-scroll px-1 xs:px-5 py-3">
+          <div className="h-full overflow-x-none overflow-y-auto px-1 xs:px-5 py-3">
             {newMsg && (
               <div>
                 <Message received={false} text={previewText}></Message>

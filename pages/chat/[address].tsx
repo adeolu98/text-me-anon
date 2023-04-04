@@ -107,7 +107,7 @@ const Chat: NextPage = () => {
             </p>
           )}
           {/** show chat messages */}
-          <div className="h-full overflow-x-scroll px-1 xs:px-5 pt-3  pb-6">
+          <div className="h-full overflow-x-none overflow-y-auto px-1 xs:px-5 pt-3  pb-6">
             {discussion && discussion.length > 0 ? (
               discussion.map((msgData, index) => {
                 return (
