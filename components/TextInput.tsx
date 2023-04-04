@@ -27,6 +27,7 @@ interface TextInputProps {
   setNewMsg: Dispatch<SetStateAction<boolean>>;
   className?: string;
   toAddress: string;
+  enableOnKeydown: boolean;
 }
 
 export const TextInput: FunctionComponent<TextInputProps> = ({
@@ -37,6 +38,7 @@ export const TextInput: FunctionComponent<TextInputProps> = ({
   setNewMsg,
   className,
   toAddress,
+  enableOnKeydown
 }) => {
   const { address } = useAccount();
   const toast = useToast();
@@ -158,7 +160,8 @@ export const TextInput: FunctionComponent<TextInputProps> = ({
   };
 
   const handleKeydown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === "Enter" && !e.shiftKey) {
+    if (e.key === "Enter" && !e.shiftKey && enableOnKeydown) {
+      e.preventDefault();
       handleSend();
     }
   };

@@ -31,7 +31,7 @@ const NewMessage: NextPage = () => {
               Cancel
             </p>
           </Link>
-          <div className="flex flex-col gap-1 w-full border rounded-t-3xl bg-gray-50  px-1 xs:px-5 py-7">
+          <div className="flex flex-col gap-1 w-full rounded-t-3xl bg-gray-50  px-1 xs:px-5 py-7">
             <div className="flex justify-center items-center">
               <p className=" break-all font-bold text-sm xs:text-xl mt-8 sm:mt-0">
                 New Message
@@ -73,14 +73,26 @@ const NewMessage: NextPage = () => {
           </div>
 
           {/**show msg input text area */}
-          <TextInput
-            text={text}
-            previewText={previewText}
-            setText={setText}
-            setNewMsg={setNewMsg}
-            setPreviewText={setPreviewText}
-            toAddress={data ? data : toAddress}
-          ></TextInput>
+          <div className="hidden lg:block">
+            <TextInput
+              text={text}
+              enableOnKeydown={true}
+              setText={setText}
+              setNewMsg={setNewMsg}
+              setPreviewText={setPreviewText}
+              toAddress={toAddress === "myself" ? address : toAddress}
+            ></TextInput>
+          </div>
+          <div className="block lg:hidden">
+            <TextInput
+              text={text}
+              enableOnKeydown={false}
+              setText={setText}
+              setNewMsg={setNewMsg}
+              setPreviewText={setPreviewText}
+              toAddress={toAddress === "myself" ? address : toAddress}
+            ></TextInput>
+          </div>
         </div>
       ) : (
         <div className="h-full w-full flex items-center justify-center flex-col gap-10 sm:w-4/6 md:w-4/6 lg:w-3/6 xl:w-2/6">

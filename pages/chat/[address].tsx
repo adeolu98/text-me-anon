@@ -59,7 +59,7 @@ const Chat: NextPage = () => {
   }, [discussion]);
 
   useEffect(() => {
-    if (!scrollOnOpen && discussion ) {
+    if (!scrollOnOpen && discussion) {
       handleClickScroll();
       setScrollOnOpen(true);
     }
@@ -96,14 +96,24 @@ const Chat: NextPage = () => {
                 ></ProfilePic>
               </div>
               <div className="text-center">
-                <p className="truncate">{data ? data : toAddress === address.toLowerCase() ? 'myself' : toAddress}</p>
+                <p className="truncate">
+                  {data
+                    ? data
+                    : toAddress === address.toLowerCase()
+                    ? "myself"
+                    : toAddress}
+                </p>
               </div>
             </div>
-            <div className="bg-gray-200 h-[1px] w-full"></div> 
+            <div className="bg-gray-200 h-[1px] w-full"></div>
           </Link>
           {currentMsgsChain && (
             <p className="text-center text-xs p-1 font-light">
-              Conversation with {toAddress === address.toLowerCase() ? 'myself' : toAddress.slice(0,6)} on {networkNames[currentMsgsChain!]}
+              Conversation with{" "}
+              {toAddress === address.toLowerCase()
+                ? "myself"
+                : toAddress.slice(0, 6)}{" "}
+              on {networkNames[currentMsgsChain!]}
             </p>
           )}
           {/** show chat messages */}
@@ -121,7 +131,9 @@ const Chat: NextPage = () => {
                     }
                   >
                     <Message
-                      received={msgData.from.toLowerCase() !== address.toLowerCase()}
+                      received={
+                        msgData.from.toLowerCase() !== address.toLowerCase()
+                      }
                       text={hex_to_string(msgData.text).slice(5)}
                       timeSent={getTime(msgData.timestamp)}
                     ></Message>
@@ -146,13 +158,26 @@ const Chat: NextPage = () => {
           </div>
 
           {/**show input text area */}
-          <TextInput
-            text={text}
-            setText={setText}
-            setNewMsg={setNewMsg}
-            setPreviewText={setPreviewText}
-            toAddress={toAddress === "myself" ? address : toAddress}
-          ></TextInput>
+          <div className="hidden lg:block">
+            <TextInput
+              text={text}
+              enableOnKeydown={true}
+              setText={setText}
+              setNewMsg={setNewMsg}
+              setPreviewText={setPreviewText}
+              toAddress={toAddress === "myself" ? address : toAddress}
+            ></TextInput>
+          </div>
+          <div className="block lg:hidden">
+            <TextInput
+              text={text}
+              enableOnKeydown={false}
+              setText={setText}
+              setNewMsg={setNewMsg}
+              setPreviewText={setPreviewText}
+              toAddress={toAddress === "myself" ? address : toAddress}
+            ></TextInput>
+          </div>
         </div>
       ) : (
         <div className="h-full w-full flex items-center justify-center flex-col gap-10 sm:w-4/6 md:w-4/6 lg:w-3/6 xl:w-2/6">
