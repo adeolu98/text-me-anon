@@ -31,7 +31,7 @@ const NewMessage: NextPage = () => {
               Cancel
             </p>
           </Link>
-          <div className="flex flex-col gap-1 w-full border rounded-t-3xl bg-gray-50  px-1 xs:px-5 py-7">
+          <div className="flex flex-col gap-1 w-full rounded-t-3xl bg-gray-50  px-1 xs:px-5 py-7">
             <div className="flex justify-center items-center">
               <p className=" break-all font-bold text-sm xs:text-xl mt-8 sm:mt-0">
                 New Message
