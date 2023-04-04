@@ -4,7 +4,6 @@ import { NextPage } from "next";
 import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faCheck,
   faCircleExclamation,
   faLink,
 } from "@fortawesome/free-solid-svg-icons";
@@ -14,8 +13,10 @@ import { Spinner } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { useAccount, useEnsAddress, useNetwork } from "wagmi";
 import { networkNames } from "@/lib/network";
-import { useRouter } from "next/router";
 import { faCircleCheck } from "@fortawesome/free-regular-svg-icons";
+import ReactGA from 'react-ga';
+
+ReactGA.initialize('UA-262892775-1');
 
 const Home: NextPage = () => {
   const { address } = useAccount();
