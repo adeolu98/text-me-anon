@@ -23,6 +23,7 @@
     "@rainbow-me/rainbowkit": "^0.12.2",
     "@raugfer/jazzicon": "^1.0.6",
     "@reduxjs/toolkit": "^1.9.3",
+    "@types/gtag.js": "^0.0.12",
     "@types/node": "18.13.0",
     "@types/react": "18.0.28",
     "@types/react-dom": "18.0.10",

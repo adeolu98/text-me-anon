@@ -18,6 +18,8 @@ import {
   useSendTransaction,
 } from "wagmi";
 import { useDiscussion } from "@/hooks/use-discussions";
+import * as gtag from '@/lib/gtag'
+
 
 interface TextInputProps {
   text: string;
@@ -123,7 +125,16 @@ export const TextInput: FunctionComponent<TextInputProps> = ({
       });
     }
   };
+
   const handleOnSuccess = async (data: any) => {
+    //send google analytics event
+    gtag.event({
+      action: 'message sent',
+      category: 'usage',
+      label: '',
+      value: ''
+    });
+     
     //show toast when tx is included in chain
     (await data?.wait()) &&
       toast({

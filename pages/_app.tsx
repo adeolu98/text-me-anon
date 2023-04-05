@@ -21,6 +21,7 @@ import React from "react";
 import Jazzicon from "@raugfer/jazzicon";
 import { AvatarComponent, lightTheme } from "@rainbow-me/rainbowkit";
 import Head from "next/head";
+import GoogleAnalytics from "@/components/analytics/GoogleAnalytics";
 
 const { chains, provider } = configureChains(
   [mainnet, polygon, optimism, arbitrum, goerli, sepolia],
@@ -78,6 +79,7 @@ export default function App({ Component, pageProps }: AppProps) {
       >
         <ChakraProvider>
           <ReduxProvider store={store}>
+            <GoogleAnalytics/>
             <Component {...pageProps} />
           </ReduxProvider>
         </ChakraProvider>
