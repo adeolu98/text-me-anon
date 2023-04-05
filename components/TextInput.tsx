@@ -13,7 +13,7 @@ import { useToast } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { hex_to_string, string_to_hex } from "@/lib/utils";
 import {
-  useNetwork
+  useNetwork,
   useAccount,
   usePrepareSendTransaction,
   useSendTransaction,
