@@ -59,13 +59,17 @@ const Chat: NextPage = () => {
   }, [discussion]);
 
   useEffect(() => {
-    if (!scrollOnOpen && discussion) {
+    //scroll to most recent text by default on page open
+    if (scrollOnOpen === false && discussion) {
       handleClickScroll();
       setScrollOnOpen(true);
     }
+  }, [discussion]);
 
-    if (newMsg) handleClickScroll();
-  }, [newMsg, discussion]);
+  useEffect (() => {
+    //scroll to most recent text when sending a new message regardless of how far up user has scrolled
+    if (newMsg === true) handleClickScroll();
+  }, [newMsg])
 
   const handleClickScroll = () => {
     const element = document.getElementById("last-msg");
