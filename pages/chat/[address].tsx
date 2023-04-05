@@ -59,12 +59,12 @@ const Chat: NextPage = () => {
   }, [discussion]);
 
   useEffect(() => {
-    if (!scrollOnOpen && discussion) {
+    if (scrollOnOpen === false && discussion) {
       handleClickScroll();
       setScrollOnOpen(true);
     }
 
-    if (newMsg) handleClickScroll();
+    if (newMsg === true) handleClickScroll();
   }, [newMsg, discussion]);
 
   const handleClickScroll = () => {
