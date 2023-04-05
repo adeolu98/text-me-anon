@@ -13,6 +13,7 @@ import { useToast } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { hex_to_string, string_to_hex } from "@/lib/utils";
 import {
+  useNetwork
   useAccount,
   usePrepareSendTransaction,
   useSendTransaction,
@@ -43,6 +44,7 @@ export const TextInput: FunctionComponent<TextInputProps> = ({
   enableOnKeydown
 }) => {
   const { address } = useAccount();
+  const { chain } = useNetwork()
   const toast = useToast();
   const router = useRouter();
   const discussion = useDiscussion(
@@ -127,9 +129,16 @@ export const TextInput: FunctionComponent<TextInputProps> = ({
   };
 
   const handleOnSuccess = async (data: any) => {
-    //send google analytics event
+    //send google analytics events
     gtag.event({
-      action: 'message sent',
+      action: 'total_messages_sent_all_chains',
+      category: 'usage',
+      label: '',
+      value: ''
+    });
+
+    gtag.event({
+      action: `total_messages_sent_${chain?.name}`,
       category: 'usage',
       label: '',
       value: ''
