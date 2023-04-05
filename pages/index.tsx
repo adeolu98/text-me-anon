@@ -15,6 +15,7 @@ import { useAccount, useEnsAddress, useNetwork } from "wagmi";
 import { networkNames } from "@/lib/network";
 import { faCircleCheck } from "@fortawesome/free-regular-svg-icons";
 import ReactGA from 'react-ga';
+import Head from "next/head";
 
 ReactGA.initialize('UA-262892775-1');
 
@@ -69,6 +70,25 @@ const Home: NextPage = () => {
     <AppLayout>
       {address ? (
         <div className="border shadow-2xl py-8 flex flex-col rounded-3xl h-full w-full sm:w-4/6 lg:w-3/6 xl:w-2/6">
+                <Head>
+        <script
+          async
+          src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_TAG}`}
+        ></script>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', '${process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_TAG}', {
+              page_path: window.location.pathname,
+            });
+          `,
+          }}
+        />
+      </Head>
+          
           {/**top section with create new message icon */}
           <div className="flex flex-col xs:flex-row justify-between px-1 xs:px-5">
             <div className="flex-flex-col">
