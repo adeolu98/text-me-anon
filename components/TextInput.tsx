@@ -71,8 +71,6 @@ export const TextInput: FunctionComponent<TextInputProps> = ({
 
   //go to chat page after msg sent if sending message from new-message.tsx
   useEffect(() => {
-    console.log("discussion", discussion);
-
     if (
       discussion &&
       hex_to_string(discussion[discussion.length - 1].text).slice(5) ===
