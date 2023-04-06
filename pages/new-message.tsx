@@ -52,11 +52,11 @@ const NewMessage: NextPage = () => {
                 type="text"
               ></input>
             </div>
-            {data && data.length !== 42 && (
+            {data !== null && data !== undefined && toAddress.length !== 42 && (
               <div className="text-xs px-1 gap-2 xs:px-5 py-3">
                 <p className="font-light">
-                  ENS for address
-                  <span className="font-semibold">{data.toLowerCase()}</span>
+                  ENS for address:
+                  <span className="font-semibold">{' '+data.toLowerCase()}</span>
                 </p>
               </div>
             )}
@@ -80,7 +80,7 @@ const NewMessage: NextPage = () => {
               setText={setText}
               setNewMsg={setNewMsg}
               setPreviewText={setPreviewText}
-              toAddress={toAddress === "myself" ? address : toAddress}
+              toAddress={data !== null && data !== undefined ? data.toLowerCase() : toAddress}
             ></TextInput>
           </div>
           <div className="block lg:hidden">
@@ -90,7 +90,7 @@ const NewMessage: NextPage = () => {
               setText={setText}
               setNewMsg={setNewMsg}
               setPreviewText={setPreviewText}
-              toAddress={toAddress === "myself" ? address : toAddress}
+              toAddress={data !== null && data !== undefined ? data.toLowerCase() : toAddress}
             ></TextInput>
           </div>
         </div>
