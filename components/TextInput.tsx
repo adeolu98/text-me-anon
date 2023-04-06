@@ -17,6 +17,7 @@ import {
   useAccount,
   usePrepareSendTransaction,
   useSendTransaction,
+  useEnsAddress,
 } from "wagmi";
 import { useDiscussion } from "@/hooks/use-discussions";
 import * as gtag from "@/lib/gtag";
@@ -46,6 +47,10 @@ export const TextInput: FunctionComponent<TextInputProps> = ({
   const { chain } = useNetwork();
   const toast = useToast();
   const router = useRouter();
+  const { data } = useEnsAddress({
+    name: toAddress,
+  });
+
   const discussion = useDiscussion(
     toAddress.toLowerCase() === address?.toLowerCase()
       ? "myself"
@@ -57,9 +62,9 @@ export const TextInput: FunctionComponent<TextInputProps> = ({
       to: toAddress,
       value: "0",
       data: "0x" + string_to_hex("OCM:" + text),
-    },
+    }
   });
-  const { data, sendTransaction } = useSendTransaction({
+  const { sendTransaction } = useSendTransaction({
     ...config,
     onSuccess(data) {
       handleOnSuccess(data);
@@ -76,6 +81,7 @@ export const TextInput: FunctionComponent<TextInputProps> = ({
       hex_to_string(discussion[discussion.length - 1].text).slice(5) ===
         previousText
     ) {
+
       if (router.pathname === `/new-message`) {
         router.push(
           `/chat/${
@@ -147,7 +153,7 @@ export const TextInput: FunctionComponent<TextInputProps> = ({
     (await data?.wait()) &&
       toast({
         title: "Success",
-        description: `Message tx included in chain block`,
+        description: `Message tx included in chain`,
         status: "success",
         duration: 6000,
         isClosable: true,
@@ -155,17 +161,19 @@ export const TextInput: FunctionComponent<TextInputProps> = ({
   };
 
   const handleSend = async () => {
+    if (text === "") return;
+
     if (address) {
-      if (toAddress !== "") {
-        sendMsg();
-      } else {
+      if (data == null || data == undefined){
         toast({
           title: "Error",
-          description: "Add message recipient.",
+          description: "Invalid Address",
           status: "error",
           duration: 6000,
           isClosable: true,
         });
+      } else if (toAddress !== "") {
+        sendMsg();
       }
     } else {
       toast({

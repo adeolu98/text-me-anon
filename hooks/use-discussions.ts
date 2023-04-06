@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "@/store";
 import { fetchDiscussions, resetDiscussions, selectDiscussions } from "@/store/slice/discussions";
-import { useAccount, useNetwork } from "wagmi";
+import { useAccount, useEnsAddress, useNetwork } from "wagmi";
 import { DiscussionsState } from "@/lib/types";
 
 let localDiscussion: DiscussionsState;
