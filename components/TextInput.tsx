@@ -19,8 +19,7 @@ import {
   useSendTransaction,
 } from "wagmi";
 import { useDiscussion } from "@/hooks/use-discussions";
-import * as gtag from '@/lib/gtag'
-
+import * as gtag from "@/lib/gtag";
 
 interface TextInputProps {
   text: string;
@@ -41,10 +40,10 @@ export const TextInput: FunctionComponent<TextInputProps> = ({
   setNewMsg,
   className,
   toAddress,
-  enableOnKeydown
+  enableOnKeydown,
 }) => {
   const { address } = useAccount();
-  const { chain } = useNetwork()
+  const { chain } = useNetwork();
   const toast = useToast();
   const router = useRouter();
   const discussion = useDiscussion(
@@ -72,12 +71,14 @@ export const TextInput: FunctionComponent<TextInputProps> = ({
 
   //go to chat page after msg sent if sending message from new-message.tsx
   useEffect(() => {
+    console.log("discussion", discussion);
+
     if (
       discussion &&
       hex_to_string(discussion[discussion.length - 1].text).slice(5) ===
-        previewText
+        previousText
     ) {
-      if (router.pathname === `/new-message`)
+      if (router.pathname === `/new-message`) {
         router.push(
           `/chat/${
             toAddress.toLowerCase() === address?.toLowerCase()
@@ -85,8 +86,8 @@ export const TextInput: FunctionComponent<TextInputProps> = ({
               : toAddress.toLowerCase()
           }`
         );
+      }
     }
-    if (text === "") setTextAreaHeight(1);
   }, [discussion, address]);
 
   useEffect(() => {
@@ -131,19 +132,19 @@ export const TextInput: FunctionComponent<TextInputProps> = ({
   const handleOnSuccess = async (data: any) => {
     //send google analytics events
     gtag.event({
-      action: 'total_messages_sent_all_chains',
-      category: 'usage',
-      label: '',
-      value: ''
+      action: "total_messages_sent_all_chains",
+      category: "usage",
+      label: "",
+      value: "",
     });
 
     gtag.event({
       action: `total_messages_sent_${chain?.name}`,
-      category: 'usage',
-      label: '',
-      value: ''
+      category: "usage",
+      label: "",
+      value: "",
     });
-     
+
     //show toast when tx is included in chain
     (await data?.wait()) &&
       toast({
@@ -201,14 +202,14 @@ export const TextInput: FunctionComponent<TextInputProps> = ({
     <div
       className={`${className} flex flex-row gap-2 items-center p-3 h-max rounded-b-3xl`}
     >
-        <textarea
-          onKeyDown={(e) => handleKeydown(e)}
-          value={text}
-          onChange={(e) => handleChange(e)}
-          className={`w-full border resize-none focus:bg-gray-100 rounded-3xl px-4 py-2 focus:border-2 focus:border-black focus:outline-none`}
-          placeholder="Text Message"
-          rows={textAreaHeight}
-        ></textarea>
+      <textarea
+        onKeyDown={(e) => handleKeydown(e)}
+        value={text}
+        onChange={(e) => handleChange(e)}
+        className={`w-full border resize-none focus:bg-gray-100 rounded-3xl px-4 py-2 focus:border-2 focus:border-black focus:outline-none`}
+        placeholder="Text Message"
+        rows={textAreaHeight}
+      ></textarea>
       <FontAwesomeIcon
         className="h-8 text-gray-400"
         icon={faArrowCircleUp}
