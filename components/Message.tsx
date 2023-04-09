@@ -35,7 +35,7 @@ export const Message: FunctionComponent<MessageProps> = ({
         ></div>
       </div>
       <div
-        className={`rounded-3xl h-max flex flex-col gap-1 break-all sm:break-normal xs:gap-0 w-max px-4 py-1.5 ${
+        className={`rounded-3xl h-max flex flex-col gap-1 break-all sm:break-normal xs:gap-0 max-w-[90%] px-4 py-1.5 ${
           received ? "bg-gray-300" : "bg-gray-100"
         } `}
       >
