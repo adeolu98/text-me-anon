@@ -132,6 +132,7 @@ const Chat: NextPage = () => {
                       text={hex_to_string(msgData.text).slice(5)}
                       timeSent={getTime(msgData.timestamp)}
                       network={msgData.id}
+                      hash={msgData.hash}
                     ></Message>
                   </div>
                 );

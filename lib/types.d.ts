@@ -6,6 +6,7 @@ export interface Discussion {
   text: string;
   timestamp: number;
   id: Network;
+  hash: string;
 }
 
 export type DiscussionsState = Record<string, Discussion[]>;

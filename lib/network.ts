@@ -6,7 +6,7 @@ import ArbitrumLogo from "@/public/arbitrum-logo.svg"
 import OptimisimLogo from "@/public/optimism-ethereum-op-logo.svg"
 import PolygonLogo from "@/public/polygon-matic-logo.svg"
 
-const etherscanUrl: Record<Network, string> = {
+export const etherscanUrl: Record<Network, string> = {
   1: "https://etherscan.io",
   5: "https://goerli.etherscan.io",
   137: "https://polygonscan.com",

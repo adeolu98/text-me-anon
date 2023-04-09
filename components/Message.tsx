@@ -1,7 +1,8 @@
 import { Spinner } from "@chakra-ui/react";
 import Image from "next/image";
+import Link from "next/link"
 import React, { FunctionComponent } from "react";
-import { Network, networkLogos } from "@/lib/network";
+import { Network, networkLogos, etherscanUrl, networkNames } from "@/lib/network";
 
 interface MessageProps {
   className?: string;
@@ -9,6 +10,7 @@ interface MessageProps {
   timeSent?: string;
   received: boolean;
   network?: Network;
+  hash?: string;
 }
 
 export const Message: FunctionComponent<MessageProps> = ({
@@ -16,7 +18,8 @@ export const Message: FunctionComponent<MessageProps> = ({
   text,
   timeSent,
   received,
-  network 
+  network,
+  hash
 }) => {
   return (
     <div
@@ -43,9 +46,9 @@ export const Message: FunctionComponent<MessageProps> = ({
             timeSent && network ? (
               <>
                 <p className=" text-[8px]">{timeSent}</p>
-                <div className="w-[8px] flex justify-center ml-1">
+                <a target="_blank" href={`${etherscanUrl[network]}/tx/${hash}`} className="w-[8px] flex justify-center ml-1" title={`Sent on ${networkNames[network]}`} rel="noreferrer">
                   <Image src={networkLogos[network]} alt="" />
-                </div>
+                </a>
               </>
             ) : (
               <Spinner size="xs" />

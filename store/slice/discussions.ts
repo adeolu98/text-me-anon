@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { AppState } from "@/store";
 import { ethers } from "ethers";
+import {TransactionResponse } from "@ethersproject/abstract-provider"
 import { DiscussionsState } from "@/lib/types";
 import { Chain } from "wagmi";
 import { Network, networks } from "@/lib/network";
@@ -9,14 +10,16 @@ import { Network, networks } from "@/lib/network";
 //THIS IS JUST "OCM:" WHEN HEXED. OCM = ON-CHAIN MESSAGE.
 const msgTxIdentifier = "0x4f434d3a";
 
-const fetchAllHistory = async (address: string): Promise<any[]> => {
+type TxResponse = TransactionResponse & {chainId: Network}
+
+const fetchAllHistory = async (address: string): Promise<TxResponse[]> => {
   const getEtherscanProvider = (network: number) => new ethers.providers.EtherscanProvider(
     network
   );
   const etherScanProviders = networks
     .map(getEtherscanProvider)
   const settledNetworks: Network[] = []
-  const allHistory = (await Promise.allSettled(etherScanProviders.map(provider => provider.getHistory(address))))
+  const _allHistory = (await Promise.allSettled(etherScanProviders.map(provider => provider.getHistory(address))))
     .filter((result, index) => {
       if(result.status === "rejected"){
         console.error(result.reason)
@@ -26,12 +29,13 @@ const fetchAllHistory = async (address: string): Promise<any[]> => {
       return true;
     })
     .map((result, index) => {
-        const txs = (result as PromiseFulfilledResult<any>).value;
-        return txs.map((tx: any) => ({...tx, chainId: settledNetworks[index]}))
+        const txs = (result as PromiseFulfilledResult<TxResponse[]>).value;
+        return txs.map((tx: TxResponse) => ({...tx, chainId: settledNetworks[index]}))
       }
     )
 
-  return [].concat(...allHistory)
+  const allHistory: TxResponse[] = []
+  return allHistory.concat(..._allHistory)
 }
 
 export const fetchDiscussions = createAsyncThunk(
@@ -58,6 +62,7 @@ export const fetchDiscussions = createAsyncThunk(
                 text: data.data,
                 timestamp: data.timestamp!,
                 id: data.chainId,
+                hash: data.hash
               },
             ])
           : discussions["myself"].push({
@@ -66,6 +71,7 @@ export const fetchDiscussions = createAsyncThunk(
               text: data.data,
               timestamp: data.timestamp!,
               id: data.chainId,
+              hash: data.hash
             });
       }
 
@@ -79,6 +85,7 @@ export const fetchDiscussions = createAsyncThunk(
                 text: data.data,
                 timestamp: data.timestamp!,
                 id: data.chainId,
+                hash: data.hash
               },
             ])
           : discussions[data.from.toLowerCase()].push({
@@ -87,6 +94,7 @@ export const fetchDiscussions = createAsyncThunk(
               text: data.data,
               timestamp: data.timestamp!,
               id: data.chainId,
+              hash: data.hash
             });
       }
 
@@ -99,6 +107,7 @@ export const fetchDiscussions = createAsyncThunk(
                 text: data.data,
                 timestamp: data.timestamp!,
                 id: data.chainId,
+                hash: data.hash
               },
             ])
           : discussions[data.to!.toLowerCase()].push({
@@ -107,6 +116,7 @@ export const fetchDiscussions = createAsyncThunk(
               text: data.data,
               timestamp: data.timestamp!,
               id: data.chainId,
+              hash: data.hash
             });
       }
     });
