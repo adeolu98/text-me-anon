@@ -49,6 +49,7 @@ export const TextInput: FunctionComponent<TextInputProps> = ({
   const router = useRouter();
   const { data } = useEnsAddress({
     name: toAddress,
+    chainId: 1
   });
 
   const discussion = useDiscussion(

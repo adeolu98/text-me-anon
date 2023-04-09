@@ -31,6 +31,7 @@ const Chat: NextPage = () => {
 
   const { data } = useEnsName({
     address: toAddress ? `0x${toAddress.slice(2)}` : undefined,
+    chainId: 1
   });
 
   const [text, setText] = useState("");

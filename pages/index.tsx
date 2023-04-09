@@ -46,6 +46,7 @@ const Home: NextPage = () => {
 
   const { data } = useEnsAddress({
     name: filterFor,
+    chainId: 1
   });
 
   useEffect(() => {

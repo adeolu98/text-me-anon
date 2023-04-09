@@ -20,6 +20,7 @@ export const ChatPreview: FunctionComponent<ChatPreviewProps> = ({
 }) => {
   const { data } = useEnsName({
     address: `0x${contactAddr.slice(2)}`,
+    chainId: 1
   });
 
   return (

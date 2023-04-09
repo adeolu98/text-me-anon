@@ -18,7 +18,8 @@ const Info: NextPage = () => {
     : router.query.address!;
 
     const { data } = useEnsName({
-    address: queriedAddress ? `0x${queriedAddress.slice(2)}` : undefined
+    address: queriedAddress ? `0x${queriedAddress.slice(2)}` : undefined,
+    chainId: 1
   })
 
   return (
