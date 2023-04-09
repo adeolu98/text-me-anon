@@ -72,9 +72,6 @@ const Home: NextPage = () => {
             <div className="flex-flex-col">
               <div className="text-xs xs:text-base sm:text-xl font-bold">
                 Messages
-                {currentMsgsChain &&
-                  discussions.length > 0 &&
-                  ` on ${networkNames[currentMsgsChain!]}`}
               </div>
               <div className="hidden sm:block">
                 <div

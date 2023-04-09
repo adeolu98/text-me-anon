@@ -1,11 +1,14 @@
 import { Spinner } from "@chakra-ui/react";
+import Image from "next/image";
 import React, { FunctionComponent } from "react";
+import { Network, networkLogos } from "@/lib/network";
 
 interface MessageProps {
   className?: string;
   text: string;
   timeSent?: string;
   received: boolean;
+  network?: Network;
 }
 
 export const Message: FunctionComponent<MessageProps> = ({
@@ -13,6 +16,7 @@ export const Message: FunctionComponent<MessageProps> = ({
   text,
   timeSent,
   received,
+  network 
 }) => {
   return (
     <div
@@ -36,10 +40,15 @@ export const Message: FunctionComponent<MessageProps> = ({
         <div className="relative w-full flex justify-end">
           {
             //if timeSent is undefined, message isn't sent yet onchain
-            timeSent ? (
-              <p className=" text-[8px]">{timeSent}</p>
+            timeSent && network ? (
+              <>
+                <p className=" text-[8px]">{timeSent}</p>
+                <div className="w-[8px] flex justify-center ml-1">
+                  <Image src={networkLogos[network]} alt="" />
+                </div>
+              </>
             ) : (
-              <Spinner size="xs"/>
+              <Spinner size="xs" />
             )
           }
         </div>

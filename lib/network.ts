@@ -1,6 +1,10 @@
 export const networks = [1, 137, 42161, 10, 5, 11155111] as const;
 export type Network = typeof networks[number];
 
+import ETHLogo from "@/public/ethereum-eth-logo.svg"
+import ArbitrumLogo from "@/public/arbitrum-logo.svg"
+import OptimisimLogo from "@/public/optimism-ethereum-op-logo.svg"
+import PolygonLogo from "@/public/polygon-matic-logo.svg"
 
 const etherscanUrl: Record<Network, string> = {
   1: "https://etherscan.io",
@@ -18,6 +22,15 @@ export const networkNames: Record<number, string>  = {
   42161: "Arbitrum",
   10: "Optimism",
   11155111: "Sepolia",
+}
+
+export const networkLogos: Record<number, string> = {
+  1: ETHLogo,
+  5: ETHLogo,
+  137: PolygonLogo,
+  42161: ArbitrumLogo,
+  10: OptimisimLogo,
+  11155111: ETHLogo,
 }
 
 export const etherscanApiKeys: Record<Network, string> = {

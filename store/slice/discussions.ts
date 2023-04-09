@@ -3,10 +3,36 @@ import { AppState } from "@/store";
 import { ethers } from "ethers";
 import { DiscussionsState } from "@/lib/types";
 import { Chain } from "wagmi";
+import { Network, networks } from "@/lib/network";
 
 //USE THIS TO FILTER THROUGH ALL TXS TO DIFFERENTIATE WHICH TXS ARE MESSAGE TXS
 //THIS IS JUST "OCM:" WHEN HEXED. OCM = ON-CHAIN MESSAGE.
 const msgTxIdentifier = "0x4f434d3a";
+
+const fetchAllHistory = async (address: string): Promise<any[]> => {
+  const getEtherscanProvider = (network: number) => new ethers.providers.EtherscanProvider(
+    network
+  );
+  const etherScanProviders = networks
+    .map(getEtherscanProvider)
+  const settledNetworks: Network[] = []
+  const allHistory = (await Promise.allSettled(etherScanProviders.map(provider => provider.getHistory(address))))
+    .filter((result, index) => {
+      if(result.status === "rejected"){
+        console.error(result.reason)
+        return false
+      }
+      settledNetworks.push(networks[index])
+      return true;
+    })
+    .map((result, index) => {
+        const txs = (result as PromiseFulfilledResult<any>).value;
+        return txs.map((tx: any) => ({...tx, chainId: settledNetworks[index]}))
+      }
+    )
+
+  return [].concat(...allHistory)
+}
 
 export const fetchDiscussions = createAsyncThunk(
   "discussions/fetchDiscussions",
@@ -17,10 +43,7 @@ export const fetchDiscussions = createAsyncThunk(
     network: (Chain & { unsupported?: boolean | undefined }) | undefined;
     userAddress: string;
   }) => {
-    const etherscanProvider = new ethers.providers.EtherscanProvider(
-      network?.network
-    );
-    const history = await etherscanProvider.getHistory(userAddress);
+    const history = await fetchAllHistory(userAddress);
     const discussions = getInitialState();
     const filtered = history.filter((tx) => tx.data.includes(msgTxIdentifier));
 
@@ -34,7 +57,7 @@ export const fetchDiscussions = createAsyncThunk(
                 to: data.to!.toLowerCase(),
                 text: data.data,
                 timestamp: data.timestamp!,
-                id: network?.id,
+                id: data.chainId,
               },
             ])
           : discussions["myself"].push({
@@ -42,7 +65,7 @@ export const fetchDiscussions = createAsyncThunk(
               to: data.to!.toLowerCase(),
               text: data.data,
               timestamp: data.timestamp!,
-              id: network?.id,
+              id: data.chainId,
             });
       }
 
@@ -55,7 +78,7 @@ export const fetchDiscussions = createAsyncThunk(
                 to: data.to!.toLowerCase(),
                 text: data.data,
                 timestamp: data.timestamp!,
-                id: network?.id,
+                id: data.chainId,
               },
             ])
           : discussions[data.from.toLowerCase()].push({
@@ -63,7 +86,7 @@ export const fetchDiscussions = createAsyncThunk(
               to: data.to!.toLowerCase(),
               text: data.data,
               timestamp: data.timestamp!,
-              id: network?.id,
+              id: data.chainId,
             });
       }
 
@@ -75,7 +98,7 @@ export const fetchDiscussions = createAsyncThunk(
                 to: data.to!.toLowerCase(),
                 text: data.data,
                 timestamp: data.timestamp!,
-                id: network?.id,
+                id: data.chainId,
               },
             ])
           : discussions[data.to!.toLowerCase()].push({
@@ -83,7 +106,7 @@ export const fetchDiscussions = createAsyncThunk(
               to: data.to!.toLowerCase(),
               text: data.data,
               timestamp: data.timestamp!,
-              id: network?.id,
+              id: data.chainId,
             });
       }
     });

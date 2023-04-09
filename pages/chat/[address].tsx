@@ -111,15 +111,6 @@ const Chat: NextPage = () => {
             </div>
             <div className="bg-gray-200 h-[1px] w-full"></div>
           </Link>
-          {currentMsgsChain && (
-            <p className="text-center text-xs p-1 font-light">
-              Conversation with{" "}
-              {toAddress === address.toLowerCase()
-                ? "myself"
-                : toAddress.slice(0, 6)}{" "}
-              on {networkNames[currentMsgsChain!]}
-            </p>
-          )}
           {/** show chat messages */}
           <div className="h-full overflow-x-none overflow-y-auto px-1 xs:px-5 pt-3  pb-6">
             {discussion && discussion.length > 0 ? (
@@ -140,6 +131,7 @@ const Chat: NextPage = () => {
                       }
                       text={hex_to_string(msgData.text).slice(5)}
                       timeSent={getTime(msgData.timestamp)}
+                      network={msgData.id}
                     ></Message>
                   </div>
                 );
