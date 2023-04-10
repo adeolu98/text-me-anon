@@ -21,6 +21,8 @@ import {
 } from "wagmi";
 import { useDiscussion } from "@/hooks/use-discussions";
 import * as gtag from "@/lib/gtag";
+import { networkNames } from "@/lib/network";
+import { useChainModal } from "@rainbow-me/rainbowkit";
 
 interface TextInputProps {
   text: string;
@@ -51,6 +53,7 @@ export const TextInput: FunctionComponent<TextInputProps> = ({
     name: toAddress,
     chainId: 1
   });
+  const {openChainModal} = useChainModal()
 
   const discussion = useDiscussion(
     toAddress.toLowerCase() === address?.toLowerCase()
@@ -209,19 +212,27 @@ export const TextInput: FunctionComponent<TextInputProps> = ({
     <div
       className={`${className} flex flex-row gap-2 items-center p-3 h-max rounded-b-3xl`}
     >
-      <textarea
-        onKeyDown={(e) => handleKeydown(e)}
-        value={text}
-        onChange={(e) => handleChange(e)}
-        className={`w-full border resize-none focus:bg-gray-100 rounded-3xl px-4 py-2 focus:border-2 focus:border-black focus:outline-none`}
-        placeholder="Text Message"
-        rows={textAreaHeight}
-      ></textarea>
-      <FontAwesomeIcon
-        className="h-8 text-gray-400"
-        icon={faArrowCircleUp}
-        onClick={handleSend}
-      ></FontAwesomeIcon>
+      <div className="flex flex-col w-full">
+        {/* should only show up when reply is being sent on a different chain from last reply and is not first message*/}
+        {chain && discussion?.[discussion?.length-1]?.id !== chain.id && (
+          <button className="underline text-[10px] mx-auto mb-1" onClick={openChainModal}>
+            You are replying on {networkNames[chain.id]}
+          </button>
+        )}
+        <textarea
+          onKeyDown={(e) => handleKeydown(e)}
+          value={text}
+          onChange={(e) => handleChange(e)}
+          className={`w-full border resize-none focus:bg-gray-100 rounded-3xl px-4 py-2 focus:border-2 focus:border-black focus:outline-none`}
+          placeholder="Text Message"
+          rows={textAreaHeight}
+        ></textarea>
+      </div>
+        <FontAwesomeIcon
+          className="h-8 text-gray-400 mt-[15px]"
+          icon={faArrowCircleUp}
+          onClick={handleSend}
+        ></FontAwesomeIcon>
     </div>
   );
 };
