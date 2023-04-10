@@ -56,9 +56,7 @@ export const TextInput: FunctionComponent<TextInputProps> = ({
   const {openChainModal} = useChainModal()
 
   const discussion = useDiscussion(
-    toAddress.toLowerCase() === address?.toLowerCase()
-      ? "myself"
-      : toAddress.toLowerCase()
+    toAddress.toLowerCase()
   );
   const [previousText, setPreviousText] = useState("");
   const { config } = usePrepareSendTransaction({

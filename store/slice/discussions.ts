@@ -52,72 +52,33 @@ export const fetchDiscussions = createAsyncThunk(
     const filtered = history.filter((tx) => tx.data.includes(msgTxIdentifier));
 
     filtered.forEach(async (data) => {
-      //for instances where messages are sent to self
-      if (data.from.toLowerCase() === data.to!.toLowerCase()) {
-        discussions["myself"] === undefined
-          ? (discussions["myself"] = [
-              {
-                from: data.from.toLowerCase(),
-                to: data.to!.toLowerCase(),
-                text: data.data,
-                timestamp: data.timestamp!,
-                id: data.chainId,
-                hash: data.hash
-              },
-            ])
-          : discussions["myself"].push({
-              from: data.from.toLowerCase(),
-              to: data.to!.toLowerCase(),
-              text: data.data,
-              timestamp: data.timestamp!,
-              id: data.chainId,
-              hash: data.hash
-            });
+      const discussion = {
+          from: data.from.toLowerCase(),
+          to: data.to!.toLowerCase(),
+          text: data.data,
+          timestamp: data.timestamp!,
+          id: data.chainId,
+          hash: data.hash
+        }
+      
+      // when userAddress is sender and receiver
+      if(data.from.toLowerCase() === userAddress.toLowerCase() && 
+        data.to?.toLowerCase() === userAddress.toLowerCase()){
+          if(!discussions[userAddress.toLowerCase()])  
+            discussions[userAddress.toLowerCase()]= []
+          discussions[userAddress.toLowerCase()].push(discussion)
       }
-
-      // for instances where messages are sent to other addresses.
-      if (data.from.toLowerCase() !== userAddress.toLowerCase()) {
-        discussions[data.from.toLowerCase()] === undefined
-          ? (discussions[data.from.toLowerCase()] = [
-              {
-                from: data.from.toLowerCase(),
-                to: data.to!.toLowerCase(),
-                text: data.data,
-                timestamp: data.timestamp!,
-                id: data.chainId,
-                hash: data.hash
-              },
-            ])
-          : discussions[data.from.toLowerCase()].push({
-              from: data.from.toLowerCase(),
-              to: data.to!.toLowerCase(),
-              text: data.data,
-              timestamp: data.timestamp!,
-              id: data.chainId,
-              hash: data.hash
-            });
+      // when userAddress receives a message
+      else if(data.from.toLowerCase() !== userAddress.toLowerCase()){
+        if(!discussions[data.from.toLowerCase()])  
+          discussions[data.from.toLowerCase()]= []
+        discussions[data.from.toLowerCase()].push(discussion)
       }
-
-      if (data.to!.toLowerCase() !== userAddress.toLowerCase()) {
-        discussions[data.to!.toLowerCase()] === undefined
-          ? (discussions[data.to!.toLowerCase()] = [
-              {
-                from: data.from.toLowerCase(),
-                to: data.to!.toLowerCase(),
-                text: data.data,
-                timestamp: data.timestamp!,
-                id: data.chainId,
-                hash: data.hash
-              },
-            ])
-          : discussions[data.to!.toLowerCase()].push({
-              from: data.from.toLowerCase(),
-              to: data.to!.toLowerCase(),
-              text: data.data,
-              timestamp: data.timestamp!,
-              id: data.chainId,
-              hash: data.hash
-            });
+      // when userAddress sends a message
+      else if(data.to && data.to.toLowerCase() !== userAddress.toLowerCase()){
+        if(!discussions[data.to.toLowerCase()]) 
+          discussions[data.to.toLowerCase()]= []
+        discussions[data.to.toLowerCase()].push(discussion)
       }
     });
 

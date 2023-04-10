@@ -198,7 +198,7 @@ const Home: NextPage = () => {
             <div className="w-full overflow-x-none overflow-y-auto px-1 xs:px-5">
               {discussions.length !== 0 ? (
                 discussions
-                  .filter((data) => data[0] === filterFor)
+                  .filter((data) => data[0].includes(filterFor) || (data[0].toLowerCase() === address.toLowerCase() ? "myself".includes(filterFor) : false))
                   .map((data, index) => {
                     return (
                       <div

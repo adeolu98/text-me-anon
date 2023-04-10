@@ -16,6 +16,7 @@ import { getTime, hex_to_string } from "@/lib/utils";
 import { Spinner } from "@chakra-ui/react";
 import { useAccount, useEnsName } from "wagmi";
 import { networkNames } from "@/lib/network";
+import { isAddress } from "ethers/lib/utils.js";
 
 const Chat: NextPage = () => {
   const router = useRouter();
@@ -26,7 +27,7 @@ const Chat: NextPage = () => {
     : router.query.address!;
 
   const discussion = useDiscussion(
-    toAddress === address?.toLowerCase() ? "myself" : toAddress
+    toAddress
   );
 
   const { data } = useEnsName({
@@ -71,6 +72,13 @@ const Chat: NextPage = () => {
     //scroll to most recent text when sending a new message regardless of how far up user has scrolled
     if (newMsg === true) handleClickScroll();
   }, [newMsg])
+
+  // navigate to home if address is invalid
+  useEffect(() => {
+    if (toAddress && !isAddress(toAddress) && router) {
+      router.push("/");
+    }
+  }, [router, toAddress])
 
   const handleClickScroll = () => {
     const element = document.getElementById("last-msg");
@@ -163,7 +171,7 @@ const Chat: NextPage = () => {
               setText={setText}
               setNewMsg={setNewMsg}
               setPreviewText={setPreviewText}
-              toAddress={toAddress === "myself" ? address : toAddress}
+              toAddress={toAddress}
             ></TextInput>
           </div>
           <div className="block lg:hidden">
@@ -173,7 +181,7 @@ const Chat: NextPage = () => {
               setText={setText}
               setNewMsg={setNewMsg}
               setPreviewText={setPreviewText}
-              toAddress={toAddress === "myself" ? address : toAddress}
+              toAddress={toAddress}
             ></TextInput>
           </div>
         </div>
