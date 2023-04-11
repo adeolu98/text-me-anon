@@ -234,7 +234,7 @@ export const TextInput: FunctionComponent<TextInputProps> = ({
             >
               Most recent message was sent on{" "}
               {networkNames[discussion?.[discussion.length - 1].id]}. You are
-              replying on {networkNames[chain.id]}. Click to change if this is
+              replying on {networkNames[chain.id]}. <br /> Click to change if this is
               unintended
             </button>
           )}
