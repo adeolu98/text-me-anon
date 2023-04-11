@@ -18,6 +18,7 @@ import {
   usePrepareSendTransaction,
   useSendTransaction,
   useEnsAddress,
+  useBalance,
 } from "wagmi";
 import { useDiscussion } from "@/hooks/use-discussions";
 import * as gtag from "@/lib/gtag";
@@ -51,20 +52,23 @@ export const TextInput: FunctionComponent<TextInputProps> = ({
   const router = useRouter();
   const { data } = useEnsAddress({
     name: toAddress,
-    chainId: 1
+    chainId: 1,
   });
-  const {openChainModal} = useChainModal()
+  const { openChainModal } = useChainModal();
+  const balance = useBalance({
+    address: address,
+    formatUnits: "ether",
+    watch: true,
+  });
 
-  const discussion = useDiscussion(
-    toAddress.toLowerCase()
-  );
+  const discussion = useDiscussion(toAddress.toLowerCase());
   const [previousText, setPreviousText] = useState("");
   const { config } = usePrepareSendTransaction({
     request: {
       to: toAddress,
       value: "0",
       data: "0x" + string_to_hex("OCM:" + text),
-    }
+    },
   });
   const { sendTransaction } = useSendTransaction({
     ...config,
@@ -83,7 +87,6 @@ export const TextInput: FunctionComponent<TextInputProps> = ({
       hex_to_string(discussion[discussion.length - 1].text).slice(5) ===
         previousText
     ) {
-
       if (router.pathname === `/new-message`) {
         router.push(
           `/chat/${
@@ -166,7 +169,7 @@ export const TextInput: FunctionComponent<TextInputProps> = ({
     if (text === "") return;
 
     if (address) {
-      if (data == null || data == undefined){
+      if (data == null || data == undefined) {
         toast({
           title: "Error",
           description: "Invalid Address",
@@ -211,12 +214,30 @@ export const TextInput: FunctionComponent<TextInputProps> = ({
       className={`${className} flex flex-row gap-2 items-center p-3 h-max rounded-b-3xl`}
     >
       <div className="flex flex-col w-full">
-        {/* should only show up when reply is being sent on a different chain from last reply and is not first message*/}
-        {chain && discussion?.[discussion?.length-1]?.id !== chain.id && (
-          <button className="underline text-[10px] mx-auto mb-1" onClick={openChainModal}>
-            You are replying on {networkNames[chain.id]}
+        {/* should only show up when user has no eth*/}
+        {chain && balance.data?.formatted === "0.0" && (
+          <button
+            className="hover:underline text-[10px] mx-auto mb-1"
+            onClick={openChainModal}
+          >
+            You have zero balance on {networkNames[chain.id]}. Consider adding more {chain.id === 5 || chain.id === 11155111 ? networkNames[chain.id]: ""} {balance.data?.symbol} or switching chains.
           </button>
         )}
+        {/* should only show up when reply is being sent on a different chain from last reply and is not first message*/}
+        {chain &&
+          balance.data?.formatted !== "0.0" &&
+          discussion &&
+          discussion?.[discussion?.length - 1]?.id !== chain.id && (
+            <button
+              className="hover:underline text-[10px] mx-auto mb-1"
+              onClick={openChainModal}
+            >
+              Most recent message was sent on{" "}
+              {networkNames[discussion?.[discussion.length - 1].id]}. You are
+              replying on {networkNames[chain.id]}. Click to change if this is
+              unintended
+            </button>
+          )}
         <textarea
           onKeyDown={(e) => handleKeydown(e)}
           value={text}
@@ -226,11 +247,11 @@ export const TextInput: FunctionComponent<TextInputProps> = ({
           rows={textAreaHeight}
         ></textarea>
       </div>
-        <FontAwesomeIcon
-          className="h-8 text-gray-400 mt-[15px]"
-          icon={faArrowCircleUp}
-          onClick={handleSend}
-        ></FontAwesomeIcon>
+      <FontAwesomeIcon
+        className="h-10 text-gray-400 self-end"
+        icon={faArrowCircleUp}
+        onClick={handleSend}
+      ></FontAwesomeIcon>
     </div>
   );
 };

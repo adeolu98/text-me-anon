@@ -20,7 +20,7 @@ const NewMessage: NextPage = () => {
   const { data } = useEnsAddress({
     name: toAddress,
     chainId: 1
-  });
+  });  
 
   return (
     <AppLayout>
