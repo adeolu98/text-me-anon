@@ -59,10 +59,7 @@ const Info: NextPage = () => {
             {queriedAddress}
           </p>
           <a
-            href={`${getEtherscanAddressLink(
-              chain?.id as Network,
-              queriedAddress
-            )}`}
+            href={`https://blockscan.com/address/${queriedAddress}`}
             target="blank"
             className="font-light hover:underline mt-4"
           >
