@@ -20,16 +20,16 @@ export function string_to_hex(str: string) {
 
 export function getTime(timestamp: number) {
   const currentTime = Math.floor(Date.now() / 1000);
-  const timePassed = currentTime - timestamp;
   const date = new Date(timestamp * 1000);
+  const currentDate = new Date(currentTime * 1000)
 
-  if (date.toDateString() !== new Date(currentTime * 1000).toDateString()) {
+  if (date.toDateString() !== currentDate.toDateString()) {
     //format is h:m dd/mm/yy
     const minutes = "0" + date.getMinutes();
     const hours = "0" + date.getHours();
     return `${hours.substr(-2)}:${minutes.substr(
       -2
-    )} ${date.getDay()}/${date.getMonth()}/${date
+    )} ${date.getDate()}/${date.getMonth() + 1}/${date
       .getFullYear()
       .toString()
       .slice(2)}`;
