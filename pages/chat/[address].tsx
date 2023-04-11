@@ -15,7 +15,6 @@ import { useDiscussion } from "@/hooks/use-discussions";
 import { getTime, hex_to_string } from "@/lib/utils";
 import { Spinner } from "@chakra-ui/react";
 import { useAccount, useEnsName } from "wagmi";
-import { networkNames } from "@/lib/network";
 import { isAddress } from "ethers/lib/utils.js";
 
 const Chat: NextPage = () => {

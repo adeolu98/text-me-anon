@@ -9,10 +9,8 @@ import { getTime, hex_to_string } from "@/lib/utils";
 import { Spinner } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { useAccount, useEnsAddress, useNetwork } from "wagmi";
-import { networkNames } from "@/lib/network";
 import { faCircleCheck } from "@fortawesome/free-regular-svg-icons";
 import ReactGA from "react-ga";
-import Head from "next/head";
 
 ReactGA.initialize("UA-262892775-1");
 
@@ -21,9 +19,6 @@ const Home: NextPage = () => {
   const [bounce, setBounce] = useState("");
 
   const [filterFor, setFilterFor] = useState("");
-  const [currentMsgsChain, setCurrentMsgsChain] = useState<
-    number | undefined
-  >();
   const [changeCopyLinkFavicon, setChangeCopyLinkFavicon] = useState(false);
 
   //sort in descending order of timestamp
@@ -33,9 +28,6 @@ const Home: NextPage = () => {
 
   useEffect(() => {
     address && discussions.length === 0 ? startBounce() : setBounce("");
-    discussions[0] &&
-      discussions[0][1][0] &&
-      setCurrentMsgsChain(discussions[0][1][0].id);
   }, [address, discussions]);
 
   const startBounce = () => {
@@ -189,7 +181,7 @@ const Home: NextPage = () => {
                 <div className="pt-8 w-full flex justify-center gap-4">
                   <p className="text-sm  font-light">No messages found yet..</p>
                   <div>
-                    <Spinner size={"md"} />
+                    <Spinner size="md" />
                   </div>
                 </div>
               )}
