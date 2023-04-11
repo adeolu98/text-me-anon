@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useEffect, useState } from "react";
+import React, { FunctionComponent } from "react";
 import { ProfilePic } from "./ProfilePic";
 import Link from "next/link";
 import { useEnsName, useAccount } from "wagmi";
