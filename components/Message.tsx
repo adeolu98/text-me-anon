@@ -1,11 +1,15 @@
 import { Spinner } from "@chakra-ui/react";
+import Image from "next/image";
 import React, { FunctionComponent } from "react";
+import { Network, networkLogos, etherscanUrl, networkNames } from "@/lib/network";
 
 interface MessageProps {
   className?: string;
   text: string;
   timeSent?: string;
   received: boolean;
+  network?: Network;
+  hash?: string;
 }
 
 export const Message: FunctionComponent<MessageProps> = ({
@@ -13,6 +17,8 @@ export const Message: FunctionComponent<MessageProps> = ({
   text,
   timeSent,
   received,
+  network,
+  hash
 }) => {
   return (
     <div
@@ -28,7 +34,7 @@ export const Message: FunctionComponent<MessageProps> = ({
         ></div>
       </div>
       <div
-        className={`rounded-3xl h-max flex flex-col gap-1 break-all sm:break-normal xs:gap-0 w-max px-4 py-1.5 ${
+        className={`rounded-3xl h-max flex flex-col gap-1 break-all sm:break-normal xs:gap-0 max-w-[90%] px-4 py-1.5 ${
           received ? "bg-gray-300" : "bg-gray-100"
         } `}
       >
@@ -36,10 +42,15 @@ export const Message: FunctionComponent<MessageProps> = ({
         <div className="relative w-full flex justify-end">
           {
             //if timeSent is undefined, message isn't sent yet onchain
-            timeSent ? (
-              <p className=" text-[8px]">{timeSent}</p>
+            timeSent && network ? (
+              <>
+                <p className=" text-[8px]">{timeSent}</p>
+                <a target="_blank" href={`${etherscanUrl[network]}/tx/${hash}`} className="w-[8px] flex justify-center ml-1" title={`Sent on ${networkNames[network]}`} rel="noreferrer">
+                  <Image src={networkLogos[network]} alt="" />
+                </a>
+              </>
             ) : (
-              <Spinner size="xs"/>
+              <Spinner size="xs" />
             )
           }
         </div>

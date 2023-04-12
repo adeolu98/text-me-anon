@@ -15,7 +15,7 @@ import { useDiscussion } from "@/hooks/use-discussions";
 import { getTime, hex_to_string } from "@/lib/utils";
 import { Spinner } from "@chakra-ui/react";
 import { useAccount, useEnsName } from "wagmi";
-import { networkNames } from "@/lib/network";
+import { isAddress } from "ethers/lib/utils.js";
 
 const Chat: NextPage = () => {
   const router = useRouter();
@@ -26,11 +26,12 @@ const Chat: NextPage = () => {
     : router.query.address!;
 
   const discussion = useDiscussion(
-    toAddress === address?.toLowerCase() ? "myself" : toAddress
+    toAddress
   );
 
   const { data } = useEnsName({
     address: toAddress ? `0x${toAddress.slice(2)}` : undefined,
+    chainId: 1
   });
 
   const [text, setText] = useState("");
@@ -70,6 +71,13 @@ const Chat: NextPage = () => {
     //scroll to most recent text when sending a new message regardless of how far up user has scrolled
     if (newMsg === true) handleClickScroll();
   }, [newMsg])
+
+  // navigate to home if address is invalid
+  useEffect(() => {
+    if (toAddress && !isAddress(toAddress) && router) {
+      router.push("/");
+    }
+  }, [router, toAddress])
 
   const handleClickScroll = () => {
     const element = document.getElementById("last-msg");
@@ -111,15 +119,6 @@ const Chat: NextPage = () => {
             </div>
             <div className="bg-gray-200 h-[1px] w-full"></div>
           </Link>
-          {currentMsgsChain && (
-            <p className="text-center text-xs p-1 font-light">
-              Conversation with{" "}
-              {toAddress === address.toLowerCase()
-                ? "myself"
-                : toAddress.slice(0, 6)}{" "}
-              on {networkNames[currentMsgsChain!]}
-            </p>
-          )}
           {/** show chat messages */}
           <div className="h-full overflow-x-none overflow-y-auto px-1 xs:px-5 pt-3  pb-6">
             {discussion && discussion.length > 0 ? (
@@ -140,6 +139,8 @@ const Chat: NextPage = () => {
                       }
                       text={hex_to_string(msgData.text).slice(5)}
                       timeSent={getTime(msgData.timestamp)}
+                      network={msgData.id}
+                      hash={msgData.hash}
                     ></Message>
                   </div>
                 );
@@ -169,7 +170,7 @@ const Chat: NextPage = () => {
               setText={setText}
               setNewMsg={setNewMsg}
               setPreviewText={setPreviewText}
-              toAddress={toAddress === "myself" ? address : toAddress}
+              toAddress={toAddress}
             ></TextInput>
           </div>
           <div className="block lg:hidden">
@@ -179,7 +180,7 @@ const Chat: NextPage = () => {
               setText={setText}
               setNewMsg={setNewMsg}
               setPreviewText={setPreviewText}
-              toAddress={toAddress === "myself" ? address : toAddress}
+              toAddress={toAddress}
             ></TextInput>
           </div>
         </div>

@@ -1,7 +1,7 @@
-import React, { FunctionComponent, useEffect, useState } from "react";
+import React, { FunctionComponent } from "react";
 import { ProfilePic } from "./ProfilePic";
 import Link from "next/link";
-import { useEnsName } from "wagmi";
+import { useEnsName, useAccount } from "wagmi";
 
 interface ChatPreviewProps {
   lastMessage: string;
@@ -20,7 +20,10 @@ export const ChatPreview: FunctionComponent<ChatPreviewProps> = ({
 }) => {
   const { data } = useEnsName({
     address: `0x${contactAddr.slice(2)}`,
+    chainId: 1
   });
+
+  const {address} = useAccount()
 
   return (
     <Link href={`/chat/${contactAddr}`} title="Click to open chat">
@@ -34,7 +37,7 @@ export const ChatPreview: FunctionComponent<ChatPreviewProps> = ({
         <div className="flex flex-col gap-1 md:gap-2 w-9/12">
           <div className="flex flex-row w-full justify-between">
             <div className={`text-lg w-full font-bold ${ data ? 'break-all' : 'truncate'}`}>
-              {data ? data : contactAddr}
+              {data ? data : (contactAddr.toLowerCase() === address?.toLowerCase() ? "myself" : contactAddr)}
             </div>
             <div className="text-xs w-5/12 text-right"> {lastMessageTime}</div>
           </div>
