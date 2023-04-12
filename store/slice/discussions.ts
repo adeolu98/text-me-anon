@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { AppState } from "@/store";
 import { ethers } from "ethers";
 import {TransactionResponse } from "@ethersproject/abstract-provider"
-import { DiscussionsState } from "@/lib/types";
+import { Discussion, DiscussionsState } from "@/lib/types";
 import { Chain } from "wagmi";
 import { Network, networks } from "@/lib/network";
 
@@ -41,14 +41,12 @@ const fetchAllHistory = async (address: string): Promise<TxResponse[]> => {
 export const fetchDiscussions = createAsyncThunk(
   "discussions/fetchDiscussions",
   async ({
-    network,
-    userAddress,
+    address,
   }: {
-    network: (Chain & { unsupported?: boolean | undefined }) | undefined;
-    userAddress: string;
+    address: string;
   }) => {
-    const history = await fetchAllHistory(userAddress);
-    const discussions = getInitialState();
+    const history = await fetchAllHistory(address);
+    const discussions: {[key: string]: Discussion[]} = {};
     const filtered = history.filter((tx) => tx.data.includes(msgTxIdentifier));
 
     filtered.forEach(async (data) => {
@@ -61,28 +59,28 @@ export const fetchDiscussions = createAsyncThunk(
           hash: data.hash
         }
       
-      // when userAddress is sender and receiver
-      if(data.from.toLowerCase() === userAddress.toLowerCase() && 
-        data.to?.toLowerCase() === userAddress.toLowerCase()){
-          if(!discussions[userAddress.toLowerCase()])  
-            discussions[userAddress.toLowerCase()]= []
-          discussions[userAddress.toLowerCase()].push(discussion)
+      // when address is sender and receiver
+      if(data.from.toLowerCase() === address.toLowerCase() && 
+        data.to?.toLowerCase() === address.toLowerCase()){
+          if(!discussions[address.toLowerCase()])  
+            discussions[address.toLowerCase()]= []
+          discussions[address.toLowerCase()].push(discussion)
       }
-      // when userAddress receives a message
-      else if(data.from.toLowerCase() !== userAddress.toLowerCase()){
+      // when address receives a message
+      else if(data.from.toLowerCase() !== address.toLowerCase()){
         if(!discussions[data.from.toLowerCase()])  
           discussions[data.from.toLowerCase()]= []
         discussions[data.from.toLowerCase()].push(discussion)
       }
-      // when userAddress sends a message
-      else if(data.to && data.to.toLowerCase() !== userAddress.toLowerCase()){
+      // when address sends a message
+      else if(data.to && data.to.toLowerCase() !== address.toLowerCase()){
         if(!discussions[data.to.toLowerCase()]) 
           discussions[data.to.toLowerCase()]= []
         discussions[data.to.toLowerCase()].push(discussion)
       }
     });
 
-    return discussions;
+    return {[address]: discussions};
   }
 );
 
@@ -101,7 +99,7 @@ export const discussionsSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(fetchDiscussions.fulfilled, (_, action) => action.payload);
+    builder.addCase(fetchDiscussions.fulfilled, (state, action) => ({...state, ...action.payload}));
   },
 });
 

@@ -9,5 +9,5 @@ export interface Discussion {
   hash: string;
 }
 
-export type DiscussionsState = Record<string, Discussion[]>;
+export type DiscussionsState = Record<string, Record<string, Discussion[]>>;
 

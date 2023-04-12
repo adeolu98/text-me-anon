@@ -11,7 +11,7 @@ function shouldFetch(discussions: DiscussionsState) {
   return !(localDiscussion === discussions);
 }
 
-export function useDiscussions() {
+export function useDiscussions(sender?: string) {
   const dispatch = useAppDispatch();
   let discussions = useAppSelector(selectDiscussions);
   const { address } = useAccount();
@@ -21,18 +21,18 @@ export function useDiscussions() {
     if (!address) return;
 
     if (shouldFetch(discussions)) {
-     dispatch(fetchDiscussions({ network: chain, userAddress: address }));
+     dispatch(fetchDiscussions({ address }));
      localDiscussion = discussions;
     }
   }, [address, chain, dispatch, discussions]);
 
-  return discussions ;
+  return discussions[sender || ""] ;
 }
 
-export function useDiscussion(address: string) {
-  const discussions = useDiscussions();
+export function useDiscussion(receiver: string, sender?: string,) {
+  const discussions = useDiscussions(sender) || [];
   const found = Object.entries(discussions).find(
-    ([a]) => address.toLowerCase() === a
+    ([a]) => receiver.toLowerCase() === a
   );
 
   return found?.[1];

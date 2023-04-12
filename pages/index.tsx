@@ -31,7 +31,7 @@ const Home: NextPage = () => {
   const [changeCopyLinkFavicon, setChangeCopyLinkFavicon] = useState(false);
 
   //sort in descending order of timestamp
-  const discussions = Object.entries(useDiscussions()).sort(
+  const discussions =Object.entries(useDiscussions(address) || []).sort(
     (a, b) => b[1][b[1].length - 1].timestamp - a[1][a[1].length - 1].timestamp
   );
 

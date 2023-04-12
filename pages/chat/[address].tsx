@@ -25,9 +25,7 @@ const Chat: NextPage = () => {
     ? router.query.address[0].toLowerCase()
     : router.query.address!;
 
-  const discussion = useDiscussion(
-    toAddress
-  );
+  const discussion = useDiscussion(toAddress, address);
 
   const { data } = useEnsName({
     address: toAddress ? `0x${toAddress.slice(2)}` : undefined,
