@@ -6,11 +6,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleExclamation, faLink } from "@fortawesome/free-solid-svg-icons";
 import { useDiscussions } from "@/hooks/use-discussions";
 import { getTime, hex_to_string } from "@/lib/utils";
-import { Spinner } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { Spinner, filter } from "@chakra-ui/react";
+import { ChangeEvent, useCallback, useEffect, useState } from "react";
 import { useAccount, useEnsAddress, useNetwork } from "wagmi";
 import { faCircleCheck } from "@fortawesome/free-regular-svg-icons";
 import ReactGA from "react-ga";
+import SearchInput from "@/components/SearchInput";
 
 ReactGA.initialize("UA-262892775-1");
 
@@ -18,7 +19,15 @@ const Home: NextPage = () => {
   const { address } = useAccount();
   const [bounce, setBounce] = useState("");
 
-  const [filterFor, setFilterFor] = useState("");
+  const [filterFor, _setFilterFor] = useState("");
+  const setFilterFor = useCallback((e: ChangeEvent<HTMLInputElement>) =>
+    _setFilterFor(
+      e.currentTarget.value.toLowerCase() === address?.toLowerCase()
+        ? "myself"
+        : e.currentTarget.value.toLowerCase()
+    )
+  , [address])
+
   const [changeCopyLinkFavicon, setChangeCopyLinkFavicon] = useState(false);
 
   //sort in descending order of timestamp
@@ -42,8 +51,8 @@ const Home: NextPage = () => {
   });
 
   useEffect(() => {
-    if (data) setFilterFor(data.toLowerCase());
-  }, [filterFor]);
+    if (data) _setFilterFor(data.toLowerCase());
+  }, [filterFor]); 
 
   const handleCopy = () => {
     navigator.clipboard.writeText(
@@ -128,19 +137,7 @@ const Home: NextPage = () => {
           </div>
           {/**search images */}
           <div className="w-full pt-2 pb-4 px-1 xs:px-5">
-            <input
-              value={filterFor.toLowerCase()}
-              type="text"
-              className=" w-full border focus:bg-gray-100 rounded-xl px-4 py-2 focus:border-2 focus:border-black focus:outline-none"
-              placeholder="search"
-              onChange={(e) =>
-                setFilterFor(
-                  e.currentTarget.value.toLowerCase() === address.toLowerCase()
-                    ? "myself"
-                    : e.currentTarget.value.toLowerCase()
-                )
-              }
-            ></input>
+            <SearchInput onChange={setFilterFor} value={filterFor} />
           </div>
           {/** contacts chat preview  */}
           {filterFor === "" ? (
@@ -241,7 +238,7 @@ const Home: NextPage = () => {
             height={100}
           ></FontAwesomeIcon>
           <p className="text-center font-bold font-xl">
-            Please connect wallet to see messages
+            Please connect wallet or search address to see messages
           </p>
         </div>
       )}
