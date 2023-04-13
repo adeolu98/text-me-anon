@@ -14,19 +14,17 @@ function shouldFetch(discussions: DiscussionsState) {
 export function useDiscussions(sender?: string) {
   const dispatch = useAppDispatch();
   let discussions = useAppSelector(selectDiscussions);
-  const { address } = useAccount();
-  const { chain } = useNetwork();
 
   useEffect(() => {
-    if (!address) return;
+    if (!sender) return;
 
     if (shouldFetch(discussions)) {
-     dispatch(fetchDiscussions({ address }));
+     sender && dispatch(fetchDiscussions({ address: sender }));
      localDiscussion = discussions;
     }
-  }, [address, chain, dispatch, discussions]);
+  }, [sender, dispatch, discussions]);
 
-  return discussions[sender || ""] ;
+  return discussions[sender || ""] ; 
 }
 
 export function useDiscussion(receiver: string, sender?: string,) {

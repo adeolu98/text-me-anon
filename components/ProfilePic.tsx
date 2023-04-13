@@ -1,7 +1,7 @@
 import React, { FunctionComponent } from "react";
 import Link from "next/link";
 import { useAccount } from "wagmi";
-import { buildDataUrl } from "@/utils/helperFunctions";
+import { buildDataUrl } from "@/lib/utils";
 
 interface ProfilePicProps {
   addressForProfileIcon: string;

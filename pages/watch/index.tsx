@@ -1,33 +1,34 @@
 import { AppLayout } from "@/components/AppLayout";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faCircleExclamation,
-} from "@fortawesome/free-solid-svg-icons";
+import { faCircleExclamation } from "@fortawesome/free-solid-svg-icons";
 import { useRouter } from "next/router";
 import { NextPage } from "next";
-import { useEffect, } from "react";
-import { useAccount } from "wagmi";
+import { useEffect } from "react";
 import { isAddress } from "ethers/lib/utils.js";
 import ChatMessages from "@/components/ChatMessages";
 
 const Chat: NextPage = () => {
   const router = useRouter();
-  const { address } = useAccount();
+  const { sender, receiver } = router.query
 
-  const toAddress = Array.isArray(router.query.address)
-    ? router.query.address[0].toLowerCase()
-    : router.query.address!;
-
-  // navigate to home if address is invalid
+  // navigate to home if addresses are invalid
   useEffect(() => {
-    if (toAddress && !isAddress(toAddress) && router) {
+    if (
+      sender &&
+      (typeof sender !== "string" || !isAddress(sender)) &&
+      receiver &&
+      (typeof receiver !== "string" || !isAddress(receiver)) &&
+      router
+    ) {
       router.push("/");
     }
-  }, [router, toAddress])
+  }, [receiver, router, sender]);
 
   return (
     <AppLayout>
-      {address ? <ChatMessages sender={address} receiver={toAddress} /> : (
+      {sender ? (
+        typeof sender === "string" &&  typeof receiver === "string" && <ChatMessages sender={sender} receiver={receiver} />
+      ) : (
         <div className="h-full w-full flex items-center justify-center flex-col gap-10 sm:w-4/6 md:w-4/6 lg:w-3/6 xl:w-2/6">
           <FontAwesomeIcon
             icon={faCircleExclamation}

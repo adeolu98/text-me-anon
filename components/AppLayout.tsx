@@ -7,7 +7,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTwitter, faDiscord } from "@fortawesome/free-brands-svg-icons";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import SearchInput from "./SearchInput";
-import { buildDataUrl } from "@/utils/helperFunctions";
+import { buildDataUrl } from "@/lib/utils";
 import { useEnsAddress, useEnsName } from "wagmi";
 import { isAddress } from "ethers/lib/utils.js";
 import { useRouter } from "next/router";
@@ -52,7 +52,10 @@ export const AppLayout: FunctionComponent<AppLayoutProps> = ({
   }, [ensAddress, ensName, search])
 
   const watchAddress = useCallback(() => {
-    if(address) router.push(`/watch/${address}`)
+    if(address) {
+      router.push(`/watch/${address}`)
+      setSearch("")
+    }
   }, [address, router])
 
   const validateKey = useCallback((e: KeyboardEvent<HTMLInputElement>) => {
@@ -95,7 +98,8 @@ export const AppLayout: FunctionComponent<AppLayoutProps> = ({
             placeholderText="Search address chat"
             onKeyDown={validateKey}
             onFocus={() => setSearchFocus(true)}
-            onBlur={() => setSearchFocus(false)}
+            // delayed to allow a possible click on the dropdown to trigger
+            onBlur={() => setTimeout(() =>setSearchFocus(false), 200)}
           />
           {search && searchFocus && (
             <div className="flex absolute p-2 w-full bg-white rounded-xl bottom-0 translate-y-[115%] items-center cursor-pointer">
