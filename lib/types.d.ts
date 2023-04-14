@@ -1,4 +1,5 @@
 import { Network } from "./network";
+import {TransactionResponse } from "@ethersproject/abstract-provider"
 
 export interface Discussion {
   from: string;
@@ -11,3 +12,4 @@ export interface Discussion {
 
 export type DiscussionsState = Record<string, Record<string, Discussion[]>>;
 
+export type TxResponse = TransactionResponse & {chainId: Network, gasUsed: string}
