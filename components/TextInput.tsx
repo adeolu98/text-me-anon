@@ -67,7 +67,7 @@ export const TextInput: FunctionComponent<TextInputProps> = ({
     request: {
       to: toAddress,
       value: "0",
-      data: "0x" + string_to_hex("OCM:" + text),
+      data: "0x" + string_to_hex(text),
     },
   });
   const { sendTransaction } = useSendTransaction({

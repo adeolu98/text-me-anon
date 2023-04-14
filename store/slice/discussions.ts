@@ -31,7 +31,7 @@ const fetchAllHistory = async (address: string): Promise<TxResponse[]> => {
       }
     )
     
-  console.log(_allHistory)
+
   const allHistory: TxResponse[] = []
   return allHistory.concat(..._allHistory)
 }
@@ -45,7 +45,15 @@ export const fetchDiscussions = createAsyncThunk(
   }) => {
     const history = await fetchAllHistory(address);
     const discussions: {[key: string]: Discussion[]} = {};
-    const filtered = history.filter((tx) => txFilter(tx));
+    const _filtered = history.filter((tx) => txFilter(tx));
+        
+    // remove OCM: in messages between February 2023 & May 2023
+    const filtered = _filtered.map(tx => ({
+      ...tx,
+      data: tx.timestamp! >= 1675209600 && tx.timestamp! <= 1682899199 && tx.data.startsWith(msgTxIdentifier) 
+        ? "0x" + tx.data.replace(msgTxIdentifier, "")
+        : tx.data
+    }))
 
     filtered.forEach(async (data) => {
       const message = {

@@ -120,7 +120,7 @@ function ChatMessages(props: ChatMessagesProps) {
                   received={
                     msgData.from.toLowerCase() !== sender.toLowerCase()
                   }
-                  text={hex_to_string(msgData.text).slice(5)}
+                  text={hex_to_string(msgData.text)}
                   timeSent={getTime(msgData.timestamp)}
                   network={msgData.id}
                   hash={msgData.hash}
