@@ -10,6 +10,7 @@ import { useDiscussions } from "@/hooks/use-discussions";
 import { useState, useEffect, ChangeEvent, useCallback } from "react";
 import { useEnsAddress } from "wagmi";
 import { ChatMode } from "@/lib/types";
+import Chat from "@/pages/watch";
 
 interface ChatListProps{
   address: string,
@@ -84,7 +85,7 @@ function ChatList(props: ChatListProps){
       <div className="flex flex-col xs:flex-row justify-between px-1 xs:px-5">
         <div className="flex-flex-col">
           <div className="text-xs xs:text-base sm:text-xl font-bold">
-            {mode === ChatMode.CHAT ? "Your Messages" : `Messages for ${shorten(address)}`}
+            {mode === ChatMode.CHAT ? "Your Messages" : `Messages for ${shorten(address ?? "")}`}
           </div>
           <div className="hidden sm:block">
             <div
@@ -133,7 +134,7 @@ function ChatList(props: ChatListProps){
             )}
           </div>
         </div>
-        <Link href={"/new-message"}>
+        <Link href={`/new-message/${mode === ChatMode.WATCH ? address : ""}`}>
           <div className={`${bounce}`} title={
             mode === ChatMode.CHAT ? "Send new message" : `Send ${shorten(address)} a message`
             }>

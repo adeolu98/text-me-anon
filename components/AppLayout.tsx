@@ -95,7 +95,7 @@ export const AppLayout: FunctionComponent<AppLayoutProps> = ({
           <SearchInput
             value={search}
             onChange={handleSearchInput}
-            placeholderText="Search address chat"
+            placeholderText="Enter address to view chat"
             onKeyDown={validateKey}
             onFocus={() => setSearchFocus(true)}
             // delayed to allow a possible click on the dropdown to trigger

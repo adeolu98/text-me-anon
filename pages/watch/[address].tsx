@@ -12,7 +12,6 @@ ReactGA.initialize("UA-262892775-1");
 const Home: NextPage = () => {
   const router = useRouter()
   const {address} = router.query;
-
   useEffect(() => {
     if (address && (typeof address !== "string" || !isAddress(address)) && router) {
       router.push("/");
@@ -21,7 +20,9 @@ const Home: NextPage = () => {
 
   return (
     <AppLayout>
-      <ChatList mode={ChatMode.WATCH} address={address as string} />
+      {typeof address === "string" && isAddress(address) && (
+        <ChatList mode={ChatMode.WATCH} address={address as string} />
+      )}
     </AppLayout>
   );
 };
