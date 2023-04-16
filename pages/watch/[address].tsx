@@ -1,10 +1,11 @@
 import { AppLayout } from "@/components/AppLayout";
 import { NextPage } from "next";
 import ReactGA from "react-ga";
-import ChatList, { ChatMode } from "@/components/ChatList";
+import ChatList from "@/components/ChatList";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 import { isAddress } from "ethers/lib/utils.js";
+import { ChatMode } from "@/lib/types";
 
 ReactGA.initialize("UA-262892775-1");
 

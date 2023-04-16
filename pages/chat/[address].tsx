@@ -9,6 +9,7 @@ import { useEffect, } from "react";
 import { useAccount } from "wagmi";
 import { isAddress } from "ethers/lib/utils.js";
 import ChatMessages from "@/components/ChatMessages";
+import { ChatMode } from "@/lib/types";
 
 const Chat: NextPage = () => {
   const router = useRouter();
@@ -27,7 +28,7 @@ const Chat: NextPage = () => {
 
   return (
     <AppLayout>
-      {address ? <ChatMessages sender={address} receiver={toAddress} /> : (
+      {address ? <ChatMessages mode={ChatMode.CHAT} sender={address} receiver={toAddress} /> : (
         <div className="h-full w-full flex items-center justify-center flex-col gap-10 sm:w-4/6 md:w-4/6 lg:w-3/6 xl:w-2/6">
           <FontAwesomeIcon
             icon={faCircleExclamation}

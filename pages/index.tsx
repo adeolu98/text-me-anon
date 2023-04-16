@@ -4,7 +4,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleExclamation, faLink } from "@fortawesome/free-solid-svg-icons";
 import { useAccount } from "wagmi";
 import ReactGA from "react-ga";
-import ChatList, { ChatMode } from "@/components/ChatList";
+import ChatList from "@/components/ChatList";
+import { ChatMode } from "@/lib/types";
 
 ReactGA.initialize("UA-262892775-1");
 

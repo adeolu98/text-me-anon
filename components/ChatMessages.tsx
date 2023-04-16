@@ -9,6 +9,7 @@ import { TextInput } from "./TextInput";
 import { useEffect, useState } from "react";
 import { useDiscussion } from "@/hooks/use-discussions";
 import { useEnsName } from "wagmi";
+import { ChatMode } from "@/lib/types"; 
 
 
   const handleClickScroll = () => {
@@ -22,10 +23,11 @@ import { useEnsName } from "wagmi";
 interface ChatMessagesProps {
   receiver: string;
   sender: string;
+  mode: ChatMode;
 }
 
 function ChatMessages(props: ChatMessagesProps) {
-  const { receiver, sender } = props;
+  const { receiver, sender, mode } = props;
   const discussions = useDiscussion(receiver, sender);
   const [text, setText] = useState("");
   const [previewText, setPreviewText] = useState("");
@@ -73,7 +75,11 @@ function ChatMessages(props: ChatMessagesProps) {
 
   return (
     <div className="border shadow-2xl flex flex-col rounded-3xl h-full w-full sm:w-4/6 lg:w-3/6 xl:w-2/6">
-      <Link href={"/"} className="" title="Go back">
+      <Link
+        href={mode === ChatMode.CHAT ? "/" : `/watch/${sender}`}
+        className=""
+        title="Go back"
+      >
         <FontAwesomeIcon
           className="absolute py-4 px-1 xs:px-5 mt-4"
           icon={faChevronLeft}
@@ -94,7 +100,7 @@ function ChatMessages(props: ChatMessagesProps) {
             <p className="truncate">
               {data
                 ? data
-                : receiver === sender.toLowerCase()
+                : receiver === sender.toLowerCase() && mode === ChatMode.CHAT
                 ? "myself"
                 : receiver}
             </p>
@@ -117,9 +123,7 @@ function ChatMessages(props: ChatMessagesProps) {
                 }
               >
                 <Message
-                  received={
-                    msgData.from.toLowerCase() !== sender.toLowerCase()
-                  }
+                  received={msgData.from.toLowerCase() !== sender.toLowerCase()}
                   text={hex_to_string(msgData.text)}
                   timeSent={getTime(msgData.timestamp)}
                   network={msgData.id}
@@ -146,26 +150,32 @@ function ChatMessages(props: ChatMessagesProps) {
       </div>
 
       {/**show input text area */}
-      <div className="hidden lg:block">
-        <TextInput
-          text={text}
-          enableOnKeydown={true}
-          setText={setText}
-          setNewMsg={setNewMsg}
-          setPreviewText={setPreviewText}
-          toAddress={receiver}
-        ></TextInput>
-      </div>
-      <div className="block lg:hidden">
-        <TextInput
-          text={text}
-          enableOnKeydown={false}
-          setText={setText}
-          setNewMsg={setNewMsg}
-          setPreviewText={setPreviewText}
-          toAddress={receiver}
-        ></TextInput>
-      </div>
+      {mode === ChatMode.CHAT ? (
+        <>
+          <div className="hidden lg:block">
+            <TextInput
+              text={text}
+              enableOnKeydown={true}
+              setText={setText}
+              setNewMsg={setNewMsg}
+              setPreviewText={setPreviewText}
+              toAddress={receiver}
+            ></TextInput>
+          </div>
+          <div className="block lg:hidden">
+            <TextInput
+              text={text}
+              enableOnKeydown={false}
+              setText={setText}
+              setNewMsg={setNewMsg}
+              setPreviewText={setPreviewText}
+              toAddress={receiver}
+            ></TextInput>
+          </div>
+        </>
+      ) : (
+        <div className="text-[14px] mx-auto mb-2">You are in watch mode.</div>
+      )}
     </div>
   );
 }

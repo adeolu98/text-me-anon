@@ -1,8 +1,9 @@
 import React, { FunctionComponent, useMemo } from "react";
+import { useEnsName, useAccount } from "wagmi";
 import { ProfilePic } from "./ProfilePic";
 import Link from "next/link";
-import { useEnsName, useAccount } from "wagmi";
-import { ChatMode } from "./ChatList";
+import { ChatMode } from "../lib/types";
+import { shorten } from "@/lib/utils";
 
 interface ChatPreviewProps {
   lastMessage: string;
@@ -55,7 +56,7 @@ export const ChatPreview: FunctionComponent<ChatPreviewProps> = ({
           </div>
           <div className="w-full flex flex-row justify-between">
             <p className="truncate">{lastMessage}</p>
-            {replied && <div title="You have not replied to this conversation" className="px-2 py-1 border border-gray-300 rounded-xl"><p className="text-black text-xs font-light">not replied</p></div> }
+            {replied && <div title={mode === ChatMode.CHAT ? "You have not replied to this conversation" : `${shorten(_sender || "")} has not replied`} className="px-2 py-1 border border-gray-300 rounded-xl"><p className="text-black text-xs font-light">not replied</p></div> }
           </div>
         </div>
       </div>

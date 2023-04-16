@@ -1,19 +1,15 @@
-import { hex_to_string, getTime } from "@/lib/utils";
+import { hex_to_string, getTime, shorten } from "@/lib/utils";
 import { Spinner } from "@chakra-ui/react";
 import { faLink, faCircleCheck } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
+import Image from "next/image";
 import { ChatPreview } from "./ChatPreview";
 import SearchInput from "./SearchInput";
 import { useDiscussions } from "@/hooks/use-discussions";
 import { useState, useEffect, ChangeEvent, useCallback } from "react";
 import { useEnsAddress } from "wagmi";
-
-
-export enum ChatMode {
-  WATCH = "watch",
-  CHAT = "chat",
-}
+import { ChatMode } from "@/lib/types";
 
 interface ChatListProps{
   address: string,
@@ -88,7 +84,7 @@ function ChatList(props: ChatListProps){
       <div className="flex flex-col xs:flex-row justify-between px-1 xs:px-5">
         <div className="flex-flex-col">
           <div className="text-xs xs:text-base sm:text-xl font-bold">
-            Messages
+            {mode === ChatMode.CHAT ? "Your Messages" : `Messages for ${shorten(address)}`}
           </div>
           <div className="hidden sm:block">
             <div
@@ -138,8 +134,10 @@ function ChatList(props: ChatListProps){
           </div>
         </div>
         <Link href={"/new-message"}>
-          <div className={`${bounce}`} title="Send new message">
-            <img
+          <div className={`${bounce}`} title={
+            mode === ChatMode.CHAT ? "Send new message" : `Send ${shorten(address)} a message`
+            }>
+            <Image
               width={30}
               height={30}
               alt="message-plus-icon"
