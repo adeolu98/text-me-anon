@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { AppState } from "@/store";
 import { ethers } from "ethers";
-import { Discussion, DiscussionsState, TxResponse } from "@/lib/types";
+import { Discussion, DiscussionsState, FetchStatus, TxResponse } from "@/lib/types";
 import { Network, networks } from "@/lib/network";
 import getHistory from "@/lib/getHistory";
 import txFilter from "@/lib/txFilter";
@@ -86,7 +86,7 @@ export const fetchDiscussions = createAsyncThunk(
       }
     });
 
-    return {[address]: discussions};
+    return {address, discussions};
   }
 );
 
@@ -105,7 +105,26 @@ export const discussionsSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(fetchDiscussions.fulfilled, (state, action) => ({...state, ...action.payload}));
+    builder.addCase(fetchDiscussions.pending, (state, action) => {
+      const address = action.meta.arg.address;
+      state[address] = {
+          discussions: state[address]?.discussions || {}, 
+          fetchStatus: FetchStatus.PENDING,
+          loaded: state[address]?.loaded || false
+        }
+    });
+    builder.addCase(fetchDiscussions.fulfilled, (state, action) => ({
+      ...state, 
+      [action.payload.address]: {discussions: action.payload.discussions, fetchStatus: FetchStatus.FULFILLED, loaded: true}
+    }));
+    builder.addCase(fetchDiscussions.rejected, (state, action) => {
+      const address = action.meta.arg.address;
+      state[address] = {
+          discussions: state[address]?.discussions || {}, 
+          fetchStatus: FetchStatus.REJECTED,
+          loaded: state[address]?.loaded || false
+        }
+    });
   },
 });
 

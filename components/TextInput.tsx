@@ -61,7 +61,7 @@ export const TextInput: FunctionComponent<TextInputProps> = ({
     watch: true,
   });
 
-  const discussion = useDiscussion(toAddress.toLowerCase());
+  const discussion = useDiscussion(toAddress.toLowerCase()).discussion;
   const [previousText, setPreviousText] = useState("");
   const { config } = usePrepareSendTransaction({
     request: {

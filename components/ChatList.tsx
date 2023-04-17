@@ -9,7 +9,7 @@ import SearchInput from "./SearchInput";
 import { useDiscussions } from "@/hooks/use-discussions";
 import { useState, useEffect, ChangeEvent, useCallback } from "react";
 import { useEnsAddress } from "wagmi";
-import { ChatMode } from "@/lib/types";
+import { ChatMode, FetchStatus } from "@/lib/types";
 import Chat from "@/pages/watch";
 
 interface ChatListProps{
@@ -34,8 +34,10 @@ function ChatList(props: ChatListProps){
   const [bounce, setBounce] = useState("");
   const [filterFor, _setFilterFor] = useState("");
 
+  const {discussions: _discussions, fetchStatus, loaded} = useDiscussions(address)
+
   //sort in descending order of timestamp
-  const discussions = Object.entries(useDiscussions(address) || []).sort(
+  const discussions = Object.entries(_discussions || []).sort(
     (a, b) => b[1][b[1].length - 1].timestamp - a[1][a[1].length - 1].timestamp
   );
   const startBounce = () => {
@@ -85,7 +87,9 @@ function ChatList(props: ChatListProps){
       <div className="flex flex-col xs:flex-row justify-between px-1 xs:px-5">
         <div className="flex-flex-col">
           <div className="text-xs xs:text-base sm:text-xl font-bold">
-            {mode === ChatMode.CHAT ? "Your Messages" : `Messages for ${shorten(address ?? "")}`}
+            {mode === ChatMode.CHAT
+              ? "Your Messages"
+              : `Messages for ${shorten(address ?? "")}`}
           </div>
           <div className="hidden sm:block">
             <div
@@ -116,9 +120,7 @@ function ChatList(props: ChatListProps){
             className="block sm:hidden text-blue-800 hover:underline cursor-copy text-xs py-2 flex flex-row items-center gap-1"
             onClick={handleCopy}
           >
-            <p>
-              {!changeCopyLinkFavicon ? copyMessage[mode][0] : "Copied!"}
-            </p>
+            <p>{!changeCopyLinkFavicon ? copyMessage[mode][0] : "Copied!"}</p>
             {!changeCopyLinkFavicon ? (
               <FontAwesomeIcon
                 width={15}
@@ -135,9 +137,14 @@ function ChatList(props: ChatListProps){
           </div>
         </div>
         <Link href={`/new-message/${mode === ChatMode.WATCH ? address : ""}`}>
-          <div className={`${bounce}`} title={
-            mode === ChatMode.CHAT ? "Send new message" : `Send ${shorten(address)} a message`
-            }>
+          <div
+            className={`${bounce}`}
+            title={
+              mode === ChatMode.CHAT
+                ? "Send new message"
+                : `Send ${shorten(address)} a message`
+            }
+          >
             <Image
               width={30}
               height={30}
@@ -190,10 +197,16 @@ function ChatList(props: ChatListProps){
             })
           ) : (
             <div className="pt-8 w-full flex justify-center gap-4">
-              <p className="text-sm  font-light">No messages found yet..</p>
-              <div>
-                <Spinner size="md" />
-              </div>
+              {fetchStatus === FetchStatus.PENDING && !loaded ? (
+                <>
+                  <p className="text-sm  font-light">No messages found yet..</p>
+                  <div>
+                    <Spinner size="md" />
+                  </div>
+                </>
+              ) : (
+                <p className="text-sm  font-light">No messages found</p>
+              )}
             </div>
           )}
         </div>
@@ -243,10 +256,18 @@ function ChatList(props: ChatListProps){
               })
           ) : (
             <div className="pt-8 w-full flex justify-center gap-4">
-              <p className="text-sm  font-light">No messages found yet..</p>
-              <div>
-                <Spinner size="md" />
-              </div>
+              {fetchStatus === FetchStatus.PENDING && !loaded ? (
+                <div>
+                  <p className="text-sm  font-light">No messages found yet..</p>
+                  <div>
+                    <Spinner size="md" />
+                  </div>
+                </div>
+              ) : (
+                <div>
+                  <p className="text-sm  font-light">No messages found</p>
+                </div>
+              )}
             </div>
           )}
         </div>

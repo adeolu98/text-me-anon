@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "@/store";
 import { fetchDiscussions, resetDiscussions, selectDiscussions } from "@/store/slice/discussions";
 import { useAccount, useEnsAddress, useNetwork } from "wagmi";
-import { DiscussionsState } from "@/lib/types";
+import { DiscussionsState, FetchStatus } from "@/lib/types";
 
 let localDiscussion: DiscussionsState;
 
@@ -17,21 +17,23 @@ export function useDiscussions(sender?: string) {
 
   useEffect(() => {
     if (!sender) return;
-
-    if (shouldFetch(discussions)) {
-     sender && dispatch(fetchDiscussions({ address: sender }));
-     localDiscussion = discussions;
+    if (shouldFetch(discussions) && discussions[sender]?.fetchStatus !== FetchStatus.PENDING) {
+      dispatch(fetchDiscussions({ address: sender }));
+      localDiscussion = discussions;
     }
   }, [sender, dispatch, discussions]);
 
-  return discussions[sender || ""] ; 
+  return { discussions: discussions[sender || ""]?.discussions, 
+    fetchStatus: discussions[sender || ""]?.fetchStatus, 
+    loaded: discussions[sender || ""]?.loaded 
+  }; 
 }
 
 export function useDiscussion(receiver: string, sender?: string,) {
-  const discussions = useDiscussions(sender) || [];
-  const found = Object.entries(discussions).find(
+  const { discussions, fetchStatus, loaded } = useDiscussions(sender);
+  const found = Object.entries(discussions || []).find(
     ([a]) => receiver.toLowerCase() === a
   );
 
-  return found?.[1];
+  return {discussion: found?.[1], fetchStatus, loaded};
 }

@@ -9,7 +9,7 @@ import { TextInput } from "./TextInput";
 import { useEffect, useState } from "react";
 import { useDiscussion } from "@/hooks/use-discussions";
 import { useEnsName } from "wagmi";
-import { ChatMode } from "@/lib/types"; 
+import { ChatMode, FetchStatus } from "@/lib/types"; 
 
 
   const handleClickScroll = () => {
@@ -28,7 +28,7 @@ interface ChatMessagesProps {
 
 function ChatMessages(props: ChatMessagesProps) {
   const { receiver, sender, mode } = props;
-  const discussions = useDiscussion(receiver, sender);
+  const {discussion, fetchStatus, loaded} = useDiscussion(receiver, sender);
   const [text, setText] = useState("");
   const [previewText, setPreviewText] = useState("");
 
@@ -39,7 +39,7 @@ function ChatMessages(props: ChatMessagesProps) {
   //track the current length of discussion before a new msg is sent
   const [lengthBeforeNewMsg, setLengthBeforeNewMsg] = useState<
     Number | undefined
-  >(discussions?.length);
+  >(discussion?.length);
   const [currentMsgsChain, setCurrentMsgsChain] = useState<
     number | undefined
   >();
@@ -50,23 +50,23 @@ function ChatMessages(props: ChatMessagesProps) {
   });
 
   useEffect(() => {
-    if (discussions && discussions?.length !== lengthBeforeNewMsg) {
+    if (discussion && discussion?.length !== lengthBeforeNewMsg) {
       //check new msg object to see that its not msg from recipient
-      if (discussions![discussions!.length - 1].from === sender?.toLowerCase()) {
+      if (discussion![discussion!.length - 1].from === sender?.toLowerCase()) {
         setNewMsg(false);
       }
-      setLengthBeforeNewMsg(discussions?.length);
+      setLengthBeforeNewMsg(discussion?.length);
     }
-    discussions && setCurrentMsgsChain(discussions[0].id);
-  }, [discussions]);
+    discussion && setCurrentMsgsChain(discussion[0].id);
+  }, [discussion]);
 
   useEffect(() => {
     //scroll to most recent text by default on page open
-    if (scrollOnOpen === false && discussions) {
+    if (scrollOnOpen === false && discussion) {
       handleClickScroll();
       setScrollOnOpen(true);
     }
-  }, [discussions]);
+  }, [discussion]);
 
   useEffect(() => {
     //scroll to most recent text when sending a new message regardless of how far up user has scrolled
@@ -110,14 +110,14 @@ function ChatMessages(props: ChatMessagesProps) {
       </Link>
       {/** show chat messages */}
       <div className="h-full overflow-x-none overflow-y-auto px-1 xs:px-5 pt-3  pb-6">
-        {discussions && discussions.length > 0 ? (
-          discussions.map((msgData, index) => {
+        {discussion && discussion.length > 0 ? (
+          discussion.map((msgData, index) => {
             return (
               <div
                 key={index}
                 className=""
                 id={
-                  index === discussions.length - 1 && newMsg === false
+                  index === discussion.length - 1 && newMsg === false
                     ? "last-msg"
                     : ""
                 }
@@ -134,12 +134,20 @@ function ChatMessages(props: ChatMessagesProps) {
           })
         ) : (
           <div className="pt-8 w-full flex justify-center gap-4">
-            <p className="text-sm  font-light">
-              No messages found, searching..
-            </p>
-            <div>
-              <Spinner size="md" />
-            </div>
+            {fetchStatus === FetchStatus.PENDING  && !loaded
+              ?
+              <>
+                <p className="text-sm  font-light">
+                  No messages found, searching..
+                </p>
+                <div>
+                  <Spinner size="md" />
+                </div>
+              </>
+              : <p className="text-sm  font-light">
+                  No messages found
+                </p>
+            }
           </div>
         )}
         {newMsg && (

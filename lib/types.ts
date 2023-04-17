@@ -10,7 +10,13 @@ export interface Discussion {
   hash: string;
 }
 
-export type DiscussionsState = Record<string, Record<string, Discussion[]>>;
+export enum FetchStatus {
+  PENDING = "pending",
+  FULFILLED = "fulfilled",
+  REJECTED = "rejected"
+}
+
+export type DiscussionsState = Record<string, {discussions: Record<string, Discussion[]>, fetchStatus: FetchStatus, loaded: boolean} >;
 
 export type TxResponse = TransactionResponse & {chainId: Network, gasUsed: string}
 
