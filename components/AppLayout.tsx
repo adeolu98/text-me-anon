@@ -1,5 +1,5 @@
-import React, { ChangeEvent, FunctionComponent, ReactNode, FocusEvent, KeyboardEvent, useMemo, useState, useCallback, FocusEventHandler } from "react";
-
+import React, { ChangeEvent, FunctionComponent, ReactNode, FocusEvent, KeyboardEvent, useMemo, useState, useCallback, FocusEventHandler, useEffect } from "react";
+import { ChatSearch } from "./SearchInput";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import Image from "next/image";
 import Head from "next/head";
@@ -11,6 +11,11 @@ import { buildDataUrl } from "@/lib/utils";
 import { useEnsAddress, useEnsName } from "wagmi";
 import { isAddress } from "ethers/lib/utils.js";
 import { useRouter } from "next/router";
+import MobileNav from "./modals/MobileNav";
+import BurgerMenu from "@/public/burger-menu.svg";
+import { Modals, useModalContext } from "@/context/modalContext";
+import Link from "next/link";
+import Chat from "@/public/chat-bubbles.svg";
 
 interface AppLayoutProps {
   className?: string;
@@ -21,48 +26,12 @@ export const AppLayout: FunctionComponent<AppLayoutProps> = ({
   className,
   children,
 }) => {
-  const [search, setSearch] = useState("")
-  const [searchFocus, setSearchFocus] = useState<boolean>(false)
+  const {open, close} = useModalContext(Modals.MobileNav) 
 
-  const handleSearchInput = (e: ChangeEvent<HTMLInputElement>) => {
-    setSearch(e.currentTarget.value);
-  }
-  const router = useRouter()
-
-  const { data: ensName, error: error1, status: status1 } = useEnsName({
-    address: isAddress(search) ? search : ("" as `0x{string}`),
-    chainId: 1
-  });
-  const {data: ensAddress, error, status} = useEnsAddress({
-    name: search,
-    chainId: 1
-  })
-
-  // resolved ensName or address
-  const [name, address]  = useMemo((): [string|undefined, string|undefined] => {
-    if(search && ensName){
-      return [ensName, search]
-    }else if(search && ensAddress){
-      return [search, ensAddress]
-    } else if(isAddress(search)){
-      return [undefined, search]
-    } else {
-      return [undefined, undefined]
-    }
-  }, [ensAddress, ensName, search])
-
-  const watchAddress = useCallback(() => {
-    if(address) {
-      router.push(`/watch/${address}`)
-      setSearch("")
-    }
-  }, [address, router])
-
-  const validateKey = useCallback((e: KeyboardEvent<HTMLInputElement>) => {
-    if(e.key === "Enter"){
-      watchAddress();
-    }
-  }, [watchAddress])
+  useEffect(() => {
+     close()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   return (
     <div
@@ -86,49 +55,29 @@ export const AppLayout: FunctionComponent<AppLayoutProps> = ({
           }}
         />
       </Head>
+      <MobileNav />
       <div className=" flex flex-row justify-between gap-6 w-full">
         <div className="font-bold flex-shrink-0 text-lg sm:text-xl md:text-2xl items-center md:gap-1 flex flex-row">
           <p className="">Text-Me Anon</p>
           <Image width={30} height={10} src="/anon.ico" alt="" />
         </div>
-        <div className="max-w-[500px] relative w-full flex items-center md:w-96">
-          <SearchInput
-            value={search}
-            onChange={handleSearchInput}
-            placeholderText="Enter address to view chat"
-            onKeyDown={validateKey}
-            onFocus={() => setSearchFocus(true)}
-            // delayed to allow a possible click on the dropdown to trigger
-            onBlur={() => setTimeout(() =>setSearchFocus(false), 200)}
-          />
-          {search && searchFocus && (
-            <div className="flex absolute p-2 w-full bg-white rounded-xl bottom-0 translate-y-[115%] items-center cursor-pointer">
-              {!name || !address ? (
-                <span className="w-full text-center inline-block">
-                  No result
-                </span>
-              ) : (
-                <button className="flex w-full items-center bg-neutral-50 p-[5px] rounded-xl" onClick={watchAddress}>
-                  <span className="inline-block flex-shrink-0 w-[20px] h-[20px] relative ">
-                    <Image
-                      fill
-                      src={buildDataUrl(address)}
-                      alt=""
-                      className="rounded-full"
-                    />
-                  </span>
-                  &nbsp;&nbsp;
-                  <span className="overflow truncate">{name || address}</span>
-                </button>
-              )}
-            </div>
-          )}
+        <ChatSearch classNames="hidden sm:block" />
+        <div className="flex-shrink-0 flex sm:hidden items-center">
+          <Link href="/" title="My messages">
+            <Image src={Chat} alt="Chat icon" width={35} height={35} />
+          </Link>
         </div>
-        <div className="flex items-center flex-shrink-0">
+
+        <div className="items-center flex-shrink-0 hidden sm:flex">
+          <div className="flex-shrink-0 flex items-center mr-4">
+            <Link href="/" title="My messages">
+              <Image src={Chat} alt="Chat icon" width={35} height={35} />
+            </Link>
+          </div>
           <ConnectButton
             showBalance={{
               smallScreen: false,
-              largeScreen: true,
+              largeScreen: false,
             }}
             accountStatus={{
               smallScreen: "avatar",
@@ -136,6 +85,9 @@ export const AppLayout: FunctionComponent<AppLayoutProps> = ({
             }}
           ></ConnectButton>
         </div>
+        <button onClick={open} className="sm:hidden">
+          <Image src={BurgerMenu} alt="" width={30} height={20} />
+        </button>
       </div>
       <div className="flex w-full justify-center items-center h-4/5 pt-5 md:px-10">
         {children}
