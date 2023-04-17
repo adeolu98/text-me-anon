@@ -1,9 +1,10 @@
-import React, { FunctionComponent, useMemo } from "react";
+import React, { FunctionComponent, useCallback, useMemo } from "react";
 import { useEnsName, useAccount } from "wagmi";
 import { ProfilePic } from "./ProfilePic";
 import Link from "next/link";
 import { ChatMode } from "../lib/types";
 import { shorten } from "@/lib/utils";
+import { useRouter } from "next/router";
 
 interface ChatPreviewProps {
   lastMessage: string;
@@ -28,6 +29,7 @@ export const ChatPreview: FunctionComponent<ChatPreviewProps> = ({
     address: `0x${receiver.slice(2)}`,
     chainId: 1
   });
+  const router = useRouter()
 
   const {address} = useAccount()
   const _sender = sender || address;
@@ -38,8 +40,12 @@ export const ChatPreview: FunctionComponent<ChatPreviewProps> = ({
       : `/watch/?sender=${_sender}&receiver=${receiver}`
   }, [_sender, mode, receiver])
 
+  const onClick = useCallback(() => {
+    router.push(chatLink)
+  }, [chatLink, router])
+
   return (
-    <Link href={chatLink} title="Click to open chat">
+    <div onClick={onClick} title="Click to open chat">
       <div
         className={` ${className} w-full flex flex-row items-center gap-2 sm:gap-4`}
       >
@@ -60,6 +66,6 @@ export const ChatPreview: FunctionComponent<ChatPreviewProps> = ({
           </div>
         </div>
       </div>
-    </Link>
+    </div>
   );
 };

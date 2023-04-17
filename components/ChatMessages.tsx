@@ -88,7 +88,6 @@ function ChatMessages(props: ChatMessagesProps) {
         ></FontAwesomeIcon>
       </Link>
       {/** contact info display */}
-      <Link href={`/info/${receiver}`} title="Click to view more info">
         <div className="flex flex-col gap-1 w-full rounded-t-3xl bg-gray-50  px-1 xs:px-5 py-3">
           <div className="w-full mt-1 flex justify-center items-center">
             <ProfilePic
@@ -107,7 +106,6 @@ function ChatMessages(props: ChatMessagesProps) {
           </div>
         </div>
         <div className="bg-gray-200 h-[1px] w-full"></div>
-      </Link>
       {/** show chat messages */}
       <div className="h-full overflow-x-none overflow-y-auto px-1 xs:px-5 pt-3  pb-6">
         {discussion && discussion.length > 0 ? (

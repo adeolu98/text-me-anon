@@ -9,14 +9,15 @@ import { Network, getEtherscanAddressLink } from "@/lib/network";
 import { useAccount, useEnsName, useNetwork } from "wagmi";
 import { isAddress } from "ethers/lib/utils.js";
 import { useEffect } from "react";
+import { ChatMode } from "@/lib/types";
 
 
 const Info: NextPage = () => {
   const router = useRouter();
-  const { chain } = useNetwork();
+  const { address } = useAccount();
   const queriedAddress = Array.isArray(router.query.address)
-    ? router.query.address[0]
-    : router.query.address!;
+    ? router.query.address[0].toLowerCase()
+    : router.query.address!?.toLowerCase();
 
   const { data } = useEnsName({
     address: queriedAddress ? `0x${queriedAddress.slice(2)}` : undefined,
@@ -33,7 +34,13 @@ const Info: NextPage = () => {
   return (
     <AppLayout>
       <div className="border shadow-2xl flex flex-col rounded-3xl h-full w-full sm:w-4/6 md:w-4/6 lg:w-3/6 xl:w-2/6">
-        <Link href={`/chat/${queriedAddress}`}>
+        <Link
+          href={
+            address?.toLowerCase() === queriedAddress
+              ? `/chat/${queriedAddress}`
+              : `/watch/${queriedAddress}`
+          }
+        >
           <FontAwesomeIcon
             className="absolute px-1 xs:px-5 mt-4"
             icon={faChevronLeft}
