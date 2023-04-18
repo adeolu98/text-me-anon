@@ -34,12 +34,9 @@ const Info: NextPage = () => {
   return (
     <AppLayout>
       <div className="border shadow-2xl flex flex-col rounded-3xl h-full w-full sm:w-4/6 md:w-4/6 lg:w-3/6 xl:w-2/6">
-        <Link
-          href={
-            address?.toLowerCase() === queriedAddress
-              ? `/chat/${queriedAddress}`
-              : `/watch/${queriedAddress}`
-          }
+        <button
+          onClick={router.back}
+          title="Go back"
         >
           <FontAwesomeIcon
             className="absolute px-1 xs:px-5 mt-4"
@@ -47,7 +44,7 @@ const Info: NextPage = () => {
             width={50}
             height={50}
           ></FontAwesomeIcon>
-        </Link>
+        </button>
         <div className="flex flex-col items-center mt-24 px-1 xs:px-5">
           <ProfilePic
             addressForProfileIcon={queriedAddress}
