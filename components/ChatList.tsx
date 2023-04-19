@@ -11,6 +11,7 @@ import { useState, useEffect, ChangeEvent, useCallback } from "react";
 import { useEnsAddress } from "wagmi";
 import { ChatMode, FetchStatus } from "@/lib/types";
 import Chat from "@/pages/watch";
+import Copy from "./Copy";
 
 interface ChatListProps{
   address: string,
@@ -92,48 +93,33 @@ function ChatList(props: ChatListProps){
               : `Messages for ${shorten(address ?? "")}`}
           </div>
           <div className="hidden sm:block">
-            <div
-              className="hover:underline text-blue-800 cursor-copy text-xs py-2 flex flex-row items-center gap-1"
-              onClick={handleCopy}
-            >
-              <p>
-                {!changeCopyLinkFavicon
-                  ? copyMessage[mode][0]
-                  : copyMessage[mode][1]}
-              </p>
-              {!changeCopyLinkFavicon ? (
-                <FontAwesomeIcon
-                  width={15}
-                  height={15}
-                  icon={faLink}
-                ></FontAwesomeIcon>
-              ) : (
-                <FontAwesomeIcon
-                  width={15}
-                  height={15}
-                  icon={faCircleCheck}
-                ></FontAwesomeIcon>
-              )}
-            </div>
+            <Copy
+              onCopyText="Copied! Now share it with other anons"
+              defaultText={
+                mode === ChatMode.WATCH
+                  ? "Click to copy this address link"
+                  : "Click to copy your address link"
+              }
+              copyText={`${
+                window.location.origin
+              }/${mode}/${address?.toLowerCase()}`}
+            />
           </div>
           <div
-            className="block sm:hidden text-blue-800 hover:underline cursor-copy text-xs py-2 flex flex-row items-center gap-1"
+            className="block sm:hidden"
             onClick={handleCopy}
           >
-            <p>{!changeCopyLinkFavicon ? copyMessage[mode][0] : "Copied!"}</p>
-            {!changeCopyLinkFavicon ? (
-              <FontAwesomeIcon
-                width={15}
-                height={15}
-                icon={faLink}
-              ></FontAwesomeIcon>
-            ) : (
-              <FontAwesomeIcon
-                width={15}
-                height={15}
-                icon={faCircleCheck}
-              ></FontAwesomeIcon>
-            )}
+            <Copy
+              onCopyText="Copied! Now share it with other anons"
+              defaultText={
+                mode === ChatMode.WATCH
+                  ? "Copy this address link"
+                  : "Copy your address link"
+              }
+              copyText={`${
+                window.location.origin
+              }/${mode}/${address?.toLowerCase()}`}
+            />
           </div>
         </div>
         <Link href={`/new-message/${mode === ChatMode.WATCH ? address : ""}`}>

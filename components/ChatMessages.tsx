@@ -10,6 +10,8 @@ import { useEffect, useState } from "react";
 import { useDiscussion } from "@/hooks/use-discussions";
 import { useEnsName } from "wagmi";
 import { ChatMode, FetchStatus } from "@/lib/types"; 
+import Copy from "./Copy";
+import { useRouter } from "next/router";
 
 
   const handleClickScroll = () => {
@@ -31,6 +33,7 @@ function ChatMessages(props: ChatMessagesProps) {
   const {discussion, fetchStatus, loaded} = useDiscussion(receiver, sender);
   const [text, setText] = useState("");
   const [previewText, setPreviewText] = useState("");
+  const {asPath} = useRouter()
 
   //tracks new msg entered by sender
   const [newMsg, setNewMsg] = useState(false);
@@ -88,24 +91,24 @@ function ChatMessages(props: ChatMessagesProps) {
         ></FontAwesomeIcon>
       </Link>
       {/** contact info display */}
-        <div className="flex flex-col gap-1 w-full rounded-t-3xl bg-gray-50  px-1 xs:px-5 py-3">
-          <div className="w-full mt-1 flex justify-center items-center">
-            <ProfilePic
-              addressForProfileIcon={receiver}
-              className="w-2/12 sm:w-1/12"
-            ></ProfilePic>
-          </div>
-          <div className="text-center">
-            <p className="truncate">
-              {data
-                ? data
-                : receiver === sender.toLowerCase() && mode === ChatMode.CHAT
-                ? "myself"
-                : receiver}
-            </p>
-          </div>
+      <div className="flex flex-col gap-1 w-full rounded-t-3xl bg-gray-50  px-1 xs:px-5 py-3">
+        <div className="w-full mt-1 flex justify-center items-center">
+          <ProfilePic
+            addressForProfileIcon={receiver}
+            className="w-2/12 sm:w-1/12"
+          ></ProfilePic>
         </div>
-        <div className="bg-gray-200 h-[1px] w-full"></div>
+        <div className="text-center">
+          <p className="truncate">
+            {data
+              ? data
+              : receiver === sender.toLowerCase() && mode === ChatMode.CHAT
+              ? "myself"
+              : receiver}
+          </p>
+        </div>
+      </div>
+      <div className="bg-gray-200 h-[1px] w-full"></div>
       {/** show chat messages */}
       <div className="h-full overflow-x-none overflow-y-auto px-1 xs:px-5 pt-3  pb-6">
         {discussion && discussion.length > 0 ? (
@@ -132,8 +135,7 @@ function ChatMessages(props: ChatMessagesProps) {
           })
         ) : (
           <div className="pt-8 w-full flex justify-center gap-4">
-            {fetchStatus === FetchStatus.PENDING  && !loaded
-              ?
+            {fetchStatus === FetchStatus.PENDING && !loaded ? (
               <>
                 <p className="text-sm  font-light">
                   No messages found, searching..
@@ -142,10 +144,9 @@ function ChatMessages(props: ChatMessagesProps) {
                   <Spinner size="md" />
                 </div>
               </>
-              : <p className="text-sm  font-light">
-                  No messages found
-                </p>
-            }
+            ) : (
+              <p className="text-sm  font-light">No messages found</p>
+            )}
           </div>
         )}
         {newMsg && (
@@ -180,7 +181,17 @@ function ChatMessages(props: ChatMessagesProps) {
           </div>
         </>
       ) : (
-        <div className="text-[14px] mx-auto mb-2">You are in watch mode.</div>
+        <div className="text-[14px] mx-auto mb-2 text-center">
+          You are in watch mode.
+            <Copy
+              onCopyText="Copied! Now share it with other anons"
+              defaultText="Click to copy this chat link"
+              copyText={`${
+                window.location.origin
+              }${asPath}`}
+              classNames="text-center mx-auto"
+            />
+        </div>
       )}
     </div>
   );
