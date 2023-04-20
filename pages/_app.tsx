@@ -22,6 +22,7 @@ import Jazzicon from "@raugfer/jazzicon";
 import { AvatarComponent, lightTheme } from "@rainbow-me/rainbowkit";
 import Head from "next/head";
 import GoogleAnalytics from "@/components/analytics/GoogleAnalytics";
+import ModalContext from "@/context/modalContext";
 
 const { chains, provider } = configureChains(
   [mainnet, polygon, optimism, arbitrum, goerli, sepolia],
@@ -79,8 +80,10 @@ export default function App({ Component, pageProps }: AppProps) {
       >
         <ChakraProvider>
           <ReduxProvider store={store}>
-            <GoogleAnalytics/>
-            <Component {...pageProps} />
+            <GoogleAnalytics />
+            <ModalContext> 
+              <Component {...pageProps} />
+            </ModalContext>
           </ReduxProvider>
         </ChakraProvider>
       </RainbowKitProvider>

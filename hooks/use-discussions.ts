@@ -1,8 +1,7 @@
 import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "@/store";
-import { fetchDiscussions, resetDiscussions, selectDiscussions } from "@/store/slice/discussions";
-import { useAccount, useEnsAddress, useNetwork } from "wagmi";
-import { DiscussionsState } from "@/lib/types";
+import { fetchDiscussions, selectDiscussions } from "@/store/slice/discussions";
+import { DiscussionsState, FetchStatus } from "@/lib/types";
 
 let localDiscussion: DiscussionsState;
 
@@ -11,29 +10,29 @@ function shouldFetch(discussions: DiscussionsState) {
   return !(localDiscussion === discussions);
 }
 
-export function useDiscussions() {
+export function useDiscussions(sender?: string) {
   const dispatch = useAppDispatch();
   let discussions = useAppSelector(selectDiscussions);
-  const { address } = useAccount();
-  const { chain } = useNetwork();
 
   useEffect(() => {
-    if (!address) return;
-
-    if (shouldFetch(discussions)) {
-     dispatch(fetchDiscussions({ network: chain, userAddress: address }));
-     localDiscussion = discussions;
+    if (!sender) return;
+    if (shouldFetch(discussions) && discussions[sender]?.fetchStatus !== FetchStatus.PENDING) {
+      dispatch(fetchDiscussions({ address: sender }));
+      localDiscussion = discussions;
     }
-  }, [address, chain, dispatch, discussions]);
+  }, [sender, dispatch, discussions]);
 
-  return discussions ;
+  return { discussions: discussions[sender || ""]?.discussions, 
+    fetchStatus: discussions[sender || ""]?.fetchStatus, 
+    loaded: discussions[sender || ""]?.loaded 
+  }; 
 }
 
-export function useDiscussion(address: string) {
-  const discussions = useDiscussions();
-  const found = Object.entries(discussions).find(
-    ([a]) => address.toLowerCase() === a
+export function useDiscussion(receiver: string, sender?: string,) {
+  const { discussions, fetchStatus, loaded } = useDiscussions(sender);
+  const found = Object.entries(discussions || []).find(
+    ([a]) => receiver.toLowerCase() === a
   );
 
-  return found?.[1];
+  return {discussion: found?.[1], fetchStatus, loaded};
 }

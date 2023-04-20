@@ -1,7 +1,7 @@
 import React, { FunctionComponent } from "react";
-import Jazzicon from "@raugfer/jazzicon";
 import Link from "next/link";
 import { useAccount } from "wagmi";
+import { buildDataUrl } from "@/lib/utils";
 
 interface ProfilePicProps {
   addressForProfileIcon: string;
@@ -14,13 +14,7 @@ export const ProfilePic: FunctionComponent<ProfilePicProps> = ({
 }) => {
   const { address } = useAccount();
 
-  // builds an image data url for embedding
-  function buildDataUrl(addr: string): string {
-    return (
-      "data:image/svg+xml;base64," +
-      btoa(Jazzicon(addr === "myself" ? address! : addr))
-    );
-  }
+
   const imageUrl = addressForProfileIcon ? buildDataUrl(addressForProfileIcon) : '/profilePlaceholderPic.svg';
 
   return (

@@ -1,11 +1,17 @@
 import React, { FunctionComponent, ReactNode } from "react";
-
+import { ChatSearch } from "./SearchInput";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import Image from "next/image";
 import Head from "next/head";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTwitter, faDiscord } from "@fortawesome/free-brands-svg-icons";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
+import { useAccount } from "wagmi";
+import { useRouter } from "next/router";
+import ModeSwitch from "./ModeSwitch";
+import { useSelector } from "react-redux";
+import { selectMode } from "@/store/slice/general";
+import { ChatMode } from "@/lib/types";
 
 interface AppLayoutProps {
   className?: string;
@@ -16,6 +22,10 @@ export const AppLayout: FunctionComponent<AppLayoutProps> = ({
   className,
   children,
 }) => {
+  const { asPath } = useRouter();
+  const { isConnected } = useAccount();
+  const mode = useSelector(selectMode);
+
   return (
     <div
       className={`${className}  flex flex-col justify-between h-screen bg-neutral-50 px-4 xs:px-6 sm:px-10 pt-10`}
@@ -39,15 +49,22 @@ export const AppLayout: FunctionComponent<AppLayoutProps> = ({
         />
       </Head>
       <div className=" flex flex-row justify-between gap-6 w-full">
-        <div className="font-bold text-lg sm:text-xl md:text-2xl items-center md:gap-1 flex flex-row">
+        <div className="font-bold flex-shrink-0 text-lg sm:text-xl md:text-2xl items-center md:gap-1 flex flex-row">
           <p className="">Text-Me Anon</p>
           <Image width={30} height={10} src="/anon.ico" alt="" />
+          <div className=" hidden sm:block text-xs self-start break-all text-center">
+            {mode === ChatMode.CHAT ? "chat mode" : "watch mode"}
+          </div>
         </div>
-        <div className="flex items-center">
+
+        <div className="items-center flex-shrink-0 flex">
+          <div className="flex-shrink-0 hidden sm:flex items-center mr-4">
+            <ModeSwitch />
+          </div>
           <ConnectButton
             showBalance={{
               smallScreen: false,
-              largeScreen: true,
+              largeScreen: false,
             }}
             accountStatus={{
               smallScreen: "avatar",
@@ -56,6 +73,23 @@ export const AppLayout: FunctionComponent<AppLayoutProps> = ({
           ></ConnectButton>
         </div>
       </div>
+
+      <div
+        className={`flex ${
+          mode === ChatMode.CHAT || "/watch/" === asPath
+            ? "justify-end"
+            : "justify-center"
+        } items-center`}
+      >
+        {"/watch/" !== asPath && mode === ChatMode.WATCH && (
+          <ChatSearch classNames="block mx-auto" />
+        )}
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <div className="sm:hidden flex-shrink-0">
+          <ModeSwitch />
+        </div>
+      </div>
+
       <div className="flex w-full justify-center items-center h-4/5 pt-5 md:px-10">
         {children}
       </div>

@@ -1,16 +1,14 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { AppState } from "@/store";
 import { ethers } from "ethers";
-import {TransactionResponse } from "@ethersproject/abstract-provider"
-import { DiscussionsState } from "@/lib/types";
-import { Chain } from "wagmi";
+import { Discussion, DiscussionsState, FetchStatus, TxResponse } from "@/lib/types";
 import { Network, networks } from "@/lib/network";
+import getHistory from "@/lib/getHistory";
+import txFilter from "@/lib/txFilter";
 
 //USE THIS TO FILTER THROUGH ALL TXS TO DIFFERENTIATE WHICH TXS ARE MESSAGE TXS
 //THIS IS JUST "OCM:" WHEN HEXED. OCM = ON-CHAIN MESSAGE.
 const msgTxIdentifier = "0x4f434d3a";
-
-type TxResponse = TransactionResponse & {chainId: Network}
 
 const fetchAllHistory = async (address: string): Promise<TxResponse[]> => {
   const getEtherscanProvider = (network: number) => new ethers.providers.EtherscanProvider(
@@ -18,21 +16,21 @@ const fetchAllHistory = async (address: string): Promise<TxResponse[]> => {
   );
   const etherScanProviders = networks
     .map(getEtherscanProvider)
-  const settledNetworks: Network[] = []
-  const _allHistory = (await Promise.allSettled(etherScanProviders.map(provider => provider.getHistory(address))))
-    .filter((result, index) => {
+
+  const _allHistory = (await Promise.allSettled(etherScanProviders.map((provider, index) => getHistory(provider, address, networks[index]))))
+    .filter((result) => {
       if(result.status === "rejected"){
         console.error(result.reason)
         return false
       }
-      settledNetworks.push(networks[index])
       return true;
     })
-    .map((result, index) => {
+    .map((result) => {
         const txs = (result as PromiseFulfilledResult<TxResponse[]>).value;
-        return txs.map((tx: TxResponse) => ({...tx, chainId: settledNetworks[index]}))
+        return txs
       }
     )
+    
 
   const allHistory: TxResponse[] = []
   return allHistory.concat(..._allHistory)
@@ -41,18 +39,24 @@ const fetchAllHistory = async (address: string): Promise<TxResponse[]> => {
 export const fetchDiscussions = createAsyncThunk(
   "discussions/fetchDiscussions",
   async ({
-    network,
-    userAddress,
+    address,
   }: {
-    network: (Chain & { unsupported?: boolean | undefined }) | undefined;
-    userAddress: string;
+    address: string;
   }) => {
-    const history = await fetchAllHistory(userAddress);
-    const discussions = getInitialState();
-    const filtered = history.filter((tx) => tx.data.includes(msgTxIdentifier));
+    const history = await fetchAllHistory(address);
+    const discussions: {[key: string]: Discussion[]} = {};
+    const _filtered = history.filter((tx) => txFilter(tx));
+        
+    // remove OCM: in messages between February 2023 & May 2023
+    const filtered = _filtered.map(tx => ({
+      ...tx,
+      data: tx.timestamp! >= 1675209600 && tx.timestamp! <= 1682899199 && tx.data.startsWith(msgTxIdentifier) 
+        ? "0x" + tx.data.replace(msgTxIdentifier, "")
+        : tx.data
+    }))
 
     filtered.forEach(async (data) => {
-      const discussion = {
+      const message = {
           from: data.from.toLowerCase(),
           to: data.to!.toLowerCase(),
           text: data.data,
@@ -61,28 +65,28 @@ export const fetchDiscussions = createAsyncThunk(
           hash: data.hash
         }
       
-      // when userAddress is sender and receiver
-      if(data.from.toLowerCase() === userAddress.toLowerCase() && 
-        data.to?.toLowerCase() === userAddress.toLowerCase()){
-          if(!discussions[userAddress.toLowerCase()])  
-            discussions[userAddress.toLowerCase()]= []
-          discussions[userAddress.toLowerCase()].push(discussion)
+      // when address is sender and receiver
+      if(data.from.toLowerCase() === address.toLowerCase() && 
+        data.to?.toLowerCase() === address.toLowerCase()){
+          if(!discussions[address.toLowerCase()])  
+            discussions[address.toLowerCase()]= []
+          discussions[address.toLowerCase()].push(message)
       }
-      // when userAddress receives a message
-      else if(data.from.toLowerCase() !== userAddress.toLowerCase()){
+      // when address receives a message
+      else if(data.from.toLowerCase() !== address.toLowerCase()){
         if(!discussions[data.from.toLowerCase()])  
           discussions[data.from.toLowerCase()]= []
-        discussions[data.from.toLowerCase()].push(discussion)
+        discussions[data.from.toLowerCase()].push(message)
       }
-      // when userAddress sends a message
-      else if(data.to && data.to.toLowerCase() !== userAddress.toLowerCase()){
+      // when address sends a message
+      else if(data.to && data.to.toLowerCase() !== address.toLowerCase()){
         if(!discussions[data.to.toLowerCase()]) 
           discussions[data.to.toLowerCase()]= []
-        discussions[data.to.toLowerCase()].push(discussion)
+        discussions[data.to.toLowerCase()].push(message)
       }
     });
 
-    return discussions;
+    return {address, discussions};
   }
 );
 
@@ -101,7 +105,26 @@ export const discussionsSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(fetchDiscussions.fulfilled, (_, action) => action.payload);
+    builder.addCase(fetchDiscussions.pending, (state, action) => {
+      const address = action.meta.arg.address;
+      state[address] = {
+          discussions: state[address]?.discussions || {}, 
+          fetchStatus: FetchStatus.PENDING,
+          loaded: state[address]?.loaded || false
+        }
+    });
+    builder.addCase(fetchDiscussions.fulfilled, (state, action) => ({
+      ...state, 
+      [action.payload.address]: {discussions: action.payload.discussions, fetchStatus: FetchStatus.FULFILLED, loaded: true}
+    }));
+    builder.addCase(fetchDiscussions.rejected, (state, action) => {
+      const address = action.meta.arg.address;
+      state[address] = {
+          discussions: state[address]?.discussions || {}, 
+          fetchStatus: FetchStatus.REJECTED,
+          loaded: state[address]?.loaded || false
+        }
+    });
   },
 });
 
