@@ -22,7 +22,7 @@ const Home: NextPage = () => {
             height={100}
           ></FontAwesomeIcon>
           <p className="text-center font-bold font-xl">
-            Please connect wallet or search address to see messages
+            Please connect wallet to see your on-chain messages
           </p>
         </div>
       )}

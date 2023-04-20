@@ -1,7 +1,5 @@
 import { hex_to_string, getTime, shorten } from "@/lib/utils";
 import { Spinner } from "@chakra-ui/react";
-import { faLink, faCircleCheck } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
 import Image from "next/image";
 import { ChatPreview } from "./ChatPreview";
@@ -10,7 +8,6 @@ import { useDiscussions } from "@/hooks/use-discussions";
 import { useState, useEffect, ChangeEvent, useCallback } from "react";
 import { useEnsAddress } from "wagmi";
 import { ChatMode, FetchStatus } from "@/lib/types";
-import Chat from "@/pages/watch";
 import Copy from "./Copy";
 
 interface ChatListProps{
@@ -31,7 +28,6 @@ const copyMessage = {
 
 function ChatList(props: ChatListProps){
   const {address, mode} = props;
-  const [changeCopyLinkFavicon, setChangeCopyLinkFavicon] = useState(false);
   const [bounce, setBounce] = useState("");
   const [filterFor, _setFilterFor] = useState("");
 
@@ -71,16 +67,6 @@ function ChatList(props: ChatListProps){
     address && discussions.length === 0 ? startBounce() : setBounce("");
   }, [address, discussions]);
 
-  const handleCopy = () => {
-    navigator.clipboard.writeText(
-      `${window.location.origin}/${mode}/${address?.toLowerCase()}`
-    );
-    setChangeCopyLinkFavicon(true);
-
-    setTimeout(() => {
-      setChangeCopyLinkFavicon(false);
-    }, 2000);
-  };
 
   return (
     <div className="border shadow-2xl py-8 flex flex-col rounded-3xl h-full w-full sm:w-4/6 lg:w-3/6 xl:w-2/6">
@@ -107,10 +93,9 @@ function ChatList(props: ChatListProps){
           </div>
           <div
             className="block sm:hidden"
-            onClick={handleCopy}
           >
             <Copy
-              onCopyText="Copied! Now share it with other anons"
+              onCopyText="Copied!"
               defaultText={
                 mode === ChatMode.WATCH
                   ? "Copy this address link"

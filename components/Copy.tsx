@@ -13,7 +13,7 @@ function Copy({copyText, onCopyText, defaultText, classNames}: CopyProps){
   const [copied, setCopied] = useState(false);
   
   const handleCopy = () => {
-    navigator.clipboard.writeText(
+    window.navigator.clipboard.writeText(
       copyText
     );
     setCopied(true);

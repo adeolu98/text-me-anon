@@ -15,7 +15,7 @@ interface SearchInputProps {
   onBlur?: () => void
 }
 
-export function ChatSearch ({classNames}: {classNames?: string}){
+export function ChatSearch ({classNames, placeholder}: {classNames?: string, placeholder?: string}){
   // const {value, onChange, placeholderText, onKeyDown, onFocus, onBlur} = props;
   const [search, setSearch] = useState("");
   const [searchFocus, setSearchFocus] = useState<boolean>(false);
@@ -79,9 +79,9 @@ export function ChatSearch ({classNames}: {classNames?: string}){
       <input
         value={search.toLowerCase()}
         type="text"
-        className=" w-full border focus:bg-gray-100 rounded-xl px-4 py-2 focus:border-2 focus:border-black focus:outline-none"
+        className=" w-full border focus:bg-gray-100 rounded-xl px-4 py-2 focus:border-1 focus:border-black focus:outline-none"
         onChange={handleSearchInput}
-        placeholder="Enter address to view chat"
+        placeholder={placeholder || "Enter address to view chat"}
         onKeyDown={validateKey}
         onFocus={() => setSearchFocus(true)}
         onBlur={() => setTimeout(() => setSearchFocus(false), 200)}

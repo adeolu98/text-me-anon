@@ -6,16 +6,16 @@ import Head from "next/head";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTwitter, faDiscord } from "@fortawesome/free-brands-svg-icons";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
-import SearchInput from "./SearchInput";
-import { buildDataUrl } from "@/lib/utils";
-import { useEnsAddress, useEnsName } from "wagmi";
-import { isAddress } from "ethers/lib/utils.js";
+import { useAccount } from "wagmi";
 import { useRouter } from "next/router";
-import MobileNav from "./modals/MobileNav";
 import BurgerMenu from "@/public/burger-menu.svg";
 import { Modals, useModalContext } from "@/context/modalContext";
 import Link from "next/link";
 import Chat from "@/public/chat-bubbles.svg";
+import ModeSwitch from "./ModeSwitch";
+import { useSelector } from "react-redux";
+import { selectMode } from "@/store/slice/general";
+import { ChatMode } from "@/lib/types";
 
 interface AppLayoutProps {
   className?: string;
@@ -26,12 +26,9 @@ export const AppLayout: FunctionComponent<AppLayoutProps> = ({
   className,
   children,
 }) => {
-  const {open, close} = useModalContext(Modals.MobileNav) 
-
-  useEffect(() => {
-     close()
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  const {asPath} = useRouter()
+  const {isConnected} = useAccount()
+  const mode = useSelector(selectMode)
 
   return (
     <div
@@ -55,24 +52,15 @@ export const AppLayout: FunctionComponent<AppLayoutProps> = ({
           }}
         />
       </Head>
-      <MobileNav />
       <div className=" flex flex-row justify-between gap-6 w-full">
         <div className="font-bold flex-shrink-0 text-lg sm:text-xl md:text-2xl items-center md:gap-1 flex flex-row">
           <p className="">Text-Me Anon</p>
           <Image width={30} height={10} src="/anon.ico" alt="" />
         </div>
-        <ChatSearch classNames="hidden sm:block" />
-        <div className="flex-shrink-0 flex sm:hidden items-center">
-          <Link href="/" title="My messages">
-            <Image src={Chat} alt="Chat icon" width={35} height={35} />
-          </Link>
-        </div>
 
-        <div className="items-center flex-shrink-0 hidden sm:flex">
-          <div className="flex-shrink-0 flex items-center mr-4">
-            <Link href="/" title="My messages">
-              <Image src={Chat} alt="Chat icon" width={35} height={35} />
-            </Link>
+        <div className="items-center flex-shrink-0 flex">
+          <div className="flex-shrink-0 hidden sm:flex items-center mr-4">
+            <ModeSwitch />
           </div>
           <ConnectButton
             showBalance={{
@@ -85,10 +73,24 @@ export const AppLayout: FunctionComponent<AppLayoutProps> = ({
             }}
           ></ConnectButton>
         </div>
-        <button onClick={open} className="sm:hidden">
-          <Image src={BurgerMenu} alt="" width={30} height={20} />
-        </button>
       </div>
+
+      <div
+        className={`flex ${
+          mode === ChatMode.CHAT || "/watch/" === asPath
+            ? "justify-end"
+            : "justify-center"
+        } items-center`}
+      >
+        {"/watch/" !== asPath && mode === ChatMode.WATCH && (
+          <ChatSearch classNames="block mx-auto" />
+        )}
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <div className="sm:hidden flex-shrink-0">
+          <ModeSwitch />
+        </div>
+      </div>
+
       <div className="flex w-full justify-center items-center h-4/5 pt-5 md:px-10">
         {children}
       </div>

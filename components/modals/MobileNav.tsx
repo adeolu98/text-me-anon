@@ -3,6 +3,7 @@ import Close from "@/public/close.svg";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import Image from "next/image";
 import { ChatSearch } from "../SearchInput";
+import { useAccount } from "wagmi";
 
 function MobileNav (){
   const {active, close} = useModalContext(Modals.MobileNav)
