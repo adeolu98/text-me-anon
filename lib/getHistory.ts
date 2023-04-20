@@ -1,5 +1,4 @@
 import { ethers } from "ethers";
-import { Network } from "./network";
 import {BlockTag } from "@ethersproject/abstract-provider"
 import { TxResponse } from "./types";
 

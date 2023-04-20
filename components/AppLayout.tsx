@@ -1,4 +1,4 @@
-import React, { ChangeEvent, FunctionComponent, ReactNode, FocusEvent, KeyboardEvent, useMemo, useState, useCallback, FocusEventHandler, useEffect } from "react";
+import React, { FunctionComponent, ReactNode } from "react";
 import { ChatSearch } from "./SearchInput";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import Image from "next/image";
@@ -8,10 +8,6 @@ import { faTwitter, faDiscord } from "@fortawesome/free-brands-svg-icons";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { useAccount } from "wagmi";
 import { useRouter } from "next/router";
-import BurgerMenu from "@/public/burger-menu.svg";
-import { Modals, useModalContext } from "@/context/modalContext";
-import Link from "next/link";
-import Chat from "@/public/chat-bubbles.svg";
 import ModeSwitch from "./ModeSwitch";
 import { useSelector } from "react-redux";
 import { selectMode } from "@/store/slice/general";
@@ -26,9 +22,9 @@ export const AppLayout: FunctionComponent<AppLayoutProps> = ({
   className,
   children,
 }) => {
-  const {asPath} = useRouter()
-  const {isConnected} = useAccount()
-  const mode = useSelector(selectMode)
+  const { asPath } = useRouter();
+  const { isConnected } = useAccount();
+  const mode = useSelector(selectMode);
 
   return (
     <div
@@ -56,6 +52,9 @@ export const AppLayout: FunctionComponent<AppLayoutProps> = ({
         <div className="font-bold flex-shrink-0 text-lg sm:text-xl md:text-2xl items-center md:gap-1 flex flex-row">
           <p className="">Text-Me Anon</p>
           <Image width={30} height={10} src="/anon.ico" alt="" />
+          <div className=" hidden sm:block text-xs self-start break-all text-center">
+            {mode === ChatMode.CHAT ? "chat mode" : "watch mode"}
+          </div>
         </div>
 
         <div className="items-center flex-shrink-0 flex">

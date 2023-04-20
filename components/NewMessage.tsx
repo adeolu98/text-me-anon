@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
 import { TextInput } from "@/components/TextInput";
-import { AppLayout } from "@/components/AppLayout";
-import { NextPage } from "next";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleExclamation } from "@fortawesome/free-solid-svg-icons";
 import { Message } from "@/components/Message";

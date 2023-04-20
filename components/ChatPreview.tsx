@@ -1,7 +1,6 @@
 import React, { FunctionComponent, useCallback, useMemo } from "react";
 import { useEnsName, useAccount } from "wagmi";
 import { ProfilePic } from "./ProfilePic";
-import Link from "next/link";
 import { ChatMode } from "../lib/types";
 import { shorten } from "@/lib/utils";
 import { useRouter } from "next/router";

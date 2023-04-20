@@ -2,19 +2,15 @@ import { AppLayout } from "@/components/AppLayout";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
 import { ProfilePic } from "@/components/ProfilePic";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import { NextPage } from "next";
-import { Network, getEtherscanAddressLink } from "@/lib/network";
 import { useAccount, useEnsName, useNetwork } from "wagmi";
 import { isAddress } from "ethers/lib/utils.js";
 import { useEffect } from "react";
-import { ChatMode } from "@/lib/types";
 
 
 const Info: NextPage = () => {
   const router = useRouter();
-  const { address } = useAccount();
   const queriedAddress = Array.isArray(router.query.address)
     ? router.query.address[0].toLowerCase()
     : router.query.address!?.toLowerCase();

@@ -1,6 +1,4 @@
 import { AppLayout } from "@/components/AppLayout";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCircleExclamation } from "@fortawesome/free-solid-svg-icons";
 import { useRouter } from "next/router";
 import { NextPage } from "next";
 import { useEffect } from "react";

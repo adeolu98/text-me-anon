@@ -1,5 +1,4 @@
 import { createContext, useContext, useState } from "react"
-import { ConnectButton } from "@rainbow-me/rainbowkit";
 
 export enum Modals {
   MobileNav = "mobileNav"
