@@ -16,16 +16,7 @@ interface ChatListProps {
   ensNameForAddress?: string | null;
 }
 
-const copyMessage = {
-  [ChatMode.CHAT]: [
-    "Click to copy your address link",
-    "Copied! Now share it with other anons",
-  ],
-  [ChatMode.WATCH]: [
-    "Click to copy this address link",
-    "Copied! Now share it with other anons",
-  ],
-};
+
 
 function ChatList(props: ChatListProps) {
   const { address, mode, ensNameForAddress } = props;
