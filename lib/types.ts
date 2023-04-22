@@ -24,3 +24,4 @@ export enum ChatMode {
   WATCH = "watch",
   CHAT = "chat",
 }
+

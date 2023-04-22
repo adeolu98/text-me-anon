@@ -6,7 +6,7 @@ import { useRouter } from "next/router";
 import { useEffect } from "react";
 import { isAddress } from "ethers/lib/utils.js";
 import { ChatMode } from "@/lib/types";
-import { useEnsAddress, useEnsName } from "wagmi";
+import { useEnsName } from "wagmi";
 
 ReactGA.initialize("UA-262892775-1");
 
