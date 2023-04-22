@@ -12,7 +12,7 @@ import { useAccount, useEnsAddress, useNetwork } from "wagmi";
 import { networkNames } from "@/lib/network";
 import { faCircleCheck } from "@fortawesome/free-regular-svg-icons";
 import ReactGA from "react-ga";
-import Head from "next/head";
+
 
 ReactGA.initialize("UA-262892775-1");
 
