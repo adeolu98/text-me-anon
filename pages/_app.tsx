@@ -25,7 +25,7 @@ import GoogleAnalytics from "@/components/analytics/GoogleAnalytics";
 
 const { chains, provider } = configureChains(
   [mainnet, polygon, optimism, arbitrum, goerli, sepolia],
-  [alchemyProvider({ apiKey: process.env.ALCHEMY_ID! }), publicProvider()]
+  [alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_API_KEY! }), publicProvider()]
 );
 
 const { connectors } = getDefaultWallets({
