@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { AppState } from "@/store";
 import { ethers } from "ethers";
 import { Discussion, DiscussionsState, FetchStatus, TxResponse } from "@/lib/types";
-import { Network, networks } from "@/lib/network";
+import { networks } from "@/lib/network";
 import getHistory from "@/lib/getHistory";
 import txFilter from "@/lib/txFilter";
 

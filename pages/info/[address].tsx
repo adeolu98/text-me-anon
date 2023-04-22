@@ -4,7 +4,7 @@ import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
 import { ProfilePic } from "@/components/ProfilePic";
 import { useRouter } from "next/router";
 import { NextPage } from "next";
-import { useAccount, useEnsName, useNetwork } from "wagmi";
+import { useEnsName } from "wagmi";
 import { isAddress } from "ethers/lib/utils.js";
 import { useEffect } from "react";
 
