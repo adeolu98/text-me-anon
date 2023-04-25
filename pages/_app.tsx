@@ -13,7 +13,6 @@ import {
   optimism,
   arbitrum,
   goerli,
-  sepolia,
 } from "wagmi/chains";
 import { alchemyProvider } from "wagmi/providers/alchemy";
 import { publicProvider } from "wagmi/providers/public";
@@ -25,7 +24,7 @@ import GoogleAnalytics from "@/components/analytics/GoogleAnalytics";
 import ModalContext from "@/context/modalContext";
 
 const { chains, provider } = configureChains(
-  [mainnet, polygon, optimism, arbitrum, goerli, sepolia],
+  [mainnet, polygon, optimism, arbitrum, goerli],
   [alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_API_KEY! }), publicProvider()]
 );
 
