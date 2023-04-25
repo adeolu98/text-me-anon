@@ -55,7 +55,7 @@ export const ChatPreview: FunctionComponent<ChatPreviewProps> = ({
         <div className="flex flex-col gap-1 md:gap-2 w-9/12">
           <div className="flex flex-row w-full justify-between">
             <div className={`text-lg w-full font-bold ${ data ? 'break-all' : 'truncate'}`}>
-              {data ? data : (receiver.toLowerCase() === address?.toLowerCase() ? "myself" : receiver)}
+              {data ? (receiver.toLowerCase() === address?.toLowerCase() ? "myself" : data) : (receiver.toLowerCase() === address?.toLowerCase() ? "myself" : receiver)}
             </div>
             <div className="text-xs w-5/12 text-right"> {lastMessageTime}</div>
           </div>
