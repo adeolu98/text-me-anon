@@ -123,7 +123,7 @@ const _setChatOpened = (address: string) => {
             title={
               mode === ChatMode.CHAT
                 ? "Send new message"
-                : `Send ${shorten(address)} a message`
+                : `Send ${ensNameForAddress ? ensNameForAddress : shorten(address)} a message`
             }
           >
             <Image
