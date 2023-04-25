@@ -12,13 +12,14 @@ import Copy from "./Copy";
 import { selectChatOpened, setChatOpened } from "@/store/slice/general";
 import { useAppDispatch, useAppSelector } from "@/store";
 
-interface ChatListProps{
-  address: string,
-  mode: ChatMode
+interface ChatListProps {
+  address: string;
+  mode: ChatMode;
+  ensNameForAddress?: string | null;
 }
 
 function ChatList(props: ChatListProps){
-  const {address, mode} = props;
+  const {address, mode, ensNameForAddress} = props;
   const [bounce, setBounce] = useState("");
   const [filterFor, _setFilterFor] = useState("");
   const chatOpened = useAppSelector(selectChatOpened);
@@ -80,10 +81,12 @@ const _setChatOpened = (address: string) => {
       {/**top section with create new message icon */}
       <div className="flex flex-col xs:flex-row justify-between px-1 xs:px-5">
         <div className="flex-flex-col">
-          <div className="text-xs xs:text-base sm:text-xl font-bold">
+        <div className="text-xs xs:text-base sm:text-xl font-bold">
             {mode === ChatMode.CHAT
               ? "Your Messages"
-              : `Messages for ${shorten(address ?? "")}`}
+              : !ensNameForAddress
+              ? `Messages for ${shorten(address ?? "")}`
+              : `Messages for ${ensNameForAddress}`}
           </div>
           <div className="hidden sm:block">
             <Copy
