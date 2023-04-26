@@ -130,6 +130,7 @@ function ChatMessages(props: ChatMessagesProps) {
                   timeSent={getTime(msgData.timestamp)}
                   network={msgData.id}
                   hash={msgData.hash}
+                  from={msgData.from}
                 ></Message>
               </div>
             );

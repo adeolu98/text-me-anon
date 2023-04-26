@@ -2,6 +2,7 @@ import { Spinner } from "@chakra-ui/react";
 import Image from "next/image";
 import React, { FunctionComponent } from "react";
 import { Network, networkLogos, etherscanUrl, networkNames } from "@/lib/network";
+import { shorten } from "@/lib/utils";
 
 interface MessageProps {
   className?: string;
@@ -10,6 +11,7 @@ interface MessageProps {
   received: boolean;
   network?: Network;
   hash?: string;
+  from?: string;
 }
 
 export const Message: FunctionComponent<MessageProps> = ({
@@ -18,13 +20,15 @@ export const Message: FunctionComponent<MessageProps> = ({
   timeSent,
   received,
   network,
-  hash
+  hash,
+  from
 }) => {
   return (
     <div
       className={`${className} flex ${
         received ? "flex-row" : "flex-row-reverse"
       } items-center gap-1 mt-3`}
+      title={ network && `Sent on ${networkNames[network]} by ${shorten(from || '')}`}
     >
       <div className="w-2">
         <div
@@ -45,7 +49,7 @@ export const Message: FunctionComponent<MessageProps> = ({
             timeSent && network ? (
               <>
                 <p className=" text-[8px]">{timeSent}</p>
-                <a target="_blank" href={`${etherscanUrl[network]}/tx/${hash}`} className="w-[8px] flex justify-center ml-1" title={`Sent on ${networkNames[network]}`} rel="noreferrer">
+                <a target="_blank" href={`${etherscanUrl[network]}/tx/${hash}`} className="w-[8px] flex justify-center ml-1" rel="noreferrer">
                   <Image src={networkLogos[network]} alt="" />
                 </a>
               </>

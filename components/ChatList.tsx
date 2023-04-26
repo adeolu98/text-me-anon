@@ -18,8 +18,8 @@ interface ChatListProps {
   ensNameForAddress?: string | null;
 }
 
-function ChatList(props: ChatListProps){
-  const {address, mode, ensNameForAddress} = props;
+function ChatList(props: ChatListProps) {
+  const { address, mode, ensNameForAddress } = props;
   const [bounce, setBounce] = useState("");
   const [filterFor, _setFilterFor] = useState("");
   const chatOpened = useAppSelector(selectChatOpened);
@@ -55,7 +55,7 @@ function ChatList(props: ChatListProps){
   }, [address, discussions]);
 
   useEffect(() => {
-      handleClickScroll()
+    handleClickScroll();
   }, []);
 
   const setFilterFor = useCallback(
@@ -73,26 +73,26 @@ function ChatList(props: ChatListProps){
   }, [address, discussions]);
 
   useEffect(() => {
-    handleClickScroll()
-}, []);
+    handleClickScroll();
+  }, []);
 
-const handleClickScroll = () => {
-  const element = document.getElementById("lastOpened");
-  if (element) {
-    element.scrollIntoView({behavior:"smooth"});
-  }
-};
+  const handleClickScroll = () => {
+    const element = document.getElementById("lastOpened");
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" });
+    }
+  };
 
-const _setChatOpened = (address: string) => {
-  dispatch(setChatOpened(address));
-};
+  const _setChatOpened = (address: string) => {
+    dispatch(setChatOpened(address));
+  };
 
   return (
     <div className="border shadow-2xl py-8 flex flex-col rounded-3xl h-full w-full sm:w-4/6 lg:w-3/6 xl:w-2/6">
       {/**top section with create new message icon */}
       <div className="flex flex-col xs:flex-row justify-between px-1 xs:px-5">
         <div className="flex-flex-col">
-        <div className="text-xs xs:text-base sm:text-xl font-bold">
+          <div className="text-xs xs:text-base sm:text-xl font-bold">
             {mode === ChatMode.CHAT
               ? "Your Messages"
               : !ensNameForAddress
@@ -132,7 +132,9 @@ const _setChatOpened = (address: string) => {
             title={
               mode === ChatMode.CHAT
                 ? "Send new message"
-                : `Send ${ensNameForAddress ? ensNameForAddress : shorten(address)} a message`
+                : `Send ${
+                    ensNameForAddress ? ensNameForAddress : shorten(address)
+                  } a message`
             }
           >
             <Image
@@ -158,9 +160,10 @@ const _setChatOpened = (address: string) => {
                   key={index}
                   className="w-full flex flex-col gap-4 pt-5 px-1 rounded-lg hover:bg-gray-200"
                   onClick={() => _setChatOpened(data[0])}
-                  id={ chatOpened === data[0] ? 'lastOpened' : ''}
+                  id={chatOpened === data[0] ? "lastOpened" : ""}
                 >
                   <ChatPreview
+                    ensNameForAddress={ensNameForAddress}
                     mode={mode}
                     lastMessage={hex_to_string(
                       data[1][data[1].length - 1].text
@@ -219,9 +222,10 @@ const _setChatOpened = (address: string) => {
                     key={index}
                     className="w-full flex flex-col gap-4 pt-5 px-1 rounded-lg hover:bg-gray-200"
                     onClick={() => _setChatOpened(data[0])}
-                    id={ chatOpened === data[0] ? 'lastOpened' : ''}
-                 >
+                    id={chatOpened === data[0] ? "lastOpened" : ""}
+                  >
                     <ChatPreview
+                      ensNameForAddress={ensNameForAddress}
                       mode={mode}
                       lastMessage={hex_to_string(
                         data[1][data[1].length - 1].text
