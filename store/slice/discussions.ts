@@ -53,7 +53,7 @@ export const fetchDiscussions = createAsyncThunk(
       data: tx.timestamp! >= 1675209600 && tx.timestamp! <= 1682899199 && tx.data.startsWith(msgTxIdentifier) 
         ? "0x" + tx.data.replace(msgTxIdentifier, "")
         : tx.data
-    }))
+    })).sort((a,b) => a.timestamp! - b.timestamp!)
 
     filtered.forEach(async (data) => {
       const message = {
