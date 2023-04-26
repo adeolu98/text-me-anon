@@ -10,7 +10,7 @@ import { useAccount } from "wagmi";
 function ModeSwitch() {
   const mode = useAppSelector(selectMode);
   const dispatch = useAppDispatch();
-  const { push, basePath, asPath, pathname } = useRouter();
+  const { push, pathname } = useRouter();
   const { isConnected } = useAccount();
   const _setMode = (mode: ChatMode) => {
     dispatch(setMode(mode));

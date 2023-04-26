@@ -65,7 +65,7 @@ const NewMessage = () => {
               </div>
               <div className="text-center text-xs text-red-600">
                 {toAddress &&
-                  !isAddress(toAddress) &&
+                  !isAddress(toAddress) && !data &&
                   "This is not a valid address."}
               </div>
             </div>
