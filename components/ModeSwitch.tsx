@@ -22,7 +22,6 @@ function ModeSwitch() {
   };
 
   useEffect(() => {
-    console.log(mode);
     if (mode !== undefined) return;
     if (pathname.startsWith("/watch")) {
       dispatch(setMode(ChatMode.WATCH));

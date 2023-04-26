@@ -12,6 +12,7 @@ import { useEnsName } from "wagmi";
 import { ChatMode, FetchStatus } from "@/lib/types"; 
 import Copy from "./Copy";
 import { useRouter } from "next/router";
+import { isAddress } from "ethers/lib/utils.js";
 
 
   const handleClickScroll = () => {
@@ -94,7 +95,7 @@ function ChatMessages(props: ChatMessagesProps) {
       <div className="flex flex-col gap-1 w-full rounded-t-3xl bg-gray-50  px-1 xs:px-5 py-3">
         <div className="w-full mt-1 flex justify-center items-center">
           <ProfilePic
-            addressForProfileIcon={receiver}
+            addressForProfileIcon={isAddress(receiver) ? receiver : ""}
             className="w-2/12 sm:w-1/12"
           ></ProfilePic>
         </div>

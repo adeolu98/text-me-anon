@@ -61,7 +61,7 @@ export const TextInput: FunctionComponent<TextInputProps> = ({
     watch: true,
   });
 
-  const discussion = useDiscussion(toAddress.toLowerCase()).discussion;
+  const discussion = useDiscussion(toAddress.toLowerCase(), address?.toLowerCase()).discussion;
   const [previousText, setPreviousText] = useState("");
   const { config } = usePrepareSendTransaction({
     request: {
@@ -80,11 +80,12 @@ export const TextInput: FunctionComponent<TextInputProps> = ({
     },
   });
 
+
   //go to chat page after msg sent if sending message from new-message.tsx
   useEffect(() => {
     if (
       discussion &&
-      hex_to_string(discussion[discussion.length - 1].text).slice(5) ===
+      hex_to_string(discussion[discussion.length - 1].text.slice(2)) ===
         previousText
     ) {
       if (router.pathname === `/new-message`) {
@@ -97,7 +98,7 @@ export const TextInput: FunctionComponent<TextInputProps> = ({
         );
       }
     }
-  }, [discussion, address]);
+  }, [discussion, address, previousText, router, toAddress]);
 
   useEffect(() => {
     if (text === "") setTextAreaHeight(1);
