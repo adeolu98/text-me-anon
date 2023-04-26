@@ -9,10 +9,10 @@ interface ChatPreviewProps {
   lastMessage: string;
   lastMessageTime: string;
   receiver: string;
-  sender?: string
+  sender?: string;
   className?: string;
   replied: boolean;
-  mode: ChatMode
+  mode: ChatMode;
 }
 
 export const ChatPreview: FunctionComponent<ChatPreviewProps> = ({
@@ -22,26 +22,26 @@ export const ChatPreview: FunctionComponent<ChatPreviewProps> = ({
   sender,
   className,
   replied,
-  mode
+  mode,
 }) => {
   const { data } = useEnsName({
     address: `0x${receiver.slice(2)}`,
-    chainId: 1
+    chainId: 1,
   });
-  const router = useRouter()
+  const router = useRouter();
 
-  const {address} = useAccount()
+  const { address } = useAccount();
   const _sender = sender || address;
 
   const chatLink = useMemo(() => {
-    return ChatMode.CHAT === mode 
+    return ChatMode.CHAT === mode
       ? `/chat/${receiver}`
-      : `/watch/?sender=${_sender}&receiver=${receiver}`
-  }, [_sender, mode, receiver])
+      : `/watch/?sender=${_sender}&receiver=${receiver}`;
+  }, [_sender, mode, receiver]);
 
   const onClick = useCallback(() => {
-    router.push(chatLink)
-  }, [chatLink, router])
+    router.push(chatLink);
+  }, [chatLink, router]);
 
   return (
     <div onClick={onClick} title="Click to open chat">
@@ -54,14 +54,35 @@ export const ChatPreview: FunctionComponent<ChatPreviewProps> = ({
         ></ProfilePic>
         <div className="flex flex-col gap-1 md:gap-2 w-9/12">
           <div className="flex flex-row w-full justify-between">
-            <div className={`text-lg w-full font-bold ${ data ? 'break-all' : 'truncate'}`}>
-              {data ? data : (receiver.toLowerCase() === address?.toLowerCase() ? "myself" : receiver)}
+            <div
+              className={`text-lg w-full font-bold ${
+                data ? "break-all" : "truncate"
+              }`}
+            >
+              {data
+                ? receiver.toLowerCase() === address?.toLowerCase()
+                  ? "myself"
+                  : data
+                : receiver.toLowerCase() === address?.toLowerCase()
+                ? "myself"
+                : receiver}
             </div>
             <div className="text-xs w-5/12 text-right"> {lastMessageTime}</div>
           </div>
           <div className="w-full flex flex-row justify-between">
             <p className="truncate">{lastMessage}</p>
-            {replied && <div title={mode === ChatMode.CHAT ? "You have not replied to this conversation" : `${shorten(_sender || "")} has not replied`} className="px-2 py-1 border border-gray-300 rounded-xl"><p className="text-black text-xs font-light">not replied</p></div> }
+            {replied && (
+              <div
+                title={
+                  mode === ChatMode.CHAT
+                    ? "You have not replied to this conversation"
+                    : `${shorten(_sender || "")} has not replied`
+                }
+                className="px-2 py-1 border border-gray-300 rounded-xl"
+              >
+                <p className="text-black text-xs font-light">not replied</p>
+              </div>
+            )}
           </div>
         </div>
       </div>

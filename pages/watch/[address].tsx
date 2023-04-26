@@ -13,11 +13,10 @@ ReactGA.initialize("UA-262892775-1");
 const Home: NextPage = () => {
   const router = useRouter()
   const {address} = router.query;
-
   const { data } = useEnsName({
-  address: `0x${address?.slice(2) as string}`,
-  chainId: 1,
-});
+    address: `0x${address?.slice(2) as string}`,
+    chainId: 1,
+  });
 
   useEffect(() => {
     if (address && (typeof address !== "string" || !isAddress(address)) && router) {

@@ -56,9 +56,7 @@ const NewMessage = () => {
                   onChange={(e) =>
                     setToAddress(e.currentTarget.value.toLowerCase())
                   }
-                  placeholder={`input ${chain?.name} address ${
-                    chain?.id === mainnet.id ? "or ENS name" : ""
-                  }`}
+                  placeholder={`input ${chain?.name} address or ENS name`}
                   className="outline-none w-full h-8 break-all text-sm px-2"
                   type="text"
                 ></input>

@@ -18,10 +18,8 @@ interface ChatListProps {
   ensNameForAddress?: string | null;
 }
 
-
-
-function ChatList(props: ChatListProps) {
-  const { address, mode, ensNameForAddress } = props;
+function ChatList(props: ChatListProps){
+  const {address, mode, ensNameForAddress} = props;
   const [bounce, setBounce] = useState("");
   const [filterFor, _setFilterFor] = useState("");
   const chatOpened = useAppSelector(selectChatOpened);
@@ -60,17 +58,6 @@ function ChatList(props: ChatListProps) {
       handleClickScroll()
   }, []);
 
-  const handleClickScroll = () => {
-    const element = document.getElementById("lastOpened");
-    if (element) {
-      element.scrollIntoView({behavior:"smooth"});
-    }
-  };
-
-  const _setChatOpened = (address: string) => {
-    dispatch(setChatOpened(address));
-  };
-
   const setFilterFor = useCallback(
     (e: ChangeEvent<HTMLInputElement>) =>
       _setFilterFor(
@@ -80,13 +67,32 @@ function ChatList(props: ChatListProps) {
       ),
     [address]
   );
-  
+
+  useEffect(() => {
+    address && discussions.length === 0 ? startBounce() : setBounce("");
+  }, [address, discussions]);
+
+  useEffect(() => {
+    handleClickScroll()
+}, []);
+
+const handleClickScroll = () => {
+  const element = document.getElementById("lastOpened");
+  if (element) {
+    element.scrollIntoView({behavior:"smooth"});
+  }
+};
+
+const _setChatOpened = (address: string) => {
+  dispatch(setChatOpened(address));
+};
+
   return (
     <div className="border shadow-2xl py-8 flex flex-col rounded-3xl h-full w-full sm:w-4/6 lg:w-3/6 xl:w-2/6">
       {/**top section with create new message icon */}
       <div className="flex flex-col xs:flex-row justify-between px-1 xs:px-5">
         <div className="flex-flex-col">
-          <div className="text-xs xs:text-base sm:text-xl font-bold">
+        <div className="text-xs xs:text-base sm:text-xl font-bold">
             {mode === ChatMode.CHAT
               ? "Your Messages"
               : !ensNameForAddress
@@ -126,7 +132,7 @@ function ChatList(props: ChatListProps) {
             title={
               mode === ChatMode.CHAT
                 ? "Send new message"
-                : `Send ${shorten(address)} a message`
+                : `Send ${ensNameForAddress ? ensNameForAddress : shorten(address)} a message`
             }
           >
             <Image
@@ -214,7 +220,7 @@ function ChatList(props: ChatListProps) {
                     className="w-full flex flex-col gap-4 pt-5 px-1 rounded-lg hover:bg-gray-200"
                     onClick={() => _setChatOpened(data[0])}
                     id={ chatOpened === data[0] ? 'lastOpened' : ''}
-                  >
+                 >
                     <ChatPreview
                       mode={mode}
                       lastMessage={hex_to_string(
