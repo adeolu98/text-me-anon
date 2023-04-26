@@ -9,27 +9,21 @@ import { useState, useEffect, ChangeEvent, useCallback } from "react";
 import { useEnsAddress } from "wagmi";
 import { ChatMode, FetchStatus } from "@/lib/types";
 import Copy from "./Copy";
+import { selectChatOpened, setChatOpened } from "@/store/slice/general";
+import { useAppDispatch, useAppSelector } from "@/store";
 
-interface ChatListProps{
-  address: string,
-  mode: ChatMode
+interface ChatListProps {
+  address: string;
+  mode: ChatMode;
+  ensNameForAddress?: string | null;
 }
 
-const copyMessage = {
-  [ChatMode.CHAT]: [
-    "Click to copy your address link",
-    "Copied! Now share it with other anons",
-  ],
-  [ChatMode.WATCH]: [
-    "Click to copy this address link",
-    "Copied! Now share it with other anons",
-  ],
-};
-
 function ChatList(props: ChatListProps){
-  const {address, mode} = props;
+  const {address, mode, ensNameForAddress} = props;
   const [bounce, setBounce] = useState("");
   const [filterFor, _setFilterFor] = useState("");
+  const chatOpened = useAppSelector(selectChatOpened);
+  const dispatch = useAppDispatch();
 
   const {discussions: _discussions, fetchStatus, loaded} = useDiscussions(address)
 
@@ -67,16 +61,32 @@ function ChatList(props: ChatListProps){
     address && discussions.length === 0 ? startBounce() : setBounce("");
   }, [address, discussions]);
 
+  useEffect(() => {
+    handleClickScroll()
+}, []);
+
+const handleClickScroll = () => {
+  const element = document.getElementById("lastOpened");
+  if (element) {
+    element.scrollIntoView({behavior:"smooth"});
+  }
+};
+
+const _setChatOpened = (address: string) => {
+  dispatch(setChatOpened(address));
+};
 
   return (
     <div className="border shadow-2xl py-8 flex flex-col rounded-3xl h-full w-full sm:w-4/6 lg:w-3/6 xl:w-2/6">
       {/**top section with create new message icon */}
       <div className="flex flex-col xs:flex-row justify-between px-1 xs:px-5">
         <div className="flex-flex-col">
-          <div className="text-xs xs:text-base sm:text-xl font-bold">
+        <div className="text-xs xs:text-base sm:text-xl font-bold">
             {mode === ChatMode.CHAT
               ? "Your Messages"
-              : `Messages for ${shorten(address ?? "")}`}
+              : !ensNameForAddress
+              ? `Messages for ${shorten(address ?? "")}`
+              : `Messages for ${ensNameForAddress}`}
           </div>
           <div className="hidden sm:block">
             <Copy
@@ -113,7 +123,7 @@ function ChatList(props: ChatListProps){
             title={
               mode === ChatMode.CHAT
                 ? "Send new message"
-                : `Send ${shorten(address)} a message`
+                : `Send ${ensNameForAddress ? ensNameForAddress : shorten(address)} a message`
             }
           >
             <Image
@@ -138,6 +148,8 @@ function ChatList(props: ChatListProps){
                 <div
                   key={index}
                   className="w-full flex flex-col gap-4 pt-5 px-1 rounded-lg hover:bg-gray-200"
+                  onClick={() => _setChatOpened(data[0])}
+                  id={ chatOpened === data[0] ? 'lastOpened' : ''}
                 >
                   <ChatPreview
                     mode={mode}
@@ -197,7 +209,9 @@ function ChatList(props: ChatListProps){
                   <div
                     key={index}
                     className="w-full flex flex-col gap-4 pt-5 px-1 rounded-lg hover:bg-gray-200"
-                  >
+                    onClick={() => _setChatOpened(data[0])}
+                    id={ chatOpened === data[0] ? 'lastOpened' : ''}
+                 >
                     <ChatPreview
                       mode={mode}
                       lastMessage={hex_to_string(
