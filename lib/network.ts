@@ -1,4 +1,4 @@
-export const networks = [1, 137, 42161, 10, 5] as const;
+export const networks = [1, 137, 42161, 10, 5, 11155111] as const;
 export type Network = typeof networks[number];
 
 import ETHLogo from "@/public/ethereum-eth-logo.svg"
@@ -12,7 +12,7 @@ export const etherscanUrl: Record<Network, string> = {
   137: "https://polygonscan.com",
   42161: "https://arbiscan.io",
   10: "https://optimistic.etherscan.io",
-  //11155111: "https://sepolia.etherscan.io",
+  11155111: "https://sepolia.etherscan.io",
 };
 
 export const networkNames: Record<number, string>  = {
@@ -21,7 +21,7 @@ export const networkNames: Record<number, string>  = {
   137: "Polygon",
   42161: "Arbitrum",
   10: "Optimism",
-  //11155111: "Sepolia",
+  11155111: "Sepolia",
 }
 
 export const networkLogos: Record<number, string> = {
@@ -30,7 +30,7 @@ export const networkLogos: Record<number, string> = {
   137: PolygonLogo,
   42161: ArbitrumLogo,
   10: OptimisimLogo,
-  //11155111: ETHLogo,
+  11155111: ETHLogo,
 }
 
 export const etherscanApiKeys: Record<Network, string> = {
@@ -39,7 +39,7 @@ export const etherscanApiKeys: Record<Network, string> = {
   137: process.env.NEXT_PUBLIC_POLYGON_MAINNET_ETHERSCAN_API_KEY!,
   42161: process.env.NEXT_PUBLIC_ARBITRUM_MAINNET_ETHERSCAN_API_KEY!,
   10: process.env.NEXT_PUBLIC_OPTIMISM_MAINNET_ETHERSCAN_API_KEY!,
-  //11155111: process.env.NEXT_PUBLIC_SEPOLIA_TESTNET_ETHERSCAN_API_KEY!,
+  11155111: process.env.NEXT_PUBLIC_SEPOLIA_TESTNET_ETHERSCAN_API_KEY!,
 };
 
 export function getEtherscanTxLink(network: Network, hash: string) {

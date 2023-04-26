@@ -6,7 +6,7 @@ import { Provider as ReduxProvider } from "react-redux";
 import { ChakraProvider } from "@chakra-ui/react";
 import "@rainbow-me/rainbowkit/styles.css";
 import { getDefaultWallets, RainbowKitProvider } from "@rainbow-me/rainbowkit";
-import { configureChains, createClient, WagmiConfig } from "wagmi";
+import { configureChains, createClient, sepolia, WagmiConfig } from "wagmi";
 import {
   mainnet,
   polygon,
@@ -24,7 +24,7 @@ import GoogleAnalytics from "@/components/analytics/GoogleAnalytics";
 import ModalContext from "@/context/modalContext";
 
 const { chains, provider } = configureChains(
-  [mainnet, polygon, optimism, arbitrum, goerli],
+  [mainnet, polygon, optimism, arbitrum, goerli, sepolia],
   [alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_API_KEY! }), publicProvider()]
 );
 
