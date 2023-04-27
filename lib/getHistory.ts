@@ -1,15 +1,17 @@
 import { ethers } from "ethers";
 import {BlockTag } from "@ethersproject/abstract-provider"
 import { TxResponse } from "./types";
+import { Network, etherscanApiKeys } from "./network";
 
 // modified the original getHistory function from etherscan provider
-async function getHistory(provider: ethers.providers.EtherscanProvider, address: string, network: number, startBlock?: BlockTag, endBlock?: BlockTag): Promise<TxResponse[]>{
+async function getHistory(provider: ethers.providers.EtherscanProvider, address: string, network: Network, startBlock?: BlockTag, endBlock?: BlockTag): Promise<TxResponse[]>{
   const params = {
             action: "txlist",
             address: (await provider.resolveName(address)),
             startblock: ((startBlock == null) ? 0: startBlock),
             endblock: ((endBlock == null) ? 99999999: endBlock),
-            sort: "asc"
+            sort: "asc",
+            apikey: etherscanApiKeys[network]
         };
 
   const result = await provider.fetch("account", params);
