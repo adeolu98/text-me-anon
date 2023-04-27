@@ -31,11 +31,11 @@ interface ChatMessagesProps {
 
 function ChatMessages(props: ChatMessagesProps) {
   const { receiver, sender, mode } = props;
-  const {discussion, fetchStatus, loaded} = useDiscussion(receiver, sender);
+  const {discussion, fetchStatus, loaded} = useDiscussion(receiver.toLowerCase(), sender.toLowerCase());
   const [text, setText] = useState("");
   const [previewText, setPreviewText] = useState("");
   const {asPath} = useRouter()
-
+   
   //tracks new msg entered by sender
   const [newMsg, setNewMsg] = useState(false);
   //tracks if chat age has scrolled to last msg on first open, its meant to do that only once

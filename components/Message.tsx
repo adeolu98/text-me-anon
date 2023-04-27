@@ -3,6 +3,7 @@ import Image from "next/image";
 import React, { FunctionComponent } from "react";
 import { Network, networkLogos, etherscanUrl, networkNames } from "@/lib/network";
 import { shorten } from "@/lib/utils";
+import { useEnsName } from "wagmi";
 
 interface MessageProps {
   className?: string;
@@ -23,12 +24,17 @@ export const Message: FunctionComponent<MessageProps> = ({
   hash,
   from
 }) => {
+
+  const {data} = useEnsName ({
+    address: `0x${from?.slice(2)}`,
+    chainId: 1
+  })
   return (
     <div
       className={`${className} flex ${
         received ? "flex-row" : "flex-row-reverse"
       } items-center gap-1 mt-3`}
-      title={ network && `Sent on ${networkNames[network]} by ${shorten(from || '')}`}
+      title={ network && `Sent on ${networkNames[network]} by ${data ? data : shorten(from || '')}`}
     >
       <div className="w-2">
         <div

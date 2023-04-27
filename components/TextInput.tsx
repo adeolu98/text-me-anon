@@ -79,7 +79,7 @@ export const TextInput: FunctionComponent<TextInputProps> = ({
       handleOnError(e);
     },
   });
-
+ 
   //go to chat page after msg sent if sending message from new-message.tsx
   useEffect(() => {
     if (
