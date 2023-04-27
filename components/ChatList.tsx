@@ -29,7 +29,7 @@ function ChatList(props: ChatListProps) {
     discussions: _discussions,
     fetchStatus,
     loaded,
-  } = useDiscussions(address);
+  } = useDiscussions(address.toLowerCase());
 
   //sort in descending order of timestamp
   const discussions = Object.entries(_discussions || []).sort(
