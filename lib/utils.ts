@@ -1,3 +1,5 @@
+import Jazzicon from "@raugfer/jazzicon";
+
 export function shorten(addr: string): string {
   return `${addr.slice(0, 6)}...${addr.slice(-4)}`;
 }
@@ -41,4 +43,13 @@ export function getTime(timestamp: number) {
     return hours.substr(-2) + ":" + minutes.substr(-2);
   }
 }
+
+export function buildDataUrl(addr: string): string {
+    return (
+      "data:image/svg+xml;base64," +
+      btoa(Jazzicon(addr))
+    );
+  }
+
+
 

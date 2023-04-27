@@ -2,11 +2,12 @@
 import { configureStore, combineReducers } from '@reduxjs/toolkit';
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 import discussions from '@/store/slice/discussions';
+import general from './slice/general';
 
 
 const reducer = combineReducers({
   discussions,
-  // TODO
+  general
 });
 
 export const store = configureStore({

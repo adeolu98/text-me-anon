@@ -18,9 +18,12 @@ import {
   usePrepareSendTransaction,
   useSendTransaction,
   useEnsAddress,
+  useBalance,
 } from "wagmi";
 import { useDiscussion } from "@/hooks/use-discussions";
 import * as gtag from "@/lib/gtag";
+import { networkNames } from "@/lib/network";
+import { useChainModal } from "@rainbow-me/rainbowkit";
 
 interface TextInputProps {
   text: string;
@@ -49,20 +52,23 @@ export const TextInput: FunctionComponent<TextInputProps> = ({
   const router = useRouter();
   const { data } = useEnsAddress({
     name: toAddress,
+    chainId: 1,
+  });
+  const { openChainModal } = useChainModal();
+  const balance = useBalance({
+    address: address,
+    formatUnits: "ether",
+    watch: true,
   });
 
-  const discussion = useDiscussion(
-    toAddress.toLowerCase() === address?.toLowerCase()
-      ? "myself"
-      : toAddress.toLowerCase()
-  );
+  const {discussion} = useDiscussion(toAddress.toLowerCase(), address?.toLowerCase());
   const [previousText, setPreviousText] = useState("");
   const { config } = usePrepareSendTransaction({
     request: {
       to: toAddress,
       value: "0",
-      data: "0x" + string_to_hex("OCM:" + text),
-    }
+      data: "0x" + string_to_hex(text),
+    },
   });
   const { sendTransaction } = useSendTransaction({
     ...config,
@@ -73,26 +79,21 @@ export const TextInput: FunctionComponent<TextInputProps> = ({
       handleOnError(e);
     },
   });
-
+ 
   //go to chat page after msg sent if sending message from new-message.tsx
   useEffect(() => {
     if (
       discussion &&
-      hex_to_string(discussion[discussion.length - 1].text).slice(5) ===
+      hex_to_string(discussion[discussion.length - 1].text.slice(2)) ===
         previousText
     ) {
-
       if (router.pathname === `/new-message`) {
         router.push(
-          `/chat/${
-            toAddress.toLowerCase() === address?.toLowerCase()
-              ? "myself"
-              : toAddress.toLowerCase()
-          }`
+          `/chat/${toAddress.toLowerCase()}`
         );
       }
     }
-  }, [discussion, address]);
+  }, [discussion, address, previousText, router, toAddress]);
 
   useEffect(() => {
     if (text === "") setTextAreaHeight(1);
@@ -164,7 +165,7 @@ export const TextInput: FunctionComponent<TextInputProps> = ({
     if (text === "") return;
 
     if (address) {
-      if (data == null || data == undefined){
+      if (data == null || data == undefined) {
         toast({
           title: "Error",
           description: "Invalid Address",
@@ -208,16 +209,42 @@ export const TextInput: FunctionComponent<TextInputProps> = ({
     <div
       className={`${className} flex flex-row gap-2 items-center p-3 h-max rounded-b-3xl`}
     >
-      <textarea
-        onKeyDown={(e) => handleKeydown(e)}
-        value={text}
-        onChange={(e) => handleChange(e)}
-        className={`w-full border resize-none focus:bg-gray-100 rounded-3xl px-4 py-2 focus:border-2 focus:border-black focus:outline-none`}
-        placeholder="Text Message"
-        rows={textAreaHeight}
-      ></textarea>
+      <div className="flex flex-col w-full">
+        {/* should only show up when user has no eth*/}
+        {chain && balance.data?.formatted === "0.0" && (
+          <button
+            className="hover:underline text-[10px] mx-auto mb-1"
+            onClick={openChainModal}
+          >
+            You have zero balance on {networkNames[chain.id]}. Consider adding more {chain.id === 5 || chain.id === 11155111 ? networkNames[chain.id]: ""} {balance.data?.symbol} or switching chains.
+          </button>
+        )}
+        {/* should only show up when reply is being sent on a different chain from last reply and is not first message*/}
+        {chain &&
+          balance.data?.formatted !== "0.0" &&
+          discussion &&
+          discussion?.[discussion?.length - 1]?.id !== chain.id && (
+            <button
+              className="hover:underline text-[10px] mx-auto mb-1"
+              onClick={openChainModal}
+            >
+              Most recent message was sent on{" "}
+              {networkNames[discussion?.[discussion.length - 1].id]}. You are
+              replying on {networkNames[chain.id]}. <br /> Click to change if this is
+              unintended.
+            </button>
+          )}
+        <textarea
+          onKeyDown={(e) => handleKeydown(e)}
+          value={text}
+          onChange={(e) => handleChange(e)}
+          className={`w-full border resize-none focus:bg-gray-100 rounded-3xl px-4 py-2 focus:border-2 focus:border-black focus:outline-none`}
+          placeholder="Text Message"
+          rows={textAreaHeight}
+        ></textarea>
+      </div>
       <FontAwesomeIcon
-        className="h-8 text-gray-400"
+        className="h-10 text-gray-400 self-end"
         icon={faArrowCircleUp}
         onClick={handleSend}
       ></FontAwesomeIcon>
