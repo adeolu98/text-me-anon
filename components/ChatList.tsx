@@ -229,7 +229,7 @@ function ChatList(props: ChatListProps) {
                       mode={mode}
                       lastMessage={hex_to_string(
                         data[1][data[1].length - 1].text
-                      ).slice(5)}
+                      )}
                       lastMessageTime={getTime(
                         data[1][data[1].length - 1].timestamp
                       )}
