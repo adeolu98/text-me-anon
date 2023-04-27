@@ -13,6 +13,7 @@ interface ChatPreviewProps {
   className?: string;
   replied: boolean;
   mode: ChatMode;
+  ensNameForAddress?: string | null;
 }
 
 export const ChatPreview: FunctionComponent<ChatPreviewProps> = ({
@@ -23,6 +24,7 @@ export const ChatPreview: FunctionComponent<ChatPreviewProps> = ({
   className,
   replied,
   mode,
+  ensNameForAddress,
 }) => {
   const { data } = useEnsName({
     address: `0x${receiver.slice(2)}`,
@@ -76,7 +78,7 @@ export const ChatPreview: FunctionComponent<ChatPreviewProps> = ({
                 title={
                   mode === ChatMode.CHAT
                     ? "You have not replied to this conversation"
-                    : `${shorten(_sender || "")} has not replied`
+                    : `${!ensNameForAddress ? shorten(_sender || "") : ensNameForAddress} has not replied`
                 }
                 className="px-2 py-1 border border-gray-300 rounded-xl"
               >

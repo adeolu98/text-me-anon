@@ -12,6 +12,7 @@ import { useEnsName } from "wagmi";
 import { ChatMode, FetchStatus } from "@/lib/types"; 
 import Copy from "./Copy";
 import { useRouter } from "next/router";
+import { isAddress } from "ethers/lib/utils.js";
 
 
   const handleClickScroll = () => {
@@ -30,11 +31,11 @@ interface ChatMessagesProps {
 
 function ChatMessages(props: ChatMessagesProps) {
   const { receiver, sender, mode } = props;
-  const {discussion, fetchStatus, loaded} = useDiscussion(receiver, sender);
+  const {discussion, fetchStatus, loaded} = useDiscussion(receiver.toLowerCase(), sender.toLowerCase());
   const [text, setText] = useState("");
   const [previewText, setPreviewText] = useState("");
   const {asPath} = useRouter()
-
+   
   //tracks new msg entered by sender
   const [newMsg, setNewMsg] = useState(false);
   //tracks if chat age has scrolled to last msg on first open, its meant to do that only once
@@ -94,7 +95,7 @@ function ChatMessages(props: ChatMessagesProps) {
       <div className="flex flex-col gap-1 w-full rounded-t-3xl bg-gray-50  px-1 xs:px-5 py-3">
         <div className="w-full mt-1 flex justify-center items-center">
           <ProfilePic
-            addressForProfileIcon={receiver}
+            addressForProfileIcon={isAddress(receiver) ? receiver : ""}
             className="w-2/12 sm:w-1/12"
           ></ProfilePic>
         </div>
@@ -129,6 +130,7 @@ function ChatMessages(props: ChatMessagesProps) {
                   timeSent={getTime(msgData.timestamp)}
                   network={msgData.id}
                   hash={msgData.hash}
+                  from={msgData.from}
                 ></Message>
               </div>
             );
