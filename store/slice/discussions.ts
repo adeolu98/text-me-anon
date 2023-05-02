@@ -18,7 +18,7 @@ const fetchAllHistory = async (address: string): Promise<TxResponse[]> => {
     .map(getEtherscanProvider)
 
   const _allHistory = (await Promise.allSettled(etherScanProviders.map((provider, index) => getHistory(provider, address, networks[index]))))
-    .filter((result) => {
+    .filter((result) => {      
       if(result.status === "rejected"){
         console.error(result.reason)
         return false
@@ -32,7 +32,7 @@ const fetchAllHistory = async (address: string): Promise<TxResponse[]> => {
     )
     
 
-  const allHistory: TxResponse[] = []
+  const allHistory: TxResponse[] = []  
   return allHistory.concat(..._allHistory)
 }
 
@@ -45,8 +45,9 @@ export const fetchDiscussions = createAsyncThunk(
   }) => {
     const history = await fetchAllHistory(address);
     const discussions: {[key: string]: Discussion[]} = {};
+
     const _filtered = history.filter((tx) => txFilter(tx));
-        
+    
     // remove OCM: in messages between February 2023 & May 2023
     const filtered = _filtered.map(tx => ({
       ...tx,
