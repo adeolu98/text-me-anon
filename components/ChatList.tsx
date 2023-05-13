@@ -255,12 +255,12 @@ function ChatList(props: ChatListProps) {
           ) : (
             <div className="pt-8 w-full flex justify-center gap-4">
               {fetchStatus === FetchStatus.PENDING && !loaded ? (
-                <div>
-                  <p className="text-sm  font-light">No messages found yet..</p>
-                  <div>
-                    <Spinner size="md" />
-                  </div>
-                </div>
+               <>
+               <p className="text-sm  font-light">No messages found yet..</p>
+               <div>
+                 <Spinner size="md" />
+               </div>
+             </>
               ) : (
                 <div>
                   <p className="text-sm  font-light">No messages found</p>
