@@ -17,7 +17,7 @@ export const etherscanUrl: Record<Network, string> = {
   11155111: "https://sepolia.etherscan.io",
 };
 
-export const networkNames: Record<Network, string> = {
+export const networkNames: Record<number, string> = {
   1: "ETH Mainnet",
   5: "Goerli",
   137: "Polygon",
