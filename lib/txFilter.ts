@@ -32,9 +32,14 @@ function compareGas(tx: TxResponse): boolean {
 
   const gas = zeroGas + nonZeroGas + 21000;
   if (tx.chainId === 42161) {
-    return true; // since base gas limit on arbitrum is not predictable it is better to skip the gas calc and always return true
+    // since base gas limit on arbitrum is not predictable it is better to skip the gas
+    //calc + contract addresses are already filtered out by isNotContract() anyway
+    return true;
+  } else {
+    return String(gas) === tx.gasUsed;
   }
-  return String(gas) === tx.gasUsed;
 }
+
+
 
 export default txFilter;

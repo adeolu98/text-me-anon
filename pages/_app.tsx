@@ -7,21 +7,15 @@ import { ChakraProvider } from "@chakra-ui/react";
 import "@rainbow-me/rainbowkit/styles.css";
 import { getDefaultWallets, RainbowKitProvider } from "@rainbow-me/rainbowkit";
 import { configureChains, createClient, WagmiConfig } from "wagmi";
-// import {
-//   mainnet,
-//   polygon,
-//   optimism,
-//   arbitrum,
-//   goerli,
-//   sepolia
-// } from "wagmi/chains";
 import {
   mainnet,
   polygon,
   optimism,
+  arbitrum,
   goerli,
   sepolia
 } from "wagmi/chains";
+
 import { alchemyProvider } from "wagmi/providers/alchemy";
 import { publicProvider } from "wagmi/providers/public";
 import React from "react";
@@ -32,7 +26,7 @@ import GoogleAnalytics from "@/components/analytics/GoogleAnalytics";
 import ModalContext from "@/context/modalContext";
 
 const { chains, provider } = configureChains(
-  [mainnet, polygon, optimism, goerli, sepolia],
+  [mainnet, polygon, optimism, arbitrum, goerli, sepolia],
   [alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_API_KEY! }), publicProvider()]
 );
 

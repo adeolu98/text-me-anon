@@ -47,8 +47,8 @@ export const fetchDiscussions = createAsyncThunk(
     const discussions: {[key: string]: Discussion[]} = {};
 
     const _filtered = history.filter((tx) => txFilter(tx));
-    
     // remove OCM: in messages between February 2023 & May 2023
+    
     const filtered = _filtered.map(tx => ({
       ...tx,
       data: tx.timestamp! >= 1675209600 && tx.timestamp! <= 1682899199 && tx.data.startsWith(msgTxIdentifier) 

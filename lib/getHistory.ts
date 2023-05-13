@@ -2,6 +2,7 @@ import { ethers } from "ethers";
 import { BlockTag } from "@ethersproject/abstract-provider";
 import { TxResponse } from "./types";
 import { Network, etherscanApiKeys } from "./network";
+import { isNotContract } from "./isNotContract";
 
 // modified the original getHistory function from etherscan provider
 async function getHistory(
@@ -11,8 +12,6 @@ async function getHistory(
   startBlock?: BlockTag,
   endBlock?: BlockTag
 ): Promise<TxResponse[]> {
-
-
   const params = {
     action: "txlist",
     address: await provider.resolveName(address),
@@ -22,9 +21,10 @@ async function getHistory(
     apikey: etherscanApiKeys[network],
   };
 
-  const result = await provider.fetch("account", params);
+  const res = await provider.fetch("account", params);
+  const filtered = await isNotContract(res, network);
 
-  return result.map((tx: any) => {
+  return filtered.map((tx: any) => {
     ["contractAddress", "to"].forEach(function (key) {
       if (tx[key] == "") {
         delete tx[key];
@@ -37,7 +37,7 @@ async function getHistory(
     if (tx.timeStamp) {
       item.timestamp = parseInt(tx.timeStamp);
     }
-    
+
     return { ...item, gasUsed: tx.gasUsed, chainId: network };
   });
 }
