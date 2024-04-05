@@ -91,7 +91,7 @@ function ChatList(props: ChatListProps) {
     <div className="border shadow-2xl py-8 flex flex-col rounded-3xl h-full w-full sm:w-4/6 lg:w-3/6 xl:w-2/6">
       {/**top section with create new message icon */}
       <div className="flex flex-col xs:flex-row justify-between px-1 xs:px-5">
-        <div className="flex-flex-col">
+        <div className="flex flex-col">
           <div className="text-xs xs:text-base sm:text-xl font-bold">
             {mode === ChatMode.CHAT
               ? "Your Messages"
