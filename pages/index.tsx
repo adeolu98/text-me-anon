@@ -1,7 +1,7 @@
 import { AppLayout } from "@/components/AppLayout";
 import { NextPage } from "next";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCircleExclamation, faLink } from "@fortawesome/free-solid-svg-icons";
+import { faCircleExclamation } from "@fortawesome/free-solid-svg-icons";
 import { useAccount, useEnsName } from "wagmi";
 import ReactGA from "react-ga";
 import ChatList from "@/components/ChatList";

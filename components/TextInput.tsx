@@ -13,17 +13,20 @@ import { useToast } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { hex_to_string, string_to_hex } from "@/lib/utils";
 import {
-  useNetwork,
   useAccount,
-  usePrepareSendTransaction,
   useSendTransaction,
   useEnsAddress,
   useBalance,
+  useBlockNumber,
+  useWaitForTransactionReceipt
 } from "wagmi";
 import { useDiscussion } from "@/hooks/use-discussions";
 import * as gtag from "@/lib/gtag";
 import { networkNames } from "@/lib/network";
 import { useChainModal } from "@rainbow-me/rainbowkit";
+import { formatUnits, SendTransactionErrorType } from 'viem' 
+import { useQueryClient } from '@tanstack/react-query' 
+
 
 interface TextInputProps {
   text: string;
@@ -46,58 +49,33 @@ export const TextInput: FunctionComponent<TextInputProps> = ({
   toAddress,
   enableOnKeydown,
 }) => {
+  //use state hooks 
+  const [previousText, setPreviousText] = useState("");
+  const [textAreaHeight, setTextAreaHeight] = useState(1);
+
+  //wagmi hooks
+  const queryClient = useQueryClient();
   const { address } = useAccount();
-  const { chain } = useNetwork();
+  const { chain } = useAccount();
   const toast = useToast();
   const router = useRouter();
-  const { data } = useEnsAddress({
-    name: toAddress,
-    chainId: 1,
-  });
+  const resolvedENS = useEnsAddress({
+    name: toAddress
+  })
   const { openChainModal } = useChainModal();
-  const balance = useBalance({
+  const {data: balance, queryKey} = useBalance({
     address: address,
-    formatUnits: "ether",
-    watch: true,
   });
+  const { data: blockNumber } = useBlockNumber({ watch: true }) 
+  const formattedBalance = balance && formatUnits(balance.value , balance.decimals);
+  const { 
+    data: hash, 
+    error,
+    sendTransaction 
+  } = useSendTransaction() 
 
+  //custom hooks 
   const {discussion} = useDiscussion(toAddress.toLowerCase(), address?.toLowerCase());
-  const [previousText, setPreviousText] = useState("");
-  const { config } = usePrepareSendTransaction({
-    request: {
-      to: toAddress,
-      value: "0",
-      data: "0x" + string_to_hex(text),
-    },
-  });
-  const { sendTransaction } = useSendTransaction({
-    ...config,
-    onSuccess(data) {
-      handleOnSuccess(data);
-    },
-    onError(e: any) {
-      handleOnError(e);
-    },
-  });
- 
-  //go to chat page after msg sent if sending message from new-message.tsx
-  useEffect(() => {
-    if (
-      discussion &&
-      hex_to_string(discussion[discussion.length - 1].text.slice(2)) ===
-        previousText
-    ) {
-      if (router.pathname === `/new-message`) {
-        router.push(
-          `/chat/${toAddress.toLowerCase()}`
-        );
-      }
-    }
-  }, [discussion, address, previousText, router, toAddress]);
-
-  useEffect(() => {
-    if (text === "") setTextAreaHeight(1);
-  }, [text]);
 
   const sendMsg = async () => {
     //set preview text, set newMsg and wipe the input bar clean
@@ -106,35 +84,39 @@ export const TextInput: FunctionComponent<TextInputProps> = ({
     setText("");
     setNewMsg(true);
     //send tx
-    sendTransaction?.();
+   
+    sendTransaction({
+      to: toAddress as `0x${string}`,
+      value: BigInt("0"),
+      data: "0x" + string_to_hex(text) as `0x${string}`,
+  })
   };
 
-  const handleOnError = (e: any) => {
+
+  const { isLoading: isConfirming, isSuccess: isConfirmed } = 
+  useWaitForTransactionReceipt({ 
+    hash, 
+  }) 
+
+
+  const handleOnError = (e: SendTransactionErrorType) => {
     //set text back to previousText to return input bar to prev state, set newMsg
     setText(previousText);
     setNewMsg(false);
     setPreviewText("");
 
-    if (e.code === 4001) {
-      toast({
-        title: "Denied",
-        description: "You denied the transaction.",
-        status: "error",
-        duration: 6000,
-        isClosable: true,
-      });
-    } else {
+
       toast({
         title: "Error",
-        description: "Please try again.",
+        description: `${error?.cause}`,
         status: "error",
         duration: 6000,
         isClosable: true,
       });
-    }
+    
   };
 
-  const handleOnSuccess = async (data: any) => {
+  const handleOnSuccess = async () => {
     //send google analytics events
     gtag.event({
       action: "total_messages_sent_all_chains",
@@ -151,7 +133,6 @@ export const TextInput: FunctionComponent<TextInputProps> = ({
     });
 
     //show toast when tx is included in chain
-    (await data?.wait()) &&
       toast({
         title: "Success",
         description: `Message tx included in chain`,
@@ -165,7 +146,7 @@ export const TextInput: FunctionComponent<TextInputProps> = ({
     if (text === "") return;
 
     if (address) {
-      if (data == null || data == undefined) {
+      if (resolvedENS == null || resolvedENS == undefined) {
         toast({
           title: "Error",
           description: "Invalid Address",
@@ -194,8 +175,6 @@ export const TextInput: FunctionComponent<TextInputProps> = ({
     }
   };
 
-  const [textAreaHeight, setTextAreaHeight] = useState(1);
-
   const handleChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setText(e.currentTarget.value);
 
@@ -205,23 +184,60 @@ export const TextInput: FunctionComponent<TextInputProps> = ({
 
     if (trows && textAreaHeight < 6) setTextAreaHeight(trows);
   };
+
+  useEffect(() => {
+    if (isConfirmed){
+      handleOnSuccess()
+    }
+  
+    if(error){
+      handleOnError(error as SendTransactionErrorType)
+    }
+  }, [isConfirmed, error])
+  
+  useEffect(() => { 
+    if (blockNumber && Number(blockNumber) % 5 === 0) 
+    queryClient.invalidateQueries({ queryKey }) 
+}, [blockNumber, queryClient]) 
+  
+ 
+  //go to chat page after msg sent if sending message from new-message.tsx
+  useEffect(() => {
+    if (
+      discussion &&
+      hex_to_string(discussion[discussion.length - 1].text.slice(2)) ===
+        previousText
+    ) {
+      if (router.pathname === `/new-message`) {
+        router.push(
+          `/chat/${toAddress.toLowerCase()}`
+        );
+      }
+    }
+  }, [discussion, address, previousText, router, toAddress]);
+
+  useEffect(() => {
+    if (text === "") setTextAreaHeight(1);
+  }, [text]);
+
+
   return (
     <div
       className={`${className} flex flex-row gap-2 items-center p-3 h-max rounded-b-3xl`}
     >
       <div className="flex flex-col w-full">
         {/* should only show up when user has no eth*/}
-        {chain && balance.data?.formatted === "0.0" && (
+        {chain && formattedBalance === "0.0" && (
           <button
             className="hover:underline text-[10px] mx-auto mb-1"
             onClick={openChainModal}
           >
-            You have zero balance on {networkNames[chain.id]}. Consider adding more {chain.id === 5 || chain.id === 11155111 ? networkNames[chain.id]: ""} {balance.data?.symbol} or switching chains.
+            You have zero balance on {networkNames[chain.id]}. Consider adding more {chain.id === 5 || chain.id === 11155111 ? networkNames[chain.id]: ""} {formattedBalance} or switching chains.
           </button>
         )}
         {/* should only show up when reply is being sent on a different chain from last reply and is not first message*/}
         {chain &&
-          balance.data?.formatted !== "0.0" &&
+          formattedBalance !== "0.0" &&
           discussion &&
           discussion?.[discussion?.length - 1]?.id !== chain.id && (
             <button

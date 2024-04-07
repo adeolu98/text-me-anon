@@ -30,7 +30,7 @@ export function ChatSearch ({classNames, placeholder}: {classNames?: string, pla
     error: error1,
     status: status1,
   } = useEnsName({
-    address: isAddress(search) ? search : ("" as `0x{string}`),
+    address: isAddress(search) ? search as `0x{string}` : ("" as `0x{string}`),
     chainId: 1,
   });
   const {
