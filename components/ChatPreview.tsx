@@ -85,7 +85,7 @@ export const ChatPreview: FunctionComponent<ChatPreviewProps> = ({
                 <p className="text-black text-xs font-light">not replied</p>
               </div>
             )}
-          </div>
+          </div> 
         </div>
       </div>
     </div>

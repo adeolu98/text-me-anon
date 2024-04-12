@@ -18,7 +18,7 @@ const GoogleAnalytics = () => {
       send_to: TRACKING_ID,
     });
   }, []);
-  
+
   // 👇 send page views on route change
   useEffect(() => {
     const handleRouteChange = (url: string) => {
@@ -61,4 +61,3 @@ const GoogleAnalytics = () => {
   );
 };
 export default memo(GoogleAnalytics);
-

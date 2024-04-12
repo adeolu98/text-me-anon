@@ -2,7 +2,14 @@ import { KeyboardEvent } from "react";
 import { buildDataUrl } from "@/lib/utils";
 import { isAddress } from "ethers/lib/utils.js";
 import { useRouter } from "next/router";
-import { ChangeEvent, FocusEventHandler, KeyboardEventHandler, useCallback, useMemo, useState } from "react";
+import {
+  ChangeEvent,
+  FocusEventHandler,
+  KeyboardEventHandler,
+  useCallback,
+  useMemo,
+  useState,
+} from "react";
 import { useEnsName, useEnsAddress } from "wagmi";
 import Image from "next/image";
 
@@ -11,11 +18,17 @@ interface SearchInputProps {
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
   placeholderText?: string;
   onKeyDown?: KeyboardEventHandler<HTMLInputElement>;
-  onFocus?: FocusEventHandler<HTMLInputElement>
-  onBlur?: () => void
+  onFocus?: FocusEventHandler<HTMLInputElement>;
+  onBlur?: () => void;
 }
 
-export function ChatSearch ({classNames, placeholder}: {classNames?: string, placeholder?: string}){
+export function ChatSearch({
+  classNames,
+  placeholder,
+}: {
+  classNames?: string;
+  placeholder?: string;
+}) {
   // const {value, onChange, placeholderText, onKeyDown, onFocus, onBlur} = props;
   const [search, setSearch] = useState("");
   const [searchFocus, setSearchFocus] = useState<boolean>(false);
@@ -30,7 +43,9 @@ export function ChatSearch ({classNames, placeholder}: {classNames?: string, pla
     error: error1,
     status: status1,
   } = useEnsName({
-    address: isAddress(search) ? search as `0x{string}` : ("" as `0x{string}`),
+    address: isAddress(search)
+      ? (search as `0x{string}`)
+      : ("" as `0x{string}`),
     chainId: 1,
   });
   const {
@@ -75,7 +90,9 @@ export function ChatSearch ({classNames, placeholder}: {classNames?: string, pla
   );
 
   return (
-    <div className={`max-w-[500px] ${classNames} relative w-full items-center md:w-96`}>
+    <div
+      className={`max-w-[500px] ${classNames} relative w-full items-center md:w-96`}
+    >
       <input
         value={search.toLowerCase()}
         type="text"

@@ -1,4 +1,3 @@
-"use client";
 import "@/styles/globals.css";
 import "@/styles/index.css";
 import type { AppProps } from "next/app";
@@ -19,7 +18,7 @@ import {
   scroll,
   linea,
   sepolia,
-} from "@wagmi/core/chains";
+} from "viem/chains";
 import React from "react";
 import Jazzicon from "@raugfer/jazzicon";
 import { AvatarComponent, lightTheme } from "@rainbow-me/rainbowkit";
@@ -44,7 +43,7 @@ const lineaMainnet = {
 };
 
 const config = getDefaultConfig({
-  appName: "RainbowKit demo",
+  appName: "Text-Me Anon",
   projectId: "TEXT_ME_ANON",
   chains: [
     mainnet,
@@ -95,6 +94,10 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <WagmiProvider config={config}>
       <QueryClientProvider client={queryClient}>
+        <Head>
+          <title>Text-Me Anon</title>
+          <link rel="icon" href="/anon.ico"></link>
+        </Head>
           <RainbowKitProvider
             modalSize="compact"
             theme={lightTheme()}

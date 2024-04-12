@@ -6,7 +6,7 @@ import { Message } from "@/components/Message";
 import { useAccount, useEnsAddress } from "wagmi";
 import { isAddress } from "ethers/lib/utils.js";
 import { useRouter } from "next/router";
-import { mainnet } from "viem/chains";
+
 
 const NewMessage = () => {
   const router = useRouter();

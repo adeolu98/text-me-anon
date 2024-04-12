@@ -18,15 +18,14 @@ import {
   useEnsAddress,
   useBalance,
   useBlockNumber,
-  useWaitForTransactionReceipt
+  useWaitForTransactionReceipt,
 } from "wagmi";
 import { useDiscussion } from "@/hooks/use-discussions";
 import * as gtag from "@/lib/gtag";
 import { networkNames } from "@/lib/network";
 import { useChainModal } from "@rainbow-me/rainbowkit";
-import { formatUnits, SendTransactionErrorType } from 'viem' 
-import { useQueryClient } from '@tanstack/react-query' 
-
+import { formatUnits, SendTransactionErrorType } from "viem";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface TextInputProps {
   text: string;
@@ -49,7 +48,7 @@ export const TextInput: FunctionComponent<TextInputProps> = ({
   toAddress,
   enableOnKeydown,
 }) => {
-  //use state hooks 
+  //use state hooks
   const [previousText, setPreviousText] = useState("");
   const [textAreaHeight, setTextAreaHeight] = useState(1);
 
@@ -60,22 +59,22 @@ export const TextInput: FunctionComponent<TextInputProps> = ({
   const toast = useToast();
   const router = useRouter();
   const resolvedENS = useEnsAddress({
-    name: toAddress
-  })
+    name: toAddress,
+  });
   const { openChainModal } = useChainModal();
-  const {data: balance, queryKey} = useBalance({
+  const { data: balance, queryKey } = useBalance({
     address: address,
   });
-  const { data: blockNumber } = useBlockNumber({ watch: true }) 
-  const formattedBalance = balance && formatUnits(balance.value , balance.decimals);
-  const { 
-    data: hash, 
-    error,
-    sendTransaction 
-  } = useSendTransaction() 
+  const { data: blockNumber } = useBlockNumber({ watch: true });
+  const formattedBalance =
+    balance && formatUnits(balance.value, balance.decimals);
+  const { data: hash, error, sendTransaction } = useSendTransaction();
 
-  //custom hooks 
-  const {discussion} = useDiscussion(toAddress.toLowerCase(), address?.toLowerCase());
+  //custom hooks
+  const { discussion } = useDiscussion(
+    toAddress.toLowerCase(),
+    address?.toLowerCase()
+  );
 
   const sendMsg = async () => {
     //set preview text, set newMsg and wipe the input bar clean
@@ -84,20 +83,18 @@ export const TextInput: FunctionComponent<TextInputProps> = ({
     setText("");
     setNewMsg(true);
     //send tx
-   
+
     sendTransaction({
       to: toAddress as `0x${string}`,
       value: BigInt("0"),
-      data: "0x" + string_to_hex(text) as `0x${string}`,
-  })
+      data: ("0x" + string_to_hex(text)) as `0x${string}`,
+    });
   };
 
-
-  const { isLoading: isConfirming, isSuccess: isConfirmed } = 
-  useWaitForTransactionReceipt({ 
-    hash, 
-  }) 
-
+  const { isLoading: isConfirming, isSuccess: isConfirmed } =
+    useWaitForTransactionReceipt({
+      hash,
+    });
 
   const handleOnError = (e: SendTransactionErrorType) => {
     //set text back to previousText to return input bar to prev state, set newMsg
@@ -105,15 +102,13 @@ export const TextInput: FunctionComponent<TextInputProps> = ({
     setNewMsg(false);
     setPreviewText("");
 
-
-      toast({
-        title: "Error",
-        description: `${error?.cause}`,
-        status: "error",
-        duration: 6000,
-        isClosable: true,
-      });
-    
+    toast({
+      title: "Error",
+      description: `${error?.cause}`,
+      status: "error",
+      duration: 6000,
+      isClosable: true,
+    });
   };
 
   const handleOnSuccess = async () => {
@@ -133,13 +128,13 @@ export const TextInput: FunctionComponent<TextInputProps> = ({
     });
 
     //show toast when tx is included in chain
-      toast({
-        title: "Success",
-        description: `Message tx included in chain`,
-        status: "success",
-        duration: 6000,
-        isClosable: true,
-      });
+    toast({
+      title: "Success",
+      description: `Message tx included in chain`,
+      status: "success",
+      duration: 6000,
+      isClosable: true,
+    });
   };
 
   const handleSend = async () => {
@@ -186,21 +181,20 @@ export const TextInput: FunctionComponent<TextInputProps> = ({
   };
 
   useEffect(() => {
-    if (isConfirmed){
-      handleOnSuccess()
+    if (isConfirmed) {
+      handleOnSuccess();
     }
-  
-    if(error){
-      handleOnError(error as SendTransactionErrorType)
+
+    if (error) {
+      handleOnError(error as SendTransactionErrorType);
     }
-  }, [isConfirmed, error])
-  
-  useEffect(() => { 
-    if (blockNumber && Number(blockNumber) % 5 === 0) 
-    queryClient.invalidateQueries({ queryKey }) 
-}, [blockNumber, queryClient]) 
-  
- 
+  }, [isConfirmed, error]);
+
+  useEffect(() => {
+    if (blockNumber && Number(blockNumber) % 5 === 0)
+      queryClient.invalidateQueries({ queryKey });
+  }, [blockNumber, queryClient]);
+
   //go to chat page after msg sent if sending message from new-message.tsx
   useEffect(() => {
     if (
@@ -209,9 +203,7 @@ export const TextInput: FunctionComponent<TextInputProps> = ({
         previousText
     ) {
       if (router.pathname === `/new-message`) {
-        router.push(
-          `/chat/${toAddress.toLowerCase()}`
-        );
+        router.push(`/chat/${toAddress.toLowerCase()}`);
       }
     }
   }, [discussion, address, previousText, router, toAddress]);
@@ -219,7 +211,6 @@ export const TextInput: FunctionComponent<TextInputProps> = ({
   useEffect(() => {
     if (text === "") setTextAreaHeight(1);
   }, [text]);
-
 
   return (
     <div
@@ -232,7 +223,12 @@ export const TextInput: FunctionComponent<TextInputProps> = ({
             className="hover:underline text-[10px] mx-auto mb-1"
             onClick={openChainModal}
           >
-            You have zero balance on {networkNames[chain.id]}. Consider adding more {chain.id === 5 || chain.id === 11155111 ? networkNames[chain.id]: ""} {formattedBalance} or switching chains.
+            You have zero balance on {networkNames[chain.id]}. Consider adding
+            more{" "}
+            {chain.id === 5 || chain.id === 11155111
+              ? networkNames[chain.id]
+              : ""}{" "}
+            {formattedBalance} or switching chains.
           </button>
         )}
         {/* should only show up when reply is being sent on a different chain from last reply and is not first message*/}
@@ -246,8 +242,8 @@ export const TextInput: FunctionComponent<TextInputProps> = ({
             >
               Most recent message was sent on{" "}
               {networkNames[discussion?.[discussion.length - 1].id]}. You are
-              replying on {networkNames[chain.id]}. <br /> Click to change if this is
-              unintended.
+              replying on {networkNames[chain.id]}. <br /> Click to change if
+              this is unintended.
             </button>
           )}
         <textarea
