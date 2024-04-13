@@ -15,8 +15,10 @@ import {
   polygon,
   optimism,
   zkSync,
+  base,
   scroll,
   linea,
+  polygonZkEvm,
   sepolia,
 } from "viem/chains";
 import React from "react";
@@ -42,6 +44,12 @@ const lineaMainnet = {
   iconUrl: 'https://s2.coinmarketcap.com/static/img/coins/64x64/27657.png'
 };
 
+const polygonZkEvmExtended = {
+  ...polygonZkEvm,
+  iconBackground: "#fff",
+  iconUrl: 'https://s2.coinmarketcap.com/static/img/coins/64x64/3890.png'
+}
+
 const config = getDefaultConfig({
   appName: "Text-Me Anon",
   projectId: "TEXT_ME_ANON",
@@ -49,18 +57,22 @@ const config = getDefaultConfig({
     mainnet,
     polygon,
     optimism,
+    base,
     zkSync,
     scrollMainnet,
     lineaMainnet,
+    polygonZkEvmExtended,
     sepolia,
   ],
   transports: {
     [mainnet.id]: http(),
     [polygon.id]: http(),
     [optimism.id]: http(),
+    [base.id]: http(),
     [zkSync.id]: http(),
     [scrollMainnet.id]: http(),
     [lineaMainnet.id]: http(),
+    [polygonZkEvmExtended.id]: http(),
     [sepolia.id]: http(),
   },
 });
