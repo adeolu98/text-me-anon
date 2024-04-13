@@ -16,6 +16,7 @@ async function getHistory(provider: ethers.providers.EtherscanProvider, address:
 
   const result = await provider.fetch("account", params);
 
+
   return result.map((tx: any) => {
     ["contractAddress", "to"].forEach(function(key) {
         if (tx[key] == "") { delete tx[key]; }
@@ -28,7 +29,10 @@ async function getHistory(provider: ethers.providers.EtherscanProvider, address:
 
     return {...item, gasUsed: tx.gasUsed, chainId: network};
   });
+
+
 }
 
 
 export default getHistory;
+

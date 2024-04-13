@@ -6,7 +6,6 @@ import Head from "next/head";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTwitter, faDiscord } from "@fortawesome/free-brands-svg-icons";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
-import { useAccount } from "wagmi";
 import { useRouter } from "next/router";
 import ModeSwitch from "./ModeSwitch";
 import { useSelector } from "react-redux";
@@ -23,7 +22,6 @@ export const AppLayout: FunctionComponent<AppLayoutProps> = ({
   children,
 }) => {
   const { asPath } = useRouter();
-  const { isConnected } = useAccount();
   const mode = useSelector(selectMode);
 
   return (

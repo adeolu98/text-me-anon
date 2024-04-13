@@ -4,8 +4,8 @@ import { ConnectButton } from "@rainbow-me/rainbowkit";
 import Image from "next/image";
 import { ChatSearch } from "../SearchInput";
 
-function MobileNav (){
-  const {active, close} = useModalContext(Modals.MobileNav)
+function MobileNav() {
+  const { active, close } = useModalContext(Modals.MobileNav);
 
   return active ? (
     <div className="absolute z-10 pt-10 px-8 left-0 right-0 top-0 bottom-0 bg-neutral-50">
@@ -33,15 +33,12 @@ function MobileNav (){
             }}
           ></ConnectButton>
         </div>
-        
-        <ChatSearch />
+        <ChatSearch></ChatSearch>
       </div>
     </div>
   ) : (
-    <></>
+    <div></div>
   );
-} 
-
-
+}
 
 export default MobileNav;

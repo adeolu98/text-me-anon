@@ -3,9 +3,10 @@ import { TextInput } from "@/components/TextInput";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleExclamation } from "@fortawesome/free-solid-svg-icons";
 import { Message } from "@/components/Message";
-import { mainnet, useAccount, useEnsAddress, useNetwork } from "wagmi";
+import { useAccount, useEnsAddress } from "wagmi";
 import { isAddress } from "ethers/lib/utils.js";
 import { useRouter } from "next/router";
+
 
 const NewMessage = () => {
   const router = useRouter();
@@ -15,7 +16,7 @@ const NewMessage = () => {
   //tracks new msg entered by sender
   const [newMsg, setNewMsg] = useState(false);
   const { address } = useAccount();
-  const { chain } = useNetwork();
+  const { chain } = useAccount();
   const { address: receiver } = router.query;
 
   const { data } = useEnsAddress({
@@ -26,6 +27,7 @@ const NewMessage = () => {
   useEffect(() => {
     if (typeof receiver === "string") {
       setToAddress(receiver);
+      console.log(receiver)
     }
   }, [receiver]);
 
