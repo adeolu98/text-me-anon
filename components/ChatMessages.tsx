@@ -31,7 +31,7 @@ interface ChatMessagesProps {
 
 function ChatMessages(props: ChatMessagesProps) {
   const { receiver, sender, mode } = props;
-  const {discussion, fetchStatus, loaded} = useDiscussion(receiver.toLowerCase(), sender.toLowerCase());
+  const {discussion, fetchStatus, loaded} = useDiscussion(receiver?.toLowerCase(), sender.toLowerCase());
   const [text, setText] = useState("");
   const [previewText, setPreviewText] = useState("");
   const {asPath} = useRouter()

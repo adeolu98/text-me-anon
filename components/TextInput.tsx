@@ -13,17 +13,20 @@ import { useToast } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { hex_to_string, string_to_hex } from "@/lib/utils";
 import {
-  useNetwork,
+  type BaseError,
   useAccount,
-  usePrepareSendTransaction,
   useSendTransaction,
-  useEnsAddress,
+  useWaitForTransactionReceipt,
   useBalance,
 } from "wagmi";
+import { getAccount, getEnsAddress, getEnsName } from "@wagmi/core";
 import { useDiscussion } from "@/hooks/use-discussions";
 import * as gtag from "@/lib/gtag";
 import { networkNames } from "@/lib/network";
 import { useChainModal } from "@rainbow-me/rainbowkit";
+import { config } from "../wagmiConfig";
+import { formatUnits, isAddress, parseEther } from "viem";
+import { normalize } from "path";
 
 interface TextInputProps {
   text: string;
@@ -47,39 +50,41 @@ export const TextInput: FunctionComponent<TextInputProps> = ({
   enableOnKeydown,
 }) => {
   const { address } = useAccount();
-  const { chain } = useNetwork();
+
+  const { chainId } = getAccount(config);
+  const chain = config.chains.find((chain) => chain.id === chainId);
+
   const toast = useToast();
   const router = useRouter();
-  const { data } = useEnsAddress({
-    name: toAddress,
+  const ensName = getEnsName(config, {
+    address: toAddress as `0x${string}`,
     chainId: 1,
   });
   const { openChainModal } = useChainModal();
   const balance = useBalance({
     address: address,
-    formatUnits: "ether",
-    watch: true,
   });
 
-  const {discussion} = useDiscussion(toAddress.toLowerCase(), address?.toLowerCase());
+  const { discussion } = useDiscussion(
+    toAddress?.toLowerCase(),
+    address?.toLowerCase()
+  );
   const [previousText, setPreviousText] = useState("");
-  const { config } = usePrepareSendTransaction({
-    request: {
-      to: toAddress,
-      value: "0",
-      data: "0x" + string_to_hex(text),
-    },
+
+  const {
+    sendTransaction,
+    data: hash,
+    isPending,
+    error,
+  } = useSendTransaction({
+    config,
   });
-  const { sendTransaction } = useSendTransaction({
-    ...config,
-    onSuccess(data) {
-      handleOnSuccess(data);
-    },
-    onError(e: any) {
-      handleOnError(e);
-    },
-  });
- 
+
+  const { isLoading: isConfirming, isSuccess: isConfirmed } =
+    useWaitForTransactionReceipt({
+      hash,
+    });
+
   //go to chat page after msg sent if sending message from new-message.tsx
   useEffect(() => {
     if (
@@ -88,9 +93,7 @@ export const TextInput: FunctionComponent<TextInputProps> = ({
         previousText
     ) {
       if (router.pathname === `/new-message`) {
-        router.push(
-          `/chat/${toAddress.toLowerCase()}`
-        );
+        router.push(`/chat/${toAddress.toLowerCase()}`);
       }
     }
   }, [discussion, address, previousText, router, toAddress]);
@@ -106,7 +109,26 @@ export const TextInput: FunctionComponent<TextInputProps> = ({
     setText("");
     setNewMsg(true);
     //send tx
-    sendTransaction?.();
+    sendTransaction(
+      {
+        to: isAddress(toAddress)
+          ? (toAddress as `0x${string}`)
+          : ((await getEnsAddress(config, {
+              name: normalize(toAddress),
+              chainId: 1,
+            })) as `0x${string}`),
+        value: parseEther("0.0"),
+        data: ("0x" + string_to_hex(text)) as `0x${string}`,
+      },
+      {
+        onError(error, variables, context) {
+          handleOnError(error);
+        },
+        onSuccess() {
+          handleOnSuccess();
+        },
+      }
+    );
   };
 
   const handleOnError = (e: any) => {
@@ -114,27 +136,18 @@ export const TextInput: FunctionComponent<TextInputProps> = ({
     setText(previousText);
     setNewMsg(false);
     setPreviewText("");
+    console.log(e);
 
-    if (e.code === 4001) {
-      toast({
-        title: "Denied",
-        description: "You denied the transaction.",
-        status: "error",
-        duration: 6000,
-        isClosable: true,
-      });
-    } else {
-      toast({
-        title: "Error",
-        description: "Please try again.",
-        status: "error",
-        duration: 6000,
-        isClosable: true,
-      });
-    }
+    toast({
+      title: "Denied",
+      description: (e as BaseError).shortMessage || e.message,
+      status: "error",
+      duration: 6000,
+      isClosable: true,
+    });
   };
 
-  const handleOnSuccess = async (data: any) => {
+  const handleOnSuccess = async () => {
     //send google analytics events
     gtag.event({
       action: "total_messages_sent_all_chains",
@@ -151,21 +164,24 @@ export const TextInput: FunctionComponent<TextInputProps> = ({
     });
 
     //show toast when tx is included in chain
-    (await data?.wait()) &&
-      toast({
-        title: "Success",
-        description: `Message tx included in chain`,
-        status: "success",
-        duration: 6000,
-        isClosable: true,
-      });
   };
 
   const handleSend = async () => {
     if (text === "") return;
 
     if (address) {
-      if (data == null || data == undefined) {
+      // if (ensName == null || ensName == undefined) {
+      //   toast({
+      //     title: "Error",
+      //     description: "Invalid Address",
+      //     status: "error",
+      //     duration: 6000,
+      //     isClosable: true,
+      //   });
+      // }
+      if (isAddress(toAddress)) {
+        sendMsg();
+      } else {
         toast({
           title: "Error",
           description: "Invalid Address",
@@ -173,8 +189,6 @@ export const TextInput: FunctionComponent<TextInputProps> = ({
           duration: 6000,
           isClosable: true,
         });
-      } else if (toAddress !== "") {
-        sendMsg();
       }
     } else {
       toast({
@@ -211,17 +225,23 @@ export const TextInput: FunctionComponent<TextInputProps> = ({
     >
       <div className="flex flex-col w-full">
         {/* should only show up when user has no eth*/}
-        {chain && balance.data?.formatted === "0.0" && (
-          <button
-            className="hover:underline text-[10px] mx-auto mb-1"
-            onClick={openChainModal}
-          >
-            You have zero balance on {networkNames[chain.id]}. Consider adding more {chain.id === 5 || chain.id === 11155111 ? networkNames[chain.id]: ""} {balance.data?.symbol} or switching chains.
-          </button>
-        )}
+        {chain &&
+          balance.data?.value &&
+          formatUnits(balance.data.value, 18) === "0.0" && (
+            <button
+              className="hover:underline text-[10px] mx-auto mb-1"
+              onClick={openChainModal}
+            >
+              You have zero balance on {networkNames[chain.id]}. Consider adding
+              more
+              {chain.id === 11155111 ? networkNames[chain.id] : ""}
+              {balance.data?.symbol} or switching chains.
+            </button>
+          )}
         {/* should only show up when reply is being sent on a different chain from last reply and is not first message*/}
         {chain &&
-          balance.data?.formatted !== "0.0" &&
+          balance.data?.value &&
+          formatUnits(balance.data.value, 18) === "0.0" &&
           discussion &&
           discussion?.[discussion?.length - 1]?.id !== chain.id && (
             <button
@@ -230,8 +250,8 @@ export const TextInput: FunctionComponent<TextInputProps> = ({
             >
               Most recent message was sent on{" "}
               {networkNames[discussion?.[discussion.length - 1].id]}. You are
-              replying on {networkNames[chain.id]}. <br /> Click to change if this is
-              unintended.
+              replying on {networkNames[chain.id]}. <br /> Click to change if
+              this is unintended.
             </button>
           )}
         <textarea
