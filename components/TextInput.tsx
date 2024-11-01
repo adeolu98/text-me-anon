@@ -16,7 +16,6 @@ import {
   type BaseError,
   useAccount,
   useSendTransaction,
-  useWaitForTransactionReceipt,
   useBalance,
 } from "wagmi";
 import { getAccount, getEnsAddress, getEnsName } from "@wagmi/core";
@@ -79,11 +78,6 @@ export const TextInput: FunctionComponent<TextInputProps> = ({
   } = useSendTransaction({
     config,
   });
-
-  const { isLoading: isConfirming, isSuccess: isConfirmed } =
-    useWaitForTransactionReceipt({
-      hash,
-    });
 
   //go to chat page after msg sent if sending message from new-message.tsx
   useEffect(() => {
@@ -162,8 +156,6 @@ export const TextInput: FunctionComponent<TextInputProps> = ({
       label: "",
       value: "",
     });
-
-    //show toast when tx is included in chain
   };
 
   const handleSend = async () => {
