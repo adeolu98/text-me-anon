@@ -6,8 +6,6 @@ import { Message } from "@/components/Message";
 import { useAccount, useEnsName } from "wagmi";
 import { isAddress } from "ethers/lib/utils.js";
 import { useRouter } from "next/router";
-import { config } from "../wagmiConfig";
-import { getAccount } from "@wagmi/core";
 
 
 const NewMessage = () => {
@@ -19,8 +17,6 @@ const NewMessage = () => {
   const [newMsg, setNewMsg] = useState(false);
 
   const { address } = useAccount();
-  const { chainId } = getAccount(config);
-  const chain = config.chains.find((chain) => chain.id === chainId);
   const { address: receiver } = router.query;
 
   const {
@@ -35,8 +31,6 @@ const NewMessage = () => {
   });
 
 
-
-  // resolved ensName or address
   const [resolvedName, resolvedAddress] = useMemo((): [
     string | undefined,
     string | undefined
@@ -48,7 +42,7 @@ const NewMessage = () => {
     } else {
       return [undefined, undefined];
     }
-  }, [ ensName, toAddress]);
+  }, [ensName, toAddress]);
 
   useEffect(() => {
     if (typeof receiver === "string") {
@@ -85,7 +79,7 @@ const NewMessage = () => {
                 <input
                   value={toAddress.toLowerCase()}
                   onChange={handleAddrInput}
-                  placeholder={`input ${chain?.name} address`}
+                  placeholder={`input address`}
                   className="outline-none w-full h-8 break-all text-sm px-2"
                   type="text"
                 ></input>

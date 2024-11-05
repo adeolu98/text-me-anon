@@ -5,8 +5,6 @@ import { useRouter } from "next/router";
 import { ChangeEvent, FocusEventHandler, KeyboardEventHandler, useCallback, useMemo, useState } from "react";
 import { useEnsName, useEnsAddress } from "wagmi";
 import Image from "next/image";
-import { normalize } from 'viem/ens'
-
 
 interface SearchInputProps {
   value: string;
@@ -32,7 +30,7 @@ export function ChatSearch ({classNames, placeholder}: {classNames?: string, pla
     error: error1,
     status: status1,
   } = useEnsName({
-    address: isAddress(search) ? search as `0x{string}` : ("" as `0x{string}`),
+    address: isAddress(search) ? search as `0x${string}` : "" as `0x${string}`,
     chainId: 1,
   });
   const {
@@ -40,7 +38,7 @@ export function ChatSearch ({classNames, placeholder}: {classNames?: string, pla
     error,
     status,
   } = useEnsAddress({
-    name: normalize(search),
+    name: search,
     chainId: 1,
   });
 
