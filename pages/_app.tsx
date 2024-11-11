@@ -52,7 +52,7 @@ export const customAvatar: AvatarComponent = ({ address, ensImage, size }) => {
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
-    <WagmiProvider config={config}>
+    <WagmiProvider reconnectOnMount={false} config={config}>
       <QueryClientProvider client={client}>
         <Head>
           <title>Text-Me Anon</title>
