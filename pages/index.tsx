@@ -28,7 +28,7 @@ const Home: NextPage = () => {
             height={100}
           ></FontAwesomeIcon>
           <p className="text-center font-bold font-xl">
-            Please connect wallet to see your on-chain messages
+            Please connect wallet to see your on-chain messages or toggle to watch mode. 
           </p>
         </div>
       )}
