@@ -12,6 +12,7 @@ import ModeSwitch from "./ModeSwitch";
 import { useSelector } from "react-redux";
 import { selectMode } from "@/store/slice/general";
 import { ChatMode } from "@/lib/types";
+import AnonLogo from "@/public/anon.svg";
 
 interface AppLayoutProps {
   className?: string;
@@ -28,7 +29,7 @@ export const AppLayout: FunctionComponent<AppLayoutProps> = ({
 
   return (
     <div
-      className={`${className}  flex flex-col justify-between h-screen bg-neutral-50 px-4 xs:px-6 sm:px-10 pt-10`}
+      className={`${className}  flex flex-col justify-between h-full w-full bg-neutral-50 px-4 xs:px-6 sm:px-10 pt-10`}
     >
       <Head>
         <script
@@ -50,8 +51,8 @@ export const AppLayout: FunctionComponent<AppLayoutProps> = ({
       </Head>
       <div className=" flex flex-row justify-between gap-6 w-full">
         <div className="font-bold flex-shrink-0 text-lg sm:text-xl md:text-2xl items-center md:gap-1 flex flex-row">
-          <p className="">Text-Me Anon</p>
-          <Image width={30} height={10} src="/anon.ico" alt="" />
+          <Image width={40} height={10} src={AnonLogo} alt="" />
+          <p className="pl-3 hidden md:block">Text-Me-Anon</p>
           <div className=" hidden sm:block text-xs self-start break-all text-center">
             {mode === ChatMode.CHAT ? "chat mode" : "watch mode"}
           </div>
@@ -90,7 +91,7 @@ export const AppLayout: FunctionComponent<AppLayoutProps> = ({
         </div>
       </div>
 
-      <div className="flex w-full justify-center items-center h-4/5 pt-5 md:px-10">
+      <div className="flex w-full justify-center items-center h-full">
         {children}
       </div>
       <div className=" w-full pt-2 sm:pt-0 pb-2 flex gap-4 flex-row">
