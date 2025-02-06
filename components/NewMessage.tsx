@@ -1,11 +1,12 @@
-import { useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useMemo, useState } from "react";
 import { TextInput } from "@/components/TextInput";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleExclamation } from "@fortawesome/free-solid-svg-icons";
 import { Message } from "@/components/Message";
-import { mainnet, useAccount, useEnsAddress, useNetwork } from "wagmi";
+import { useAccount, useEnsName } from "wagmi";
 import { isAddress } from "ethers/lib/utils.js";
 import { useRouter } from "next/router";
+
 
 const NewMessage = () => {
   const router = useRouter();
@@ -14,20 +15,44 @@ const NewMessage = () => {
   const [previewText, setPreviewText] = useState("");
   //tracks new msg entered by sender
   const [newMsg, setNewMsg] = useState(false);
+
   const { address } = useAccount();
-  const { chain } = useNetwork();
   const { address: receiver } = router.query;
 
-  const { data } = useEnsAddress({
-    name: toAddress,
+  const {
+    data: ensName,
+    error: error1,
+    status: status1,
+  } = useEnsName({
+    address: isAddress(toAddress)
+      ? (toAddress as `0x{string}`)
+      : ("" as `0x{string}`),
     chainId: 1,
   });
+
+
+  const [resolvedName, resolvedAddress] = useMemo((): [
+    string | undefined,
+    string | undefined
+  ] => {
+    if (toAddress && ensName) {
+      return [ensName, toAddress];
+    } else if (isAddress(toAddress)) {
+      return [undefined, toAddress];
+    } else {
+      return [undefined, undefined];
+    }
+  }, [ensName, toAddress]);
 
   useEffect(() => {
     if (typeof receiver === "string") {
       setToAddress(receiver);
     }
   }, [receiver]);
+
+  const handleAddrInput = (e: ChangeEvent<HTMLInputElement>) => {
+    setToAddress(e.currentTarget.value);
+  };
 
   return (
     <>
@@ -53,31 +78,31 @@ const NewMessage = () => {
                 <p className="font-bold">To:</p>
                 <input
                   value={toAddress.toLowerCase()}
-                  onChange={(e) =>
-                    setToAddress(e.currentTarget.value.toLowerCase())
-                  }
-                  placeholder={`input ${chain?.name} address or ENS name`}
+                  onChange={handleAddrInput}
+                  placeholder={`input address`}
                   className="outline-none w-full h-8 break-all text-sm px-2"
                   type="text"
                 ></input>
               </div>
               <div className="text-center text-xs text-red-600">
                 {toAddress &&
-                  !isAddress(toAddress) && !data &&
+                  !isAddress(toAddress) &&
+                  !resolvedAddress &&
                   "This is not a valid address."}
               </div>
             </div>
-            {data !== null && data !== undefined && toAddress.length !== 42 && (
-              <div className="text-xs px-1 gap-2 xs:px-5 py-3">
-                <p className="font-light">
-                  ENS for address:
-                  <span className="font-semibold">
-                    {" " + data.toLowerCase()}
-                  </span>
-                </p>
-              </div>
-            )}
-
+            {resolvedName !== null &&
+              toAddress !== undefined &&
+              toAddress.length == 42 && (
+                <div className="text-xs px-1 gap-2 xs:px-5 py-3">
+                  <p className="font-light">
+                    ENS name:
+                    <span className="font-semibold">
+                      {" " + resolvedName?.toLowerCase()}
+                    </span>
+                  </p>
+                </div>
+              )}
             <div className="w-full bg-gray-200 h-0.5"></div>
           </div>
           {/** show chat messages */}
@@ -90,34 +115,30 @@ const NewMessage = () => {
           </div>
 
           {/**show msg input text area */}
-          <div className="hidden lg:block">
-            <TextInput
-              text={text}
-              enableOnKeydown={true}
-              setText={setText}
-              setNewMsg={setNewMsg}
-              setPreviewText={setPreviewText}
-              toAddress={
-                data !== null && data !== undefined
-                  ? data.toLowerCase()
-                  : toAddress
-              }
-            ></TextInput>
-          </div>
-          <div className="block lg:hidden">
-            <TextInput
-              text={text}
-              enableOnKeydown={false}
-              setText={setText}
-              setNewMsg={setNewMsg}
-              setPreviewText={setPreviewText}
-              toAddress={
-                data !== null && data !== undefined
-                  ? data.toLowerCase()
-                  : toAddress
-              }
-            ></TextInput>
-          </div>
+          {
+            <div className="hidden lg:block">
+              <TextInput
+                text={text}
+                enableOnKeydown={true}
+                setText={setText}
+                setNewMsg={setNewMsg}
+                setPreviewText={setPreviewText}
+                toAddress={toAddress}
+              ></TextInput>
+            </div>
+          }
+          {
+            <div className="block lg:hidden">
+              <TextInput
+                text={text}
+                enableOnKeydown={false}
+                setText={setText}
+                setNewMsg={setNewMsg}
+                setPreviewText={setPreviewText}
+                toAddress={toAddress}
+              ></TextInput>
+            </div>
+          }
         </div>
       ) : (
         <div className="h-full w-full flex items-center justify-center flex-col gap-10 sm:w-4/6 md:w-4/6 lg:w-3/6 xl:w-2/6">

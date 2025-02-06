@@ -5,47 +5,25 @@ import store from "@/store";
 import { Provider as ReduxProvider } from "react-redux";
 import { ChakraProvider } from "@chakra-ui/react";
 import "@rainbow-me/rainbowkit/styles.css";
-import { getDefaultWallets, RainbowKitProvider } from "@rainbow-me/rainbowkit";
-import { configureChains, createClient, WagmiConfig } from "wagmi";
-// import {
-//   mainnet,
-//   polygon,
-//   optimism,
-//   arbitrum,
-//   goerli,
-//   sepolia
-// } from "wagmi/chains";
-import {
-  mainnet,
-  polygon,
-  optimism,
-  goerli,
-  sepolia
-} from "wagmi/chains";
-import { alchemyProvider } from "wagmi/providers/alchemy";
-import { publicProvider } from "wagmi/providers/public";
+import { getDefaultConfig, RainbowKitProvider } from "@rainbow-me/rainbowkit";
+import { WagmiProvider } from "wagmi";
+import { mainnet, polygon, optimism, base, sepolia } from "wagmi/chains";
 import React from "react";
 import Jazzicon from "@raugfer/jazzicon";
 import { AvatarComponent, lightTheme } from "@rainbow-me/rainbowkit";
 import Head from "next/head";
 import GoogleAnalytics from "@/components/analytics/GoogleAnalytics";
 import ModalContext from "@/context/modalContext";
+import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 
-const { chains, provider } = configureChains(
-  [mainnet, polygon, optimism, goerli, sepolia],
-  [alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_API_KEY! }), publicProvider()]
-);
-
-const { connectors } = getDefaultWallets({
+const config = getDefaultConfig({
   appName: "My RainbowKit App",
-  chains,
+  projectId: "YOUR_PROJECT_ID",
+  chains: [/**base,*/ polygon, optimism, mainnet, sepolia],
+  ssr: true, // If your dApp uses server side rendering (SSR)
 });
 
-const wagmiClient = createClient({
-  autoConnect: false,
-  connectors,
-  provider,
-});
+const client = new QueryClient();
 
 export const customAvatar: AvatarComponent = ({ address, ensImage, size }) => {
   // builds an image data url for embedding
@@ -74,26 +52,27 @@ export const customAvatar: AvatarComponent = ({ address, ensImage, size }) => {
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
-    <WagmiConfig client={wagmiClient}>
-      <Head>
-        <title>Text-Me Anon</title>
-        <link rel="icon" href="/anon.ico"></link>
-      </Head>
-      <RainbowKitProvider
-        modalSize="compact"
-        theme={lightTheme()}
-        avatar={customAvatar}
-        chains={chains}
-      >
-        <ChakraProvider>
-          <ReduxProvider store={store}>
-            <GoogleAnalytics />
-            <ModalContext> 
-              <Component {...pageProps} />
-            </ModalContext>
-          </ReduxProvider>
-        </ChakraProvider>
-      </RainbowKitProvider>
-    </WagmiConfig>
+    <WagmiProvider reconnectOnMount={false} config={config}>
+      <QueryClientProvider client={client}>
+        <Head>
+          <title>Text-Me Anon</title>
+          <link rel="icon" href="/anon.ico"></link>
+        </Head>
+        <RainbowKitProvider
+          modalSize="compact"
+          theme={lightTheme()}
+          avatar={customAvatar}
+        >
+          <ChakraProvider>
+            <ReduxProvider store={store}>
+              <GoogleAnalytics />
+              <ModalContext>
+                <Component {...pageProps} />
+              </ModalContext>
+            </ReduxProvider>
+          </ChakraProvider>
+        </RainbowKitProvider>
+      </QueryClientProvider>
+    </WagmiProvider>
   );
 }

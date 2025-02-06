@@ -46,7 +46,7 @@ export const ChatPreview: FunctionComponent<ChatPreviewProps> = ({
   }, [chatLink, router]);
 
   return (
-    <div onClick={onClick} title="Click to open chat">
+    <div>
       <div
         className={` ${className} w-full flex flex-row items-center gap-2 sm:gap-4`}
       >
@@ -54,7 +54,7 @@ export const ChatPreview: FunctionComponent<ChatPreviewProps> = ({
           addressForProfileIcon={receiver}
           className="w-2/12"
         ></ProfilePic>
-        <div className="flex flex-col gap-1 md:gap-2 w-9/12">
+        <div className="flex flex-col gap-1 md:gap-2 w-9/12"  onClick={onClick} title="Click to open chat">
           <div className="flex flex-row w-full justify-between">
             <div
               className={`text-lg w-full font-bold ${
