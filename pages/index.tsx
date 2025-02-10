@@ -26,7 +26,7 @@ const Home: NextPage = () => {
           address={address}
         />
       ) : (
-        <LandingPage/>
+        <LandingPage mode={ChatMode.CHAT}/>
       )}
     </AppLayout>
   );

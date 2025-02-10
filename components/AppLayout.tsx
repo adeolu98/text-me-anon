@@ -3,9 +3,7 @@ import { ChatSearch } from "./SearchInput";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import Image from "next/image";
 import Head from "next/head";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTwitter, faDiscord } from "@fortawesome/free-brands-svg-icons";
-import { IconProp } from "@fortawesome/fontawesome-svg-core";
+
 import { useAccount } from "wagmi";
 import { useRouter } from "next/router";
 import ModeSwitch from "./ModeSwitch";
@@ -93,30 +91,6 @@ export const AppLayout: FunctionComponent<AppLayoutProps> = ({
 
       <div className="flex w-full justify-center items-center h-full">
         {children}
-      </div>
-      <div className=" w-full pt-2 sm:pt-0 pb-2 flex gap-4 flex-row">
-        <a
-          className="hover:underline text-black"
-          href="https://twitter.com/textmeanon"
-          target="__blank"
-        >
-          <FontAwesomeIcon
-            width={20}
-            height={20}
-            icon={faTwitter as IconProp}
-          ></FontAwesomeIcon>
-        </a>
-        <a
-          className="hover:underline text-black"
-          href="https://discord.gg/nmtJbFjPK9"
-          target="__blank"
-        >
-          <FontAwesomeIcon
-            width={20}
-            height={20}
-            icon={faDiscord as IconProp}
-          ></FontAwesomeIcon>
-        </a>
       </div>
     </div>
   );
