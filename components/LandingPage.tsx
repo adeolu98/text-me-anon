@@ -11,14 +11,9 @@ import { ChatMode, FetchStatus } from "@/lib/types";
 import Copy from "./Copy";
 import { selectChatOpened, setChatOpened } from "@/store/slice/general";
 import { useAppDispatch, useAppSelector } from "@/store";
-import {
-  faCircleExclamation,
-  faLink,
-  faMailBulk,
-  faMailReply,
-} from "@fortawesome/free-solid-svg-icons";
 import Demo1 from "@/public/demo1.gif";
 import Demo2 from "@/public/demo2.gif";
+import Demo3 from "@/public/demo3.gif";
 import one from "@/public/one.svg";
 import two from "@/public/two.svg";
 import three from "@/public/three.svg";
@@ -42,7 +37,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faTwitter,
   faDiscord,
-  faMailchimp,
   faGoogle,
 } from "@fortawesome/free-brands-svg-icons";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
@@ -92,7 +86,7 @@ function LandingPage(props: LandingPageProps) {
           )}
         </div>
         <div className="md:w-2/5 place-content-center">
-          <Image src={Demo1} className="w-full" alt="demo gif 1"></Image>
+          {mode == ChatMode.CHAT ?  <Image src={Demo1} className="w-full" alt="demo gif 1"></Image> : <Image src={Demo3} className="w-full" alt="demo gif 3"></Image>  }
         </div>
       </div>
 

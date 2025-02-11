@@ -196,7 +196,7 @@ function ChatList(props: ChatListProps) {
                 <>
                   <p className="text-sm  font-light">No messages found yet..</p>
                   <div>
-                    <Spinner size="md" />
+                    <Spinner size="md"/>
                   </div>
                 </>
               ) : (

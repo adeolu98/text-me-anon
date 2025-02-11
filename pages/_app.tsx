@@ -43,6 +43,7 @@ const { chains, provider } = configureChains(
 const { connectors } = getDefaultWallets({
   appName: "My RainbowKit App",
   chains,
+  projectId: 'YOUR_PROJECT_ID'
 });
 
 const wagmiClient = createClient({
