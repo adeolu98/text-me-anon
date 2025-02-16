@@ -83,7 +83,7 @@ export default function App({ Component, pageProps }: AppProps) {
     <WagmiConfig client={wagmiClient}>
       <Head>
         <title>Text-Me Anon</title>
-        <link rel="icon" href="/anon.ico"></link>
+        <link rel="icon" href="/anon.svg"></link>
         <ColorSchemeScript />
       </Head>
       <RainbowKitProvider
