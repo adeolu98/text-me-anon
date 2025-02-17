@@ -57,7 +57,7 @@ export const AppLayout: FunctionComponent<AppLayoutProps> = ({
         </div>
 
         <div className="items-center flex-shrink-0 flex">
-          <div className="flex-shrink-0 hidden sm:flex items-center mr-4">
+          <div className="flex-shrink-0  sm:flex items-center mr-4">
             <ModeSwitch />
           </div>
           <ConnectButton
@@ -70,22 +70,6 @@ export const AppLayout: FunctionComponent<AppLayoutProps> = ({
               largeScreen: "full",
             }}
           ></ConnectButton>
-        </div>
-      </div>
-
-      <div
-        className={`flex ${
-          mode === ChatMode.CHAT || "/watch/" === asPath
-            ? "justify-end"
-            : "justify-center"
-        } items-center`}
-      >
-        {"/watch/" !== asPath && mode === ChatMode.WATCH && (
-          <ChatSearch classNames="block mx-auto" />
-        )}
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <div className="sm:hidden flex-shrink-0">
-          <ModeSwitch />
         </div>
       </div>
 
