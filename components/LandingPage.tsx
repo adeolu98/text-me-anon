@@ -14,7 +14,7 @@ import noScripts_mobile from "@/public/noscripts-mobile.svg";
 import onchain_mobile from "@/public/onchain-mobile.svg";
 import instant_mobile from "@/public/instant-mobile.svg";
 import multi from "@/public/multi.svg";
-import noScripts from "@/public/noscripts.svg";
+import noScripts from "@/public/noScripts.svg";
 import onchain from "@/public/on-chain.svg";
 import instant from "@/public/instant.svg";
 
