@@ -1,16 +1,7 @@
-import { hex_to_string, getTime, shorten } from "@/lib/utils";
-import { Spinner } from "@chakra-ui/react";
-import Link from "next/link";
 import Image from "next/image";
-import { ChatPreview } from "./ChatPreview";
-import SearchInput, { ChatSearch } from "./SearchInput";
-import { useDiscussions } from "@/hooks/use-discussions";
-import { useState, useEffect, ChangeEvent, useCallback } from "react";
-import { useEnsAddress } from "wagmi";
-import { ChatMode, FetchStatus } from "@/lib/types";
-import Copy from "./Copy";
-import { selectChatOpened, setChatOpened } from "@/store/slice/general";
-import { useAppDispatch, useAppSelector } from "@/store";
+import { ChatSearch } from "./SearchInput";
+import { ChatMode } from "@/lib/types";
+
 import Demo1 from "@/public/demo1.gif";
 import Demo2 from "@/public/demo2.gif";
 import Demo3 from "@/public/demo3.gif";
@@ -18,16 +9,18 @@ import one from "@/public/one.svg";
 import two from "@/public/two.svg";
 import three from "@/public/three.svg";
 import four from "@/public/four.svg";
+import multi_mobile from "@/public/multi-mobile.svg";
+import noScripts_mobile from "@/public/noscripts-mobile.svg";
+import onchain_mobile from "@/public/onchain-mobile.svg";
+import instant_mobile from "@/public/instant-mobile.svg";
 import multi from "@/public/multi.svg";
-
+import noScripts from "@/public/noscripts.svg";
 import onchain from "@/public/on-chain.svg";
 import instant from "@/public/instant.svg";
 
 import instant_w from "@/public/instant-w.svg";
 import privateSVG from "@/public/private.svg";
 import smart from "@/public/smart.svg";
-
-import noScripts from "@/public/noScripts.svg";
 
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import FAQAccordion from "./FAQAccordion";
@@ -86,7 +79,11 @@ function LandingPage(props: LandingPageProps) {
           )}
         </div>
         <div className="md:w-2/5 place-content-center">
-          {mode == ChatMode.CHAT ?  <Image src={Demo1} className="w-full" alt="demo gif 1"></Image> : <Image src={Demo3} className="w-full" alt="demo gif 3"></Image>  }
+          {mode == ChatMode.CHAT ? (
+            <Image src={Demo1} className="w-full" alt="demo gif 1"></Image>
+          ) : (
+            <Image src={Demo3} className="w-full" alt="demo gif 3"></Image>
+          )}
         </div>
       </div>
 
@@ -152,26 +149,54 @@ function LandingPage(props: LandingPageProps) {
         <div className="w-full  flex flex-col gap-10">
           <div className="w-full flex flex-col xl:flex-row justify-between gap-8 xl:h-1/2">
             <div className="w-full xl:w-max">
-              <Image className="w-full" src={multi} alt="multi-svg" />
+              <Image
+                className="w-full block xl:hidden"
+                src={multi_mobile}
+                alt="multi-svg"
+              />
+              <Image
+                className="w-full hidden xl:block"
+                src={multi}
+                alt="multi-svg"
+              />
             </div>
 
             <div className=" w-full  xl:w-max  ">
               <Image
-                className="w-full xl:h-max"
+                className="w-full block xl:hidden"
+                src={noScripts_mobile}
+                alt="multi-svg"
+              />
+              <Image
+                className="w-full hidden xl:block"
                 src={noScripts}
-                alt="no-script-svg"
+                alt="multi-svg"
               />
             </div>
           </div>
           <div className="w-full flex flex-col xl:flex-row justify-between gap-8 xl:h-1/2">
             <div className="w-full xl:w-max">
-              <Image className="w-full" src={instant} alt="multi-svg" />
+              <Image
+                className="w-full block xl:hidden"
+                src={instant_mobile}
+                alt="multi-svg"
+              />
+              <Image
+                className="w-full hidden xl:block"
+                src={instant}
+                alt="multi-svg"
+              />
             </div>
             <div className=" w-full  xl:w-max  ">
               <Image
-                className="w-full xl:h-max"
+                className="w-full block xl:hidden"
+                src={onchain_mobile}
+                alt="multi-svg"
+              />
+              <Image
+                className="w-full hidden xl:block"
                 src={onchain}
-                alt="no-script-svg"
+                alt="multi-svg"
               />
             </div>
           </div>
