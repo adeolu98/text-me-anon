@@ -10,40 +10,42 @@ import LandingPage from "@/components/LandingPage";
 
 const Chat: NextPage = () => {
   const router = useRouter();
-  const { sender, receiver } = router.query
+  const { sender, receiver } = router.query;
 
   // navigate to home if addresses are invalid
   useEffect(() => {
     if (
-      (sender &&
-      (typeof sender !== "string" || !isAddress(sender))) ||
+      (sender && (typeof sender !== "string" || !isAddress(sender))) ||
       (receiver &&
-      (typeof receiver !== "string" || !isAddress(receiver))) &&
-      router
+        (typeof receiver !== "string" || !isAddress(receiver)) &&
+        router)
     ) {
-      console.log("pushing")
+      console.log("pushing");
       router.push("/");
     }
   }, [receiver, router, sender]);
 
   return (
-    <AppLayout>
+    <div>
       {typeof sender === "string" &&
       typeof receiver === "string" &&
       isAddress(sender) &&
       isAddress(receiver) ? (
-        typeof sender === "string" &&
-        typeof receiver === "string" && (
-          <ChatMessages
-            mode={ChatMode.WATCH}
-            sender={sender}
-            receiver={receiver}
-          />
-        )
+        <AppLayout isLanding={false}>
+          <div className="h-[200px]">
+            <ChatMessages
+              mode={ChatMode.WATCH}
+              sender={sender}
+              receiver={receiver}
+            />
+          </div>
+        </AppLayout>
       ) : (
-        <LandingPage mode={ChatMode.WATCH}/>
+        <AppLayout isLanding={true}>
+          <LandingPage mode={ChatMode.WATCH} />
+        </AppLayout>
       )}
-    </AppLayout>
+    </div>
   );
 };
 

@@ -15,11 +15,13 @@ import AnonLogo from "@/public/anon.svg";
 interface AppLayoutProps {
   className?: string;
   children?: ReactNode;
+  isLanding?: boolean;
 }
 
 export const AppLayout: FunctionComponent<AppLayoutProps> = ({
   className,
   children,
+  isLanding,
 }) => {
   const { asPath } = useRouter();
   const { isConnected } = useAccount();
@@ -27,7 +29,7 @@ export const AppLayout: FunctionComponent<AppLayoutProps> = ({
 
   return (
     <div
-      className={`${className}  flex flex-col justify-between h-full w-full bg-neutral-50 px-4 xs:px-6 sm:px-10 pt-10`}
+      className={`${className}  flex flex-col justify-between ${ isLanding ? `h-full` : `h-screen py-32`} w-full  bg-neutral-50 px-4 xs:px-6 sm:px-10 pt-10`}
     >
       <Head>
         <script
@@ -73,7 +75,7 @@ export const AppLayout: FunctionComponent<AppLayoutProps> = ({
         </div>
       </div>
 
-      <div className="flex w-full justify-center items-center h-full">
+      <div className={`flex w-full justify-center pt-10`}>
         {children}
       </div>
     </div>
