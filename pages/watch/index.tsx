@@ -6,6 +6,7 @@ import { isAddress } from "ethers/lib/utils.js";
 import ChatMessages from "@/components/ChatMessages";
 import { ChatMode } from "@/lib/types";
 import { ChatSearch } from "@/components/SearchInput";
+import LandingPage from "@/components/LandingPage";
 
 const Chat: NextPage = () => {
   const router = useRouter();
@@ -40,14 +41,7 @@ const Chat: NextPage = () => {
           />
         )
       ) : (
-        <div className="bg-[#fafafa] h-full w-full flex items-center translate-y-1 justify-center flex-col sm:w-4/6 md:w-4/6 lg:w-3/6 xl:w-2/6">
-          <div className="-translate-y-full w-full">
-            <p className="text-center font-xl mb-2">
-              Enter an address below to view its on-chain messages
-            </p>
-            <ChatSearch placeholder="0x" classNames="w-full md:w-full max-w-full" />
-          </div>
-        </div>
+        <LandingPage mode={ChatMode.WATCH}/>
       )}
     </AppLayout>
   );

@@ -6,6 +6,7 @@ import { Message } from "@/components/Message";
 import { mainnet, useAccount, useEnsAddress, useNetwork } from "wagmi";
 import { isAddress } from "ethers/lib/utils.js";
 import { useRouter } from "next/router";
+import { NoConnect } from "./NoConnect";
 
 const NewMessage = () => {
   const router = useRouter();
@@ -32,7 +33,7 @@ const NewMessage = () => {
   return (
     <>
       {address ? (
-        <div className="border shadow-2xl flex flex-col rounded-3xl h-full w-full sm:w-4/6 md:w-4/6 lg:w-3/6 xl:w-2/6">
+        <div className="border shadow-2xl flex flex-col rounded-3xl mt-10 h-[500px] md:h-[650px] 2xl:h-[900px] w-full sm:w-4/6 md:w-4/6 lg:w-3/6 xl:w-2/6">
           {/**cancel button and page header */}
           <button onClick={() => router.back()}>
             <p className="absolute hover:underline px-1 text-xs xs:text-base xs:px-5 mt-4 xs:mt-8">
@@ -63,7 +64,8 @@ const NewMessage = () => {
               </div>
               <div className="text-center text-xs text-red-600">
                 {toAddress &&
-                  !isAddress(toAddress) && !data &&
+                  !isAddress(toAddress) &&
+                  !data &&
                   "This is not a valid address."}
               </div>
             </div>
@@ -120,16 +122,7 @@ const NewMessage = () => {
           </div>
         </div>
       ) : (
-        <div className="h-full w-full flex items-center justify-center flex-col gap-10 sm:w-4/6 md:w-4/6 lg:w-3/6 xl:w-2/6">
-          <FontAwesomeIcon
-            icon={faCircleExclamation}
-            width={100}
-            height={100}
-          ></FontAwesomeIcon>
-          <p className="text-center font-bold font-xl">
-            Please connect wallet first
-          </p>
-        </div>
+        <NoConnect></NoConnect>
       )}
     </>
   );

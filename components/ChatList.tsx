@@ -88,7 +88,7 @@ function ChatList(props: ChatListProps) {
   };
 
   return (
-    <div className="border shadow-2xl py-8 flex flex-col rounded-3xl h-full w-full sm:w-4/6 lg:w-3/6 xl:w-2/6">
+    <div className="shadow-2xl py-8 flex flex-col rounded-3xl mt-10 h-[500px] md:h-[650px] 2xl:h-[900px]  w-full sm:w-4/6 lg:w-3/6 xl:w-2/6">
       {/**top section with create new message icon */}
       <div className="flex flex-col xs:flex-row justify-between px-1 xs:px-5">
         <div className="flex-flex-col">
@@ -196,7 +196,7 @@ function ChatList(props: ChatListProps) {
                 <>
                   <p className="text-sm  font-light">No messages found yet..</p>
                   <div>
-                    <Spinner size="md" />
+                    <Spinner size="md"/>
                   </div>
                 </>
               ) : (

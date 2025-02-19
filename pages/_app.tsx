@@ -30,6 +30,10 @@ import { AvatarComponent, lightTheme } from "@rainbow-me/rainbowkit";
 import Head from "next/head";
 import GoogleAnalytics from "@/components/analytics/GoogleAnalytics";
 import ModalContext from "@/context/modalContext";
+// core styles are required for all packages
+import '@mantine/core/styles.css';
+import { createTheme, MantineProvider } from '@mantine/core';
+import { ColorSchemeScript } from '@mantine/core';
 
 const { chains, provider } = configureChains(
   [mainnet, polygon, optimism, goerli, sepolia],
@@ -39,6 +43,7 @@ const { chains, provider } = configureChains(
 const { connectors } = getDefaultWallets({
   appName: "My RainbowKit App",
   chains,
+  projectId: 'YOUR_PROJECT_ID'
 });
 
 const wagmiClient = createClient({
@@ -74,10 +79,12 @@ export const customAvatar: AvatarComponent = ({ address, ensImage, size }) => {
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
+    <MantineProvider> 
     <WagmiConfig client={wagmiClient}>
       <Head>
         <title>Text-Me Anon</title>
-        <link rel="icon" href="/anon.ico"></link>
+        <link rel="icon" href="/anon_new.ico"></link>
+        <ColorSchemeScript />
       </Head>
       <RainbowKitProvider
         modalSize="compact"
@@ -95,5 +102,6 @@ export default function App({ Component, pageProps }: AppProps) {
         </ChakraProvider>
       </RainbowKitProvider>
     </WagmiConfig>
+    </MantineProvider>
   );
 }
