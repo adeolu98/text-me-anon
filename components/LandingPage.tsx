@@ -42,7 +42,7 @@ function LandingPage(props: LandingPageProps) {
   const { mode } = props;
 
   return (
-    <div className="flex flex-col gap-20">
+    <div className="flex flex-col pt-10 gap-20">
       <div className="h-full w-full flex flex-col md:flex-row gap-10">
         <div className=" w-full md:w-3/5  text-left  flex flex-col md:items-left gap-10 ">
           <p className=" pt-10 lg:pt-20 font-black text-3xl lg:text-6xl lg:pr-36">
@@ -68,11 +68,11 @@ function LandingPage(props: LandingPageProps) {
             ></ConnectButton>
           ) : (
             <div>
-              <p className="text-left font-xl mb-2 mt-10">
+              <p className="text-left font-semibold font-xl mb-2 mt-10">
                 Enter an address below to view its on-chain messages
               </p>
               <ChatSearch
-                placeholder="0x"
+                placeholder="0x or ENS"
                 classNames="w-full lg:w-2/4 max-w-full"
               />
             </div>

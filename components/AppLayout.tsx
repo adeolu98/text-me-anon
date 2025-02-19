@@ -27,7 +27,7 @@ export const AppLayout: FunctionComponent<AppLayoutProps> = ({
 
   return (
     <div
-      className={`${className}  flex flex-col justify-between h-full w-full bg-neutral-50 px-4 xs:px-6 sm:px-10 pt-10`}
+      className={`${className}  flex flex-col justify-between h-full w-full px-4 xs:px-6 sm:px-10 py-10`}
     >
       <Head>
         <script

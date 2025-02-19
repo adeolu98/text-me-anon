@@ -29,7 +29,7 @@ const Info: NextPage = () => {
 
   return (
     <AppLayout>
-      <div className="border shadow-2xl flex flex-col rounded-3xl h-full w-full sm:w-4/6 md:w-4/6 lg:w-3/6 xl:w-2/6">
+      <div className="border shadow-2xl flex flex-col rounded-3xl mt-10 h-[500px] md:h-[650px] 2xl:h-[900px] w-full sm:w-4/6 md:w-4/6 lg:w-3/6 xl:w-2/6">
         <button
           onClick={router.back}
           title="Go back"
