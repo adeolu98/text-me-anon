@@ -293,7 +293,7 @@ function LandingPage(props: LandingPageProps) {
       </div>
       <div className="pb-8">
         <p className="text-sm">
-          © Copyright {new Date().getFullYear()}, All Rights Reserved
+          © {new Date().getFullYear()} TStore Labs. All rights reserved.
         </p>
       </div>
     </div>
