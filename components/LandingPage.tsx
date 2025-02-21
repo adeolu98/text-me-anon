@@ -14,7 +14,7 @@ import noScripts_mobile from "@/public/noscripts-mobile.svg";
 import onchain_mobile from "@/public/onchain-mobile.svg";
 import instant_mobile from "@/public/instant-mobile.svg";
 import multi from "@/public/multi.svg";
-import noScripts from "@/public/noScripts.svg";
+import noScripts from "@/public/noscripts.svg";
 import onchain from "@/public/on-chain.svg";
 import instant from "@/public/instant.svg";
 
@@ -147,55 +147,56 @@ function LandingPage(props: LandingPageProps) {
           </p>
         </div>
         <div className="w-full  flex flex-col gap-10">
-          <div className="w-full flex flex-col xl:flex-row justify-between gap-8 xl:h-1/2">
+          <div className="w-full flex flex-col sm:flex-row justify-between gap-8 xl:h-1/2">
             <div className="w-full xl:w-max">
               <Image
-                className="w-full block xl:hidden"
+                className="w-full block lg:hidden"
                 src={multi_mobile}
                 alt="multi-svg"
               />
               <Image
-                className="w-full hidden xl:block"
+                className="w-full hidden lg:block"
                 src={multi}
                 alt="multi-svg"
               />
             </div>
 
-            <div className=" w-full  xl:w-max  ">
+            <div className="w-full  xl:w-max">
               <Image
-                className="w-full block xl:hidden"
+                className="w-full block lg:hidden"
                 src={noScripts_mobile}
                 alt="multi-svg"
               />
               <Image
-                className="w-full hidden xl:block"
+                className="w-full hidden lg:block"
                 src={noScripts}
                 alt="multi-svg"
               />
             </div>
           </div>
-          <div className="w-full flex flex-col xl:flex-row justify-between gap-8 xl:h-1/2">
+          <div className="w-full flex flex-col sm:flex-row justify-between gap-8 xl:h-1/2">
             <div className="w-full xl:w-max">
               <Image
-                className="w-full block xl:hidden"
-                src={instant_mobile}
-                alt="multi-svg"
-              />
-              <Image
-                className="w-full hidden xl:block"
-                src={instant}
-                alt="multi-svg"
-              />
-            </div>
-            <div className=" w-full  xl:w-max  ">
-              <Image
-                className="w-full block xl:hidden"
+                className="w-full block lg:hidden"
                 src={onchain_mobile}
                 alt="multi-svg"
               />
               <Image
-                className="w-full hidden xl:block"
+                className="w-full hidden lg:block"
                 src={onchain}
+                alt="multi-svg"
+              />
+            </div>
+
+            <div className="w-full  xl:w-max">
+              <Image
+                className="w-full block lg:hidden"
+                src={instant_mobile}
+                alt="multi-svg"
+              />
+              <Image
+                className="w-full hidden lg:block"
+                src={instant}
                 alt="multi-svg"
               />
             </div>
