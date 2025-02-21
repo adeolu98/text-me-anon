@@ -10,11 +10,11 @@ import two from "@/public/two.svg";
 import three from "@/public/three.svg";
 import four from "@/public/four.svg";
 import multi_mobile from "@/public/multi-mobile.svg";
-import noScripts_mobile from "@/public/noscripts-mobile.svg";
+import noScripts_mobile from "@/public/nocripts-mobile.svg";
 import onchain_mobile from "@/public/onchain-mobile.svg";
 import instant_mobile from "@/public/instant-mobile.svg";
 import multi from "@/public/multi.svg";
-import noScripts from "@/public/noscripts.svg";
+import noScripts from "@/public/noScripts.svg";
 import onchain from "@/public/on-chain.svg";
 import instant from "@/public/instant.svg";
 
@@ -188,7 +188,7 @@ function LandingPage(props: LandingPageProps) {
               />
             </div>
 
-            <div className="w-full  xl:w-max">
+            <div className="w-full xl:w-max">
               <Image
                 className="w-full block lg:hidden"
                 src={instant_mobile}
