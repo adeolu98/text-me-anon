@@ -10,7 +10,7 @@ import two from "@/public/two.svg";
 import three from "@/public/three.svg";
 import four from "@/public/four.svg";
 import multi_mobile from "@/public/multi-mobile.svg";
-import noScripts_mobile from "@/public/nocripts-mobile.svg";
+import noScripts_mobile from "@/public/noscripts-mobile.svg";
 import onchain_mobile from "@/public/onchain-mobile.svg";
 import instant_mobile from "@/public/instant-mobile.svg";
 import multi from "@/public/multi.svg";
