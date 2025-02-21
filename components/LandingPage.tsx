@@ -52,8 +52,8 @@ function LandingPage(props: LandingPageProps) {
           </p>
           <p className="font-normal text-xl lg:text-2xl">
             {mode == ChatMode.CHAT
-              ? "Say goodbye to scripts and hexdata! Instantly send messages to any wallet address on chain—all from one simple dApp."
-              : "Say goodbye to following conversations on blockchain explorers. Instantly view messages and follow the most interesting conversations — all from one simple dApp."}
+              ? "Say goodbye to scripts and hex data! Instantly send messages to any wallet address on-chain—all from one easy-to-use dApp."
+              : "Say goodbye to following conversations on blockchain explorers! Instantly view messages and follow the most interesting conversations — all from one easy-to-use dApp."}
           </p>
           {mode == ChatMode.CHAT ? (
             <ConnectButton
